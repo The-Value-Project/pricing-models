@@ -1,0 +1,358 @@
+{
+  "title": "InvoiceStatement",
+  "description": "Computed pricing output from a PricingModel and DealConfiguration. Implementations may extend the top-level object (e.g. with computation_notes, audit trail, or rendering hints) without breaking conformance with the standard.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "invoice_id",
+    "config_id",
+    "period",
+    "currency",
+    "line_items",
+    "subtotals",
+    "adjustments",
+    "totals",
+    "entitlement_summary",
+    "warnings"
+  ],
+  "properties": {
+    "invoice_id": {
+      "type": "string"
+    },
+    "config_id": {
+      "type": "string"
+    },
+    "period": {
+      "type": "object",
+      "required": [
+        "label",
+        "start_date",
+        "end_date",
+        "period_type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string"
+        },
+        "end_date": {
+          "type": "string"
+        },
+        "period_type": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "quarterly",
+            "annual",
+            "contract_total"
+          ]
+        }
+      }
+    },
+    "currency": {
+      "type": "string"
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "line_id",
+          "category",
+          "description",
+          "product_id",
+          "target_id",
+          "quantity",
+          "unit",
+          "unit_price",
+          "line_total",
+          "computation_method",
+          "source_fields"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "line_id": {
+            "type": "integer"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "module_charge",
+              "credit_package",
+              "usage_overage",
+              "one_time_fee",
+              "minimum_commitment_true_up",
+              "other"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "module_id, credit_package_id, etc."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "unit_price": {
+            "type": "number"
+          },
+          "line_total": {
+            "type": "number"
+          },
+          "graduated_detail": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "band_label",
+                    "quantity_in_band",
+                    "unit_price",
+                    "band_total"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "band_label": {
+                      "type": "string"
+                    },
+                    "quantity_in_band": {
+                      "type": "number"
+                    },
+                    "unit_price": {
+                      "type": "number"
+                    },
+                    "band_total": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "computation_method": {
+            "type": "string"
+          },
+          "source_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "subtotals": {
+      "type": "object",
+      "required": [
+        "recurring",
+        "one_time",
+        "gross"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "recurring": {
+          "type": "number"
+        },
+        "one_time": {
+          "type": "number"
+        },
+        "gross": {
+          "type": "number"
+        }
+      }
+    },
+    "adjustments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "adjustment_type",
+          "description",
+          "amount",
+          "applies_to",
+          "computation_method",
+          "source"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "adjustment_type": {
+            "type": "string",
+            "enum": [
+              "plan_adjustment",
+              "negotiated_discount_percentage",
+              "negotiated_discount_amount",
+              "negotiated_fixed_price",
+              "waived_fee",
+              "price_cap",
+              "volume_discount",
+              "bundle_discount",
+              "minimum_true_up",
+              "strategy_discount",
+              "other"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Signed: negative=discount, positive=true-up."
+          },
+          "applies_to": {
+            "type": "string"
+          },
+          "computation_method": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "total_adjustments",
+        "net_total",
+        "annualized_total",
+        "total_contract_value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_adjustments": {
+          "type": "number"
+        },
+        "net_total": {
+          "type": "number"
+        },
+        "annualized_total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total_contract_value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "entitlement_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "credit_type_id",
+          "granted",
+          "committed_or_used",
+          "overage",
+          "overage_cost",
+          "overage_policy"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "credit_type_id": {
+            "type": "string"
+          },
+          "granted": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "committed_or_used": {
+            "type": "number"
+          },
+          "overage": {
+            "type": "number"
+          },
+          "overage_cost": {
+            "type": "number"
+          },
+          "overage_policy": {
+            "type": "string",
+            "enum": [
+              "pay_as_you_go",
+              "hard_cap",
+              "throttle",
+              "contact_sales",
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "message",
+          "severity"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          }
+        }
+      }
+    },
+    "computation_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,375 @@
+{
+  "title": "DealConfiguration",
+  "description": "Customer-specific deal referencing a PricingModel instance. Created by a salesperson or LLM. Implementations may extend the top-level object (e.g. with config_notes, approval metadata, or CRM references) without breaking conformance with the standard.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "config_id",
+    "config_date",
+    "model_reference",
+    "customer",
+    "deal_motion",
+    "billing",
+    "product_selections",
+    "bundle_selections",
+    "discount_selections",
+    "negotiated_overrides"
+  ],
+  "properties": {
+    "config_id": {
+      "type": "string"
+    },
+    "config_date": {
+      "type": "string",
+      "description": "ISO date."
+    },
+    "model_reference": {
+      "type": "object",
+      "required": [
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "description": "Matches pricing_model context."
+        }
+      }
+    },
+    "customer": {
+      "type": "object",
+      "required": [
+        "name",
+        "domain",
+        "region"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "domain": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "For price book resolution."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "deal_motion": {
+      "type": "string",
+      "enum": [
+        "new_logo",
+        "renewal",
+        "expansion",
+        "reprice"
+      ],
+      "description": "For variant resolution."
+    },
+    "billing": {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "contract_start_date",
+        "contract_term_months"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": "References products[].plans[].id."
+        },
+        "contract_start_date": {
+          "type": "string"
+        },
+        "contract_term_months": {
+          "type": "integer"
+        },
+        "payment_terms": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "product_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "tier_id",
+          "quantities",
+          "credit_package_selections"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "tier_id": {
+            "type": "string"
+          },
+          "quantities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "credit_type_id",
+                "quantity",
+                "quantity_type",
+                "growth_schedule"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "credit_type_id": {
+                  "type": "string",
+                  "description": "References credit_types[].id."
+                },
+                "quantity": {
+                  "type": "number"
+                },
+                "quantity_type": {
+                  "type": "string",
+                  "enum": [
+                    "committed",
+                    "estimated",
+                    "maximum",
+                    "starting"
+                  ]
+                },
+                "growth_schedule": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "period_label",
+                          "quantity"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "period_label": {
+                            "type": "string"
+                          },
+                          "quantity": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "credit_package_selections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "credit_package_id",
+                "quantity"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "credit_package_id": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bundle_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "bundle_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "bundle_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discount_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "discount_id",
+          "manual_value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "discount_id": {
+            "type": "string"
+          },
+          "manual_value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "description": "For mode=manual discounts."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "negotiated_overrides": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "price_overrides",
+            "credit_grant_overrides",
+            "custom_terms"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "price_overrides": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "target_id",
+                  "override_type",
+                  "override_value",
+                  "description"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "target_id": {
+                    "type": "string",
+                    "description": "module_id, credit_package_id, or 'total_deal'."
+                  },
+                  "override_type": {
+                    "type": "string",
+                    "enum": [
+                      "fixed_price",
+                      "discount_percentage",
+                      "discount_amount",
+                      "custom_unit_price",
+                      "waived",
+                      "capped"
+                    ]
+                  },
+                  "override_value": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "credit_grant_overrides": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "credit_type_id",
+                  "new_quantity",
+                  "description"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "credit_type_id": {
+                    "type": "string"
+                  },
+                  "new_quantity": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "custom_terms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "term_type",
+                  "description"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "term_type": {
+                    "type": "string",
+                    "enum": [
+                      "sla_upgrade",
+                      "support_upgrade",
+                      "custom_overage_rate",
+                      "price_lock",
+                      "mfn_clause",
+                      "termination_right",
+                      "data_terms",
+                      "other"
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "config_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,2817 @@
+{
+  "type": "object",
+  "required": [
+    "products",
+    "bundles",
+    "discounts",
+    "credit_types",
+    "credit_packages",
+    "discount_strategies",
+    "price_books",
+    "variants",
+    "minimum_commitments",
+    "pricing_rules",
+    "business_rules",
+    "module_dependencies",
+    "pricing_relationships"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "products": {
+      "type": "array",
+      "description": "Vendor's product catalog.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "modules",
+          "tiers",
+          "plans"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable kebab-case product identifier."
+          },
+          "label": {
+            "type": "string"
+          },
+          "modules": {
+            "type": "array",
+            "description": "Individually priced capabilities.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "required",
+                "price",
+                "included_credit_grants",
+                "eligibility",
+                "features"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean",
+                  "description": "True if mandatory for the product."
+                },
+                "price": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "period",
+                    "amount",
+                    "currency",
+                    "unit",
+                    "tiers",
+                    "breakpoints"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "flat",
+                        "per_unit",
+                        "tiered",
+                        "volume"
+                      ],
+                      "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+                    },
+                    "period": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "quarter",
+                        "year",
+                        "one_time"
+                      ]
+                    },
+                    "amount": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currency": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "unit": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "description": "What the price is per. Null for flat."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tiers": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Graduated bands (tiered type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "breakpoints": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Volume bands (volume type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "included_credit_grants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "credit_type_id",
+                      "quantity",
+                      "renewal_behavior",
+                      "period",
+                      "metric_type"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "credit_type_id": {
+                        "type": "string",
+                        "description": "References credit_types[].id."
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "description": "Amount granted. Use -1 for unlimited."
+                      },
+                      "renewal_behavior": {
+                        "type": "string",
+                        "enum": [
+                          "reset",
+                          "accumulate"
+                        ]
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "monthly",
+                          "annual",
+                          "per_billing_period",
+                          "concurrent",
+                          "lifetime",
+                          "one_time"
+                        ],
+                        "description": "How grant renews. concurrent=simultaneous limit."
+                      },
+                      "metric_type": {
+                        "type": "string",
+                        "enum": [
+                          "consumable",
+                          "capacity",
+                          "cumulative",
+                          "one_time"
+                        ],
+                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+                      }
+                    }
+                  }
+                },
+                "eligibility": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "deal_motions",
+                        "regions",
+                        "min_metric"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "deal_motions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "new_logo",
+                              "renewal",
+                              "expansion",
+                              "reprice"
+                            ]
+                          }
+                        },
+                        "regions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "min_metric": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "required": [
+                                "metric",
+                                "min"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "metric": {
+                                  "type": "string"
+                                },
+                                "min": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Human-readable features provided by this module."
+                }
+              }
+            }
+          },
+          "tiers": {
+            "type": "array",
+            "description": "Plan levels including sets of modules.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "included_modules",
+                "included_credit_grants",
+                "overage_policy",
+                "features"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "included_modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Module IDs included in this tier."
+                },
+                "included_credit_grants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "credit_type_id",
+                      "quantity",
+                      "renewal_behavior",
+                      "period",
+                      "metric_type"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "credit_type_id": {
+                        "type": "string",
+                        "description": "References credit_types[].id."
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "description": "Amount granted. Use -1 for unlimited."
+                      },
+                      "renewal_behavior": {
+                        "type": "string",
+                        "enum": [
+                          "reset",
+                          "accumulate"
+                        ]
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "monthly",
+                          "annual",
+                          "per_billing_period",
+                          "concurrent",
+                          "lifetime",
+                          "one_time"
+                        ],
+                        "description": "How grant renews. concurrent=simultaneous limit."
+                      },
+                      "metric_type": {
+                        "type": "string",
+                        "enum": [
+                          "consumable",
+                          "capacity",
+                          "cumulative",
+                          "one_time"
+                        ],
+                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+                      }
+                    }
+                  }
+                },
+                "overage_policy": {
+                  "type": "string",
+                  "enum": [
+                    "pay_as_you_go",
+                    "hard_cap",
+                    "throttle",
+                    "contact_sales",
+                    "unknown"
+                  ],
+                  "description": "What happens when entitlements are exhausted."
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tier-level features beyond module features."
+                }
+              }
+            }
+          },
+          "plans": {
+            "type": "array",
+            "description": "Commitment-period pricing options.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "commitment_months",
+                "adjustment",
+                "targets",
+                "included_credit_grants",
+                "eligibility"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "commitment_months": {
+                  "type": "number"
+                },
+                "adjustment": {
+                  "type": "object",
+                  "required": [
+                    "percent"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "percent": {
+                      "type": "number",
+                      "description": "Negative = discount (e.g., -20 = 20% off)."
+                    }
+                  }
+                },
+                "targets": {
+                  "type": "object",
+                  "required": [
+                    "tier_ids",
+                    "module_ids"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "tier_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "module_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "included_credit_grants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "credit_type_id",
+                      "quantity",
+                      "renewal_behavior",
+                      "period",
+                      "metric_type"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "credit_type_id": {
+                        "type": "string",
+                        "description": "References credit_types[].id."
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "description": "Amount granted. Use -1 for unlimited."
+                      },
+                      "renewal_behavior": {
+                        "type": "string",
+                        "enum": [
+                          "reset",
+                          "accumulate"
+                        ]
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "monthly",
+                          "annual",
+                          "per_billing_period",
+                          "concurrent",
+                          "lifetime",
+                          "one_time"
+                        ],
+                        "description": "How grant renews. concurrent=simultaneous limit."
+                      },
+                      "metric_type": {
+                        "type": "string",
+                        "enum": [
+                          "consumable",
+                          "capacity",
+                          "cumulative",
+                          "one_time"
+                        ],
+                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+                      }
+                    }
+                  }
+                },
+                "eligibility": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "deal_motions",
+                        "regions",
+                        "min_metric"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "deal_motions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "new_logo",
+                              "renewal",
+                              "expansion",
+                              "reprice"
+                            ]
+                          }
+                        },
+                        "regions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "min_metric": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "required": [
+                                "metric",
+                                "min"
+                              ],
+                              "additionalProperties": false,
+                              "properties": {
+                                "metric": {
+                                  "type": "string"
+                                },
+                                "min": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bundles": {
+      "type": "array",
+      "description": "Multi-product bundles.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "product_ids",
+          "adjustment",
+          "included_credit_grants",
+          "eligibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "product_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "adjustment": {
+            "type": "object",
+            "required": [
+              "percent"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "percent": {
+                "type": "number"
+              }
+            }
+          },
+          "included_credit_grants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "credit_type_id",
+                "quantity",
+                "renewal_behavior",
+                "period",
+                "metric_type"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "credit_type_id": {
+                  "type": "string",
+                  "description": "References credit_types[].id."
+                },
+                "quantity": {
+                  "type": "number",
+                  "description": "Amount granted. Use -1 for unlimited."
+                },
+                "renewal_behavior": {
+                  "type": "string",
+                  "enum": [
+                    "reset",
+                    "accumulate"
+                  ]
+                },
+                "period": {
+                  "type": "string",
+                  "enum": [
+                    "monthly",
+                    "annual",
+                    "per_billing_period",
+                    "concurrent",
+                    "lifetime",
+                    "one_time"
+                  ],
+                  "description": "How grant renews. concurrent=simultaneous limit."
+                },
+                "metric_type": {
+                  "type": "string",
+                  "enum": [
+                    "consumable",
+                    "capacity",
+                    "cumulative",
+                    "one_time"
+                  ],
+                  "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+                }
+              }
+            }
+          },
+          "eligibility": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "deal_motions",
+                  "regions",
+                  "min_metric"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "deal_motions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "new_logo",
+                        "renewal",
+                        "expansion",
+                        "reprice"
+                      ]
+                    }
+                  },
+                  "regions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "min_metric": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "metric",
+                          "min"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "min": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "discounts": {
+      "type": "array",
+      "description": "Available discounts.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "scope",
+          "mode",
+          "type",
+          "discretion",
+          "stacking",
+          "eligibility",
+          "targets",
+          "manual",
+          "strategy"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "discretion": {
+            "type": "string",
+            "enum": [
+              "mandatory",
+              "discretionary"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "module",
+              "product",
+              "contract_total",
+              "credits_only"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "percentage",
+              "flat"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "strategy"
+            ]
+          },
+          "stacking": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "stackable",
+                  "exclusive_group"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "stackable": {
+                    "type": "boolean"
+                  },
+                  "exclusive_group": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eligibility": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "deal_motions",
+                  "regions",
+                  "min_metric"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "deal_motions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "new_logo",
+                        "renewal",
+                        "expansion",
+                        "reprice"
+                      ]
+                    }
+                  },
+                  "regions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "min_metric": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "metric",
+                          "min"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "min": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "module_ids",
+                  "product_ids",
+                  "credit_type_ids"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "module_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "product_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "credit_type_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "manual": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "max_value",
+                  "approval_required_over"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "max_value": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "approval_required_over": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "strategy": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "strategy_id",
+                  "caps"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "strategy_id": {
+                    "type": "string"
+                  },
+                  "caps": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "max_percent",
+                          "max_amount",
+                          "approval_required_over_percent",
+                          "approval_required_over_amount"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "max_percent": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "max_amount": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "approval_required_over_percent": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "approval_required_over_amount": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "credit_types": {
+      "type": "array",
+      "description": "Credit/entitlement pool types.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "unit_label",
+          "consumption_rules",
+          "overage_policy"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "unit_label": {
+            "type": "string",
+            "description": "Display label (e.g., 'credits', 'minutes')."
+          },
+          "consumption_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "action",
+                "credits_per_unit",
+                "conditions"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "credits_per_unit": {
+                  "type": "number"
+                },
+                "conditions": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "When this rate applies. Null if always."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "overage_policy": {
+            "type": "string",
+            "enum": [
+              "pay_as_you_go",
+              "hard_cap",
+              "throttle",
+              "contact_sales",
+              "unknown"
+            ],
+            "description": "What happens when this credit type is exhausted."
+          }
+        }
+      }
+    },
+    "credit_packages": {
+      "type": "array",
+      "description": "Purchasable credit blocks.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "credit_type_id",
+          "quantity",
+          "price",
+          "expiration_months",
+          "rollover_policy",
+          "eligibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "credit_type_id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "price": {
+            "type": "object",
+            "required": [
+              "type",
+              "period",
+              "amount",
+              "currency",
+              "unit",
+              "tiers",
+              "breakpoints"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "flat",
+                  "per_unit",
+                  "tiered",
+                  "volume"
+                ],
+                "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+              },
+              "period": {
+                "type": "string",
+                "enum": [
+                  "month",
+                  "quarter",
+                  "year",
+                  "one_time"
+                ]
+              },
+              "amount": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "currency": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "unit": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "What the price is per. Null for flat."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tiers": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "description": "Graduated bands (tiered type).",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "min",
+                        "max",
+                        "value"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": "number"
+                        },
+                        "max": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "breakpoints": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "description": "Volume bands (volume type).",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "min",
+                        "max",
+                        "value"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": "number"
+                        },
+                        "max": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "expiration_months": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rollover_policy": {
+            "type": "string",
+            "enum": [
+              "none",
+              "partial",
+              "full"
+            ]
+          },
+          "eligibility": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "deal_motions",
+                  "regions",
+                  "min_metric"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "deal_motions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "new_logo",
+                        "renewal",
+                        "expansion",
+                        "reprice"
+                      ]
+                    }
+                  },
+                  "regions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "min_metric": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "metric",
+                          "min"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "min": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "discount_strategies": {
+      "type": "array",
+      "description": "Parameterized discount functions.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "output_type",
+          "input_keys",
+          "shape"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "output_type": {
+            "type": "string",
+            "enum": [
+              "percentage",
+              "flat"
+            ]
+          },
+          "input_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shape": {
+            "type": "object",
+            "required": [
+              "type",
+              "step_tiers",
+              "linear_ramp",
+              "piecewise_linear",
+              "lookup_table"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "step_tiers",
+                  "linear_ramp",
+                  "piecewise_linear",
+                  "lookup_table"
+                ]
+              },
+              "step_tiers": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "metric",
+                      "tiers"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "metric": {
+                        "type": "string"
+                      },
+                      "tiers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "min",
+                            "max",
+                            "value"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "min": {
+                              "type": "number"
+                            },
+                            "max": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "linear_ramp": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "metric",
+                      "start_at",
+                      "start_value",
+                      "slope_per_unit",
+                      "max_value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "metric": {
+                        "type": "string"
+                      },
+                      "start_at": {
+                        "type": "number"
+                      },
+                      "start_value": {
+                        "type": "number"
+                      },
+                      "slope_per_unit": {
+                        "type": "number"
+                      },
+                      "max_value": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "piecewise_linear": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "metric",
+                      "points",
+                      "max_value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "metric": {
+                        "type": "string"
+                      },
+                      "points": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "x",
+                            "y"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      },
+                      "max_value": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lookup_table": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "metric",
+                      "table"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "metric": {
+                        "type": "string"
+                      },
+                      "table": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "key",
+                            "value"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "price_books": {
+      "type": "array",
+      "description": "Regional price overrides.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "region",
+          "currency",
+          "fallback_multiplier",
+          "module_prices",
+          "credit_package_prices"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "fallback_multiplier": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "module_prices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "module_id",
+                "price"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "module_id": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "period",
+                    "amount",
+                    "currency",
+                    "unit",
+                    "tiers",
+                    "breakpoints"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "flat",
+                        "per_unit",
+                        "tiered",
+                        "volume"
+                      ],
+                      "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+                    },
+                    "period": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "quarter",
+                        "year",
+                        "one_time"
+                      ]
+                    },
+                    "amount": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currency": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "unit": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "description": "What the price is per. Null for flat."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tiers": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Graduated bands (tiered type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "breakpoints": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Volume bands (volume type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "credit_package_prices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "credit_package_id",
+                "price"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "credit_package_id": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "period",
+                    "amount",
+                    "currency",
+                    "unit",
+                    "tiers",
+                    "breakpoints"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "flat",
+                        "per_unit",
+                        "tiered",
+                        "volume"
+                      ],
+                      "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+                    },
+                    "period": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "quarter",
+                        "year",
+                        "one_time"
+                      ]
+                    },
+                    "amount": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currency": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "unit": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "description": "What the price is per. Null for flat."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tiers": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Graduated bands (tiered type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "breakpoints": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "description": "Volume bands (volume type).",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "min",
+                              "max",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "description": "Deal-motion-specific overrides.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "deal_motion",
+          "label",
+          "overrides"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "deal_motion": {
+            "type": "string",
+            "enum": [
+              "new_logo",
+              "renewal",
+              "expansion",
+              "reprice"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "overrides": {
+            "type": "object",
+            "required": [
+              "module_price_overrides",
+              "credit_package_price_overrides",
+              "included_credit_grants",
+              "discount_eligibility_overrides",
+              "bundle_eligibility_overrides"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "module_price_overrides": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "module_id",
+                    "price"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "module_id": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "period",
+                        "amount",
+                        "currency",
+                        "unit",
+                        "tiers",
+                        "breakpoints"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "flat",
+                            "per_unit",
+                            "tiered",
+                            "volume"
+                          ],
+                          "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+                        },
+                        "period": {
+                          "type": "string",
+                          "enum": [
+                            "month",
+                            "quarter",
+                            "year",
+                            "one_time"
+                          ]
+                        },
+                        "amount": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "currency": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "unit": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "description": "What the price is per. Null for flat."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "tiers": {
+                          "anyOf": [
+                            {
+                              "type": "array",
+                              "description": "Graduated bands (tiered type).",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "min",
+                                  "max",
+                                  "value"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "breakpoints": {
+                          "anyOf": [
+                            {
+                              "type": "array",
+                              "description": "Volume bands (volume type).",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "min",
+                                  "max",
+                                  "value"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "credit_package_price_overrides": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "credit_package_id",
+                    "price"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "credit_package_id": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "period",
+                        "amount",
+                        "currency",
+                        "unit",
+                        "tiers",
+                        "breakpoints"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "flat",
+                            "per_unit",
+                            "tiered",
+                            "volume"
+                          ],
+                          "description": "flat=fixed, per_unit=amount\u00d7qty, tiered=graduated bands, volume=all units at band price."
+                        },
+                        "period": {
+                          "type": "string",
+                          "enum": [
+                            "month",
+                            "quarter",
+                            "year",
+                            "one_time"
+                          ]
+                        },
+                        "amount": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "currency": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "unit": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "description": "What the price is per. Null for flat."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "tiers": {
+                          "anyOf": [
+                            {
+                              "type": "array",
+                              "description": "Graduated bands (tiered type).",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "min",
+                                  "max",
+                                  "value"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "breakpoints": {
+                          "anyOf": [
+                            {
+                              "type": "array",
+                              "description": "Volume bands (volume type).",
+                              "items": {
+                                "type": "object",
+                                "required": [
+                                  "min",
+                                  "max",
+                                  "value"
+                                ],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "min": {
+                                    "type": "number"
+                                  },
+                                  "max": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number"
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "included_credit_grants": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "credit_type_id",
+                    "quantity",
+                    "renewal_behavior",
+                    "period",
+                    "metric_type"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "credit_type_id": {
+                      "type": "string",
+                      "description": "References credit_types[].id."
+                    },
+                    "quantity": {
+                      "type": "number",
+                      "description": "Amount granted. Use -1 for unlimited."
+                    },
+                    "renewal_behavior": {
+                      "type": "string",
+                      "enum": [
+                        "reset",
+                        "accumulate"
+                      ]
+                    },
+                    "period": {
+                      "type": "string",
+                      "enum": [
+                        "monthly",
+                        "annual",
+                        "per_billing_period",
+                        "concurrent",
+                        "lifetime",
+                        "one_time"
+                      ],
+                      "description": "How grant renews. concurrent=simultaneous limit."
+                    },
+                    "metric_type": {
+                      "type": "string",
+                      "enum": [
+                        "consumable",
+                        "capacity",
+                        "cumulative",
+                        "one_time"
+                      ],
+                      "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+                    }
+                  }
+                }
+              },
+              "discount_eligibility_overrides": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "discount_id",
+                    "enabled"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "discount_id": {
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "bundle_eligibility_overrides": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "bundle_id",
+                    "enabled"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "bundle_id": {
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "minimum_commitments": {
+      "type": "array",
+      "description": "Minimum spend requirements.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "scope",
+          "amount",
+          "currency",
+          "targets",
+          "eligibility"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "contract_total",
+              "annual",
+              "credits_only",
+              "product"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "product_ids",
+                  "credit_type_ids"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "product_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "credit_type_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eligibility": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "deal_motions",
+                  "regions",
+                  "min_metric"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "deal_motions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "new_logo",
+                        "renewal",
+                        "expansion",
+                        "reprice"
+                      ]
+                    }
+                  },
+                  "regions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "min_metric": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "metric",
+                          "min"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "min": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "pricing_rules": {
+      "type": "object",
+      "required": [
+        "calculation_order",
+        "discount_application_order",
+        "rounding",
+        "policy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "calculation_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "discount_application_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rounding": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "mode",
+                "currency_minor_units"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "currency_minor_units"
+                  ]
+                },
+                "currency_minor_units": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policy": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "exclusive_group_resolution",
+                "ineligible_selection_handling",
+                "missing_strategy_inputs_handling"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "exclusive_group_resolution": {
+                  "type": "string",
+                  "enum": [
+                    "max_discount",
+                    "first_in_order"
+                  ]
+                },
+                "ineligible_selection_handling": {
+                  "type": "string",
+                  "enum": [
+                    "error",
+                    "drop_with_warning"
+                  ]
+                },
+                "missing_strategy_inputs_handling": {
+                  "type": "string",
+                  "enum": [
+                    "error",
+                    "zero_with_warning"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "business_rules": {
+      "type": "array",
+      "description": "Human/LLM-interpretable business rules.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "rule_type",
+          "description",
+          "applies_to",
+          "enforcement"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rule_type": {
+            "type": "string",
+            "enum": [
+              "minimum_purchase",
+              "maximum_limit",
+              "bundling_requirement",
+              "downgrade_restriction",
+              "upgrade_path",
+              "data_retention",
+              "sla_tier",
+              "geographic_restriction",
+              "eligibility_requirement",
+              "sunset_grandfathering",
+              "fair_use_policy",
+              "refund_policy",
+              "ramp_schedule",
+              "contract_term",
+              "other"
+            ],
+            "description": "Category for programmatic routing."
+          },
+          "description": {
+            "type": "string",
+            "description": "Plain text rule statement. Self-contained and actionable by human or LLM. Include specific numbers, names, conditions."
+          },
+          "applies_to": {
+            "type": "object",
+            "required": [
+              "product_ids",
+              "tier_ids",
+              "module_ids"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "product_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Empty = all."
+              },
+              "tier_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Empty = all."
+              },
+              "module_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Empty = all."
+              }
+            }
+          },
+          "enforcement": {
+            "type": "string",
+            "enum": [
+              "hard_block",
+              "warning",
+              "info"
+            ],
+            "description": "hard_block=prevents config, warning=allows with flag, info=informational."
+          }
+        }
+      }
+    },
+    "module_dependencies": {
+      "type": "array",
+      "description": "Module dependency graph.",
+      "items": {
+        "type": "object",
+        "required": [
+          "dependent_id",
+          "requires_id",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "dependent_id": {
+            "type": "string",
+            "description": "Module/credit_package that has the dependency."
+          },
+          "requires_id": {
+            "type": "string",
+            "description": "Module/tier/product that must be selected."
+          },
+          "description": {
+            "type": "string",
+            "description": "Plain text dependency explanation."
+          }
+        }
+      }
+    },
+    "pricing_relationships": {
+      "type": "array",
+      "description": "Cross-product pricing rules.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "relationship_type",
+          "subject",
+          "related_to",
+          "description"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "relationship_type": {
+            "type": "string",
+            "enum": [
+              "prerequisite",
+              "bundle_discount",
+              "mutual_exclusion",
+              "volume_across_products",
+              "upgrade_path",
+              "migration_path",
+              "credit_sharing",
+              "entitlement_pooling",
+              "other"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "description": "Originating product/tier/module."
+          },
+          "related_to": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Target. Null if unilateral."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Plain text rule description."
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PricingModel",
+  "description": "Pricing Model Schema (PMS v1.4) \u2014 a structured, computable representation of a vendor's pricing. Implementations may add top-level fields without breaking conformance with the standard."
+}
