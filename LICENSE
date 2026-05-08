@@ -1,0 +1,50 @@
+The Value Project — pricing-models
+Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)
+
+This repository contains two types of content under different licenses.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+JSON SCHEMAS  ·  schemas/
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Files:  schemas/pricing_model.json
+          schemas/deal_configuration.json
+          schemas/invoice_statement.json
+
+  License: Apache License, Version 2.0
+  SPDX:    Apache-2.0
+  Full text: LICENSE-CODE
+  URL:     https://www.apache.org/licenses/LICENSE-2.0
+
+  You may use, modify, and distribute these schema files in your own
+  products and services, including commercially, subject to the terms
+  of the Apache 2.0 License.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SPECIFICATIONS, DOCUMENTATION, AND EXAMPLES  ·  spec/  examples/  README.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Files:  spec/pricing-meta-model-spec.md
+          spec/pricing-page-spec.md
+          spec/pricing-model-llm-reference.md
+          examples/
+          README.md  ·  CONTRIBUTING.md  ·  CHANGELOG.md
+
+  License: Creative Commons Attribution 4.0 International
+  SPDX:    CC-BY-4.0
+  Full text: LICENSE-DOCS
+  URL:     https://creativecommons.org/licenses/by/4.0/
+
+  You are free to share and adapt this material for any purpose, including
+  commercially, as long as you give appropriate credit to The Value Project.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ATTRIBUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  When attributing this work, please use:
+
+    "PricingModel, DealConfiguration, and InvoiceStatement schemas by
+     The Value Project (https://github.com/The-Value-Project/pricing-models),
+     an initiative by ValueIQ (https://valueiq.ai).
+     Schemas: Apache-2.0. Specifications: CC BY 4.0."
