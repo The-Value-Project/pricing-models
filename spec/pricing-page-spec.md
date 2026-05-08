@@ -1,3 +1,16 @@
+---
+license: "CC-BY-4.0"
+license_url: "https://creativecommons.org/licenses/by/4.0/"
+license_full_text: "LICENSE-DOCS"
+copyright: "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)"
+version: "1.0.0"
+repo: "https://github.com/The-Value-Project/pricing-models"
+related_schema: "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json"
+related_llm_reference: "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-model-llm-reference.md"
+related_value_page_spec: "https://github.com/The-Value-Project/value-models/blob/main/spec/value-page-spec.md"
+part_of: "The Value Project — https://github.com/The-Value-Project"
+---
+
 # Pricing Page Specification
 
 **The Value Project — pricing-models**
@@ -299,3 +312,6 @@ A pricing page conforms to this specification if:
 **Multiple products:** If a vendor has multiple products with separate pricing models, publish a separate pricing page per product.
 
 **Discoverability:** Link to your pricing page from your main pricing page and sitemap. Consider adding a `<link rel="alternate" type="text/markdown">` tag in your HTML pricing page pointing to the `.md` version.
+
+---
+*License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Copyright 2026 The Value Project (an initiative by [ValueIQ](https://valueiq.ai)) · Part of [The Value Project](https://github.com/The-Value-Project/pricing-models)*
