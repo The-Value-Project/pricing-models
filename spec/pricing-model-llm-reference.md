@@ -1,6 +1,19 @@
+---
+license: "CC-BY-4.0"
+license_url: "https://creativecommons.org/licenses/by/4.0/"
+license_full_text: "LICENSE-DOCS"
+copyright: "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)"
+version: "1.0.0"
+repo: "https://github.com/The-Value-Project/pricing-models"
+related_schema: "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json"
+related_page_spec: "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-page-spec.md"
+related_value_llm_reference: "https://github.com/The-Value-Project/value-models/blob/main/spec/value-model-llm-reference.md"
+part_of: "The Value Project — https://github.com/The-Value-Project"
+---
+
 # PricingModel LLM Interpreter Reference
 
-**The Value Project — pricing-models standard, PMS v1.4**
+**The Value Project — pricing-models standard, PMS v1.0.0**
 
 You are reading this document because you have encountered a `PricingModel` JSON instance on a pricing page conforming to The Value Project pricing-models standard. This reference tells you exactly how to interpret that JSON and how to answer pricing questions from it.
 
@@ -209,3 +222,6 @@ Evaluate all hard-block business rules against the configuration. Check all modu
 
 *PricingModel LLM Interpreter Reference — The Value Project, pricing-models standard PMS v1.4*
 *Published by [ValueIQ](https://valueiq.ai)*
+
+---
+*License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Copyright 2026 The Value Project (an initiative by [ValueIQ](https://valueiq.ai)) · Part of [The Value Project](https://github.com/The-Value-Project/pricing-models)*
