@@ -1,6 +1,22 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/deal_configuration.json",
   "title": "DealConfiguration",
-  "description": "Customer-specific deal referencing a PricingModel instance. Created by a salesperson or LLM. Implementations may extend the top-level object (e.g. with config_notes, approval metadata, or CRM references) without breaking conformance with the standard.",
+  "description": "Customer-specific deal referencing a PricingModel instance. Created by a salesperson or LLM. Implementations may extend the top-level object (e.g. with config_notes, approval metadata, or CRM references) without breaking conformance with the standard. Part of The Value Project open standard. Schema license: Apache-2.0 (https://www.apache.org/licenses/LICENSE-2.0). Copyright 2026 The Value Project (https://github.com/The-Value-Project/pricing-models).",
+  "x-license": {
+    "spdx": "Apache-2.0",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "copyright": "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)",
+    "full-text": "LICENSE-CODE",
+    "repo": "https://github.com/The-Value-Project/pricing-models"
+  },
+  "x-version": "1.0.0",
+  "x-part-of": "The Value Project — https://github.com/The-Value-Project",
+  "x-related-schemas": {
+    "PricingModel": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json",
+    "InvoiceStatement": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/invoice_statement.json",
+    "CustomerVariables": "https://github.com/The-Value-Project/value-models/blob/main/schemas/customer_variables.json"
+  },
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -370,6 +386,5 @@
         "type": "string"
       }
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }
