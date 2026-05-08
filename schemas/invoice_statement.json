@@ -1,6 +1,21 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/invoice_statement.json",
   "title": "InvoiceStatement",
-  "description": "Computed pricing output from a PricingModel and DealConfiguration. Implementations may extend the top-level object (e.g. with computation_notes, audit trail, or rendering hints) without breaking conformance with the standard.",
+  "description": "Computed pricing output from a PricingModel and DealConfiguration. Implementations may extend the top-level object (e.g. with computation_notes, audit trail, or rendering hints) without breaking conformance with the standard. Part of The Value Project open standard. Schema license: Apache-2.0 (https://www.apache.org/licenses/LICENSE-2.0). Copyright 2026 The Value Project (https://github.com/The-Value-Project/pricing-models).",
+  "x-license": {
+    "spdx": "Apache-2.0",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "copyright": "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)",
+    "full-text": "LICENSE-CODE",
+    "repo": "https://github.com/The-Value-Project/pricing-models"
+  },
+  "x-version": "1.0.0",
+  "x-part-of": "The Value Project — https://github.com/The-Value-Project",
+  "x-related-schemas": {
+    "PricingModel": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json",
+    "DealConfiguration": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/deal_configuration.json"
+  },
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -353,6 +368,5 @@
         "type": "string"
       }
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  }
 }
