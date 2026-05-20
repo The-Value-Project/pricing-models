@@ -14,6 +14,50 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Version
 
 ---
 
+## [2.0.0] — 2026-05-20
+
+### Changed — `spec/pricing-page-spec.md` v2.0.0
+
+License: CC BY 4.0
+
+Breaking change: the human-readable narrative structure has been redesigned. Pricing pages conforming to v1.0.0 do not conform to v2.0.0.
+
+**Narrative restructure**
+
+- Replaced the flat section sequence with a three-level structure: model overview → per-product sections → model-level sections. Each product in `products[]` now has its own named section (`## [Product Label]`) containing Tiers, Plans, Add-ons, and Notes subsections.
+- Added explicit narrative design principles stating the three intended readers (buyer, reviewer, LLM) and requiring that the narrative summarise and orient rather than duplicate the JSON.
+- Added cross-referencing guidance: shared credit types, discounts, and business rules are described once at the model level and noted as shared in per-product sections rather than repeated.
+
+**New and changed sections**
+
+- Added `§4a Model Overview` — one paragraph orienting the reader to the full model before per-product sections.
+- Added `§4b Tiers` (per product) — replaces the v1 flat Modules table as the primary human-readable reference. A table with one row per tier and one column per credit type present in any tier's `included_credit_grants`, surfacing entitlement quantities and metric types (consumable, capacity, cumulative, one-time) inline. Overage policy included per tier.
+- Added `§4c Plans` (per product, conditional) — prose-preferred for simple annual/monthly pairs; table for four or more structurally distinct plans.
+- Added `§4d Add-ons` (per product, conditional) — compact table of modules not included in any tier, with dependency requirements resolved to labels. Replaces the full Modules table for non-base modules.
+- Added `§4e Notes` (per product, conditional) — short paragraph for product-specific context not captured in structured sections (trial availability, upgrade flexibility, encoding ambiguities).
+- Added `§4g Discount Strategies` (model-level, conditional) — prose section describing each strategy's input metric and computation shape. Absent from v1.
+- Added `§4i Pricing Relationships` (model-level, conditional) — prose or table of relationships from `pricing_relationships[]`. Absent from v1.
+- Revised `§4f Discounts` — added Stackable and Applies To columns; Mode column now distinguishes manual from strategy-driven with strategy label resolved.
+- Revised `§4e Credit Types` — prose now explicitly states `metric_type` in plain English for each credit type; entitlement quantities removed (covered in §4b Tiers).
+- Removed standalone Modules table — module detail is now split between the Tiers table (base modules via entitlements) and the Add-ons subsection.
+- Removed standalone Module Dependencies section — dependency information folded into the Add-ons subsection (§4d) where it is buyer-relevant.
+- Removed standalone Minimum Commitments, Variants, and Price Books sections from the narrative — these remain present and complete in the JSON block and are interpretable via the LLM reference. Added a Section Reference table documenting which arrays are narrative-surfaced and which are JSON-only.
+
+**JSON block requirements tightened**
+
+- JSON block must be the unwrapped model object: top-level keys are `products`, `bundles`, etc. Wrapper objects (e.g. `{"version": "...", "pricing_model": {...}}`) must be unwrapped before emission.
+- JSON block must be sanitised: only fields defined in the schema's `properties` allowlists at every level. Extra fields are silently dropped.
+- Both requirements were absent from v1.
+
+**Other**
+
+- Added adjustment percentage display rule: render to maximum 2 decimal places, trailing zeros removed, sign always included.
+- Added multi-product front matter guidance: `product` field set to "Multiple" when `products[]` contains more than one entry.
+- Added Section Reference table mapping each narrative section to its source JSON field(s) and always/conditional status.
+- Added Changes from v1.0.0 table.
+
+---
+
 ## [1.0.0] — 2026-05-07
 
 ### Added — Repository structure
