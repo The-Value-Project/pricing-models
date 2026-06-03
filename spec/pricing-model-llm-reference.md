@@ -185,6 +185,75 @@ Apply phases in this sequence:
 9. **Assemble** — compute subtotals, net total, annualized total, TCV
 
 ---
+## Exception Handling
+
+This section specifies the required behaviour when inputs are missing, malformed, or out of range. An interpreter that does not implement these rules may silently produce incorrect prices or configurations. That is worse than failing loudly.
+
+---
+
+### Missing Quantity Inputs
+
+A `per_unit`, `tiered`, or `volume` price requires a quantity to be computable. If no quantity is supplied by the deal configuration:
+
+- **Do not substitute zero.** A quantity of zero is a valid input with a defined price; it is not the same as an absent quantity.
+- **Treat the missing quantity as a validation failure.** The configuration is incomplete, not invalid. Return an error identifying which module ID requires a quantity and halt price computation for that module.
+- If all other modules are computable, subtotals for those modules may be returned alongside the error, clearly marked as partial.
+
+A `flat` price requires no quantity. Do not raise a missing-quantity error for `flat`-priced modules.
+
+---
+
+### Out-of-Range and Malformed Strategy Inputs
+
+Each `discount_strategy` shape defines a function over an input metric. When the input metric is absent, negative, non-numeric, or outside the defined domain:
+
+| Shape | Out-of-range behaviour |
+|---|---|
+| `step_tiers` | If the input falls below the lowest bracket's minimum, return zero discount. If the input exceeds the highest bracket's maximum, apply the highest bracket's value. If the input is null or non-numeric, return an error — do not apply any discount. |
+| `linear_ramp` | If the input is below `start_at`, return zero discount. Cap applies at `max_value` as specified. If the input is null or non-numeric, return an error. |
+| `piecewise_linear` | If the input is below the lowest declared point, return zero discount. If the input exceeds the highest declared point, return the value at that point (no extrapolation). If the input is null or non-numeric, return an error. |
+| `lookup_table` | If the key is not found, return an error identifying the unmatched key — do not silently return zero. |
+
+In all error cases, the discount is not applied and the error is surfaced in the response. A strategy error does not invalidate the entire configuration; it makes the affected discount indeterminate.
+
+---
+
+### Tiered and Volume Band Matching
+
+For `tiered` and `volume` price types, the `tiers` array must cover the input quantity without gaps. When evaluating:
+
+- **No matching band:** If a quantity falls below the minimum of the first band, this is a malformed price definition. Return an error — do not assume a price of zero.
+- **Null `max` on the final band:** Treat as unbounded. Any quantity at or above that band's `min` matches.
+- **Gap between bands:** If a quantity falls in a gap between two bands (i.e. above one band's `max` but below the next band's `min`), this is a malformed price definition. Return an error.
+
+These are model authoring errors, not deal configuration errors. Report them as such.
+
+---
+
+### Credit Grant Summation with Unlimited Grants
+
+When summing `included_credit_grants` for the same `credit_type_id` across tier, plan, module, and bundle:
+
+- If **any** applicable grant has `quantity: -1` (unlimited), the combined grant quantity is unlimited regardless of other grant values. Do not sum a finite quantity with -1.
+- If **all** applicable grants have finite quantities, sum them as specified.
+- Grants with different `period` values are not summed — they are tracked as separate pools for that credit type.
+
+---
+
+### Validation Failure vs. Computation Error
+
+These are distinct states and must be reported distinctly:
+
+| State | Meaning | Response |
+|---|---|---|
+| **Validation failure** | The configuration violates a hard-block rule or has a missing required input | No price computed. Report which rule or input caused the failure. |
+| **Computation error** | A price definition is malformed (band gap, missing strategy key) | Report the model authoring error. Partial results for unaffected modules may be returned, clearly marked. |
+| **Warning** | A warning-level business rule is triggered | Price is computed. Warning is surfaced alongside the result. |
+| **Indeterminate discount** | A strategy input is null or unmatched | Price is computed without that discount. The indeterminate discount is surfaced in the response. |
+
+Never silently substitute a default value to avoid surfacing an error. Silent substitution produces prices that appear valid but are wrong.
+
+---
 
 ## Answering Common Questions
 
