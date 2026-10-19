@@ -20,6 +20,11 @@
   "x-spec": "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-meta-model-spec.md",
   "type": "object",
   "required": [
+    "schema_version",
+    "model_id",
+    "vendor_name",
+    "effective_date",
+    "currency",
     "products",
     "bundles",
     "discounts",
@@ -32,10 +37,48 @@
     "pricing_rules",
     "business_rules",
     "module_dependencies",
-    "pricing_relationships"
+    "pricing_relationships",
+    "comparison_grid",
+    "conformance_profile"
   ],
   "additionalProperties": true,
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "2.0.0",
+      "description": "Version of this schema that the document conforms to."
+    },
+    "model_id": {
+      "type": "string",
+      "description": "Stable unique identifier of this model. DealConfiguration.model_reference.model_id and InvoiceStatement.model_id refer to it."
+    },
+    "vendor_name": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Name of the vendor that publishes this pricing."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effective_date": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "ISO 8601 date (YYYY-MM-DD) from which this model applies."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 base currency of the model. A price whose currency is null uses this currency."
+    },
     "products": {
       "type": "array",
       "description": "Vendor's product catalog.",
@@ -46,7 +89,8 @@
           "label",
           "modules",
           "tiers",
-          "commitment_plans"
+          "commitment_plans",
+          "position"
         ],
         "additionalProperties": false,
         "properties": {
@@ -69,7 +113,8 @@
                 "price",
                 "included_credit_grants",
                 "eligibility",
-                "features"
+                "features",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
@@ -101,6 +146,9 @@
                     "type": "string"
                   },
                   "description": "Human-readable features provided by this module."
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
                 }
               }
             }
@@ -116,7 +164,8 @@
                 "included_modules",
                 "included_credit_grants",
                 "overage_policy",
-                "features"
+                "features",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
@@ -156,6 +205,9 @@
                     "type": "string"
                   },
                   "description": "Tier-level features beyond module features."
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
                 }
               }
             }
@@ -171,8 +223,10 @@
                 "commitment_months",
                 "adjustment",
                 "targets",
+                "default_for_tier_ids",
                 "included_credit_grants",
-                "eligibility"
+                "eligibility",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
@@ -183,7 +237,15 @@
                   "type": "string"
                 },
                 "commitment_months": {
-                  "type": "number"
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Minimum commitment in months. Null if the commitment is not a clean number of months, or if there is no minimum term. Never guessed from a label such as \"Annual\"."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "adjustment": {
                   "type": "object",
@@ -228,9 +290,22 @@
                 },
                 "eligibility": {
                   "$ref": "#/$defs/eligibility"
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
+                },
+                "default_for_tier_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Ids of this product's tiers for which this commitment plan is the preselected option. Empty if none. A tier appears in at most one commitment plan of a product."
                 }
               }
             }
+          },
+          "position": {
+            "$ref": "#/$defs/position"
           }
         }
       }
@@ -540,7 +615,8 @@
           "label",
           "unit_label",
           "consumption_rules",
-          "overage_policy"
+          "overage_policy",
+          "overage_price"
         ],
         "additionalProperties": false,
         "properties": {
@@ -595,8 +671,47 @@
               "unknown"
             ],
             "description": "What happens when this credit type is exhausted."
+          },
+          "overage_price": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/price"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Price per unit of overage for this credit type. Required (non-null) when overage_policy is pay_as_you_go, and null otherwise. Its credit_type_id is null: the unit is this credit type."
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "overage_policy": {
+                  "const": "pay_as_you_go"
+                }
+              },
+              "required": [
+                "overage_policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "overage_price": {
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "overage_price": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "credit_packages": {
@@ -612,6 +727,7 @@
           "price",
           "expiration_months",
           "rollover_policy",
+          "rollover_percent",
           "eligibility"
         ],
         "additionalProperties": false,
@@ -646,13 +762,55 @@
             "enum": [
               "none",
               "partial",
-              "full"
+              "full",
+              "unknown"
             ]
           },
           "eligibility": {
             "$ref": "#/$defs/eligibility"
+          },
+          "rollover_percent": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Percentage of unused units that roll over. Required (non-null) when rollover_policy is partial, and null otherwise."
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "rollover_policy": {
+                  "const": "partial"
+                }
+              },
+              "required": [
+                "rollover_policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "rollover_percent": {
+                  "type": "number"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "rollover_percent": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "discount_strategies": {
@@ -686,7 +844,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Deprecated in 2.0.0. Each strategy shape already names its input in shape.*.metric, which is authoritative. A second list can disagree with it, and nothing says which one wins. Engines read shape.*.metric and ignore input_keys. Validators warn if the two disagree. Earliest removal: two MINOR releases after 2.0.0."
           },
           "shape": {
             "type": "object",
@@ -1181,13 +1340,15 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Deprecated in 2.0.0. The order of phases is fixed by the specification, so a model-supplied order can only contradict it, and its vocabulary is defined nowhere. Engines ignore it. Validators warn when it differs from the phase list. Earliest removal: two MINOR releases after 2.0.0."
         },
         "discount_application_order": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Ids of discounts, in the order they are applied. Every discount that can apply to a deal MUST appear, otherwise the model is invalid."
         },
         "rounding": {
           "anyOf": [
@@ -1195,6 +1356,7 @@
               "type": "object",
               "required": [
                 "mode",
+                "method",
                 "currency_minor_units"
               ],
               "additionalProperties": false,
@@ -1209,12 +1371,20 @@
                 "currency_minor_units": {
                   "anyOf": [
                     {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Number of decimal places. Applied to line totals and adjustment amounts only."
                     },
                     {
                       "type": "null"
                     }
                   ]
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "half_away_from_zero"
+                  ],
+                  "description": "How a tie rounds. Only half_away_from_zero is defined in 2.0.0."
                 }
               }
             },
@@ -1429,6 +1599,269 @@
           }
         }
       }
+    },
+    "comparison_grid": {
+      "type": "array",
+      "description": "A grid of features, limits and comparison items (rows) across the tiers of a product. Descriptive only: calculation never reads it, so it is never a second source of price truth. Empty when unused.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "product_id",
+          "label",
+          "section",
+          "position",
+          "cells"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string",
+            "description": "References products[].id."
+          },
+          "label": {
+            "type": "string"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Heading the row is grouped under."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "position": {
+            "$ref": "#/$defs/position"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "tier_id",
+                "state",
+                "value",
+                "text",
+                "position"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "tier_id": {
+                  "type": "string",
+                  "description": "References products[].tiers[].id of the row's product."
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "structured",
+                    "free_text",
+                    "not_available"
+                  ],
+                  "description": "structured: value holds the content. free_text: only prose is available, in text. not_available: this tier does not have it."
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "text": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "structured"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "not": {
+                          "type": "null"
+                        }
+                      },
+                      "text": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "free_text"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      },
+                      "text": {
+                        "not": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "not_available"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      },
+                      "text": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "conformance_profile": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "implementation",
+            "persists",
+            "derives",
+            "discards"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "implementation": {
+              "type": "string",
+              "description": "Name of the implementation that declares this profile."
+            },
+            "persists": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation stores and returns unchanged."
+            },
+            "derives": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation computes from other data instead of storing."
+            },
+            "discards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation drops. It must say so here and may not drop a populated region silently."
+            }
+          },
+          "description": "What an implementation keeps, derives and drops. Null if the implementation does not declare one."
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "$defs": {
@@ -1440,6 +1873,7 @@
         "amount",
         "currency",
         "unit",
+        "credit_type_id",
         "tiers",
         "breakpoints"
       ],
@@ -1488,7 +1922,7 @@
           "anyOf": [
             {
               "type": "string",
-              "description": "What the price is per. Null for flat."
+              "description": "Display label only: what the price is per. Null for flat. Calculation uses credit_type_id, not this text."
             },
             {
               "type": "null"
@@ -1570,8 +2004,112 @@
               "type": "null"
             }
           ]
+        },
+        "credit_type_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "References credit_types[].id. The quantity of this credit type is the quantity the price applies to. Required (non-null) for per_unit, tiered and volume module prices; null for flat prices and for credit-package prices."
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "tiered"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "array"
+              },
+              "breakpoints": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "volume"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "breakpoints": {
+                "type": "array"
+              },
+              "tiers": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "flat"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "null"
+              },
+              "breakpoints": {
+                "type": "null"
+              },
+              "credit_type_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "per_unit"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "null"
+              },
+              "breakpoints": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     },
     "credit_grant": {
       "type": "object",
@@ -1596,8 +2134,10 @@
           "type": "string",
           "enum": [
             "reset",
-            "accumulate"
-          ]
+            "accumulate",
+            "unknown"
+          ],
+          "description": "reset or accumulate. unknown means the source does not say; an engine reports an indeterminate entitlement and never guesses."
         },
         "period": {
           "type": "string",
@@ -1607,7 +2147,8 @@
             "per_billing_period",
             "concurrent",
             "lifetime",
-            "one_time"
+            "one_time",
+            "unknown"
           ],
           "description": "How grant renews. concurrent=simultaneous limit."
         },
@@ -1617,7 +2158,8 @@
             "consumable",
             "capacity",
             "cumulative",
-            "one_time"
+            "one_time",
+            "unknown"
           ],
           "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
         }
@@ -1681,6 +2223,18 @@
           "type": "null"
         }
       ]
+    },
+    "position": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Display order among siblings. Dense, zero-based and unique within the immediate parent. Null means array order. For ordering only, never an identifier or a diff key."
     }
   }
 }
