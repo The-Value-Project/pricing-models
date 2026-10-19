@@ -79,8 +79,11 @@
       ]
     },
     "currency": {
-      "type": "string",
-      "pattern": "^[A-Z]{3}$",
+      "allOf": [
+        {
+          "$ref": "#/$defs/currency_code"
+        }
+      ],
       "description": "ISO 4217 base currency of the model. A price whose currency is null uses this currency."
     },
     "products": {
@@ -1083,7 +1086,12 @@
             "type": "string"
           },
           "currency": {
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/$defs/currency_code"
+              }
+            ],
+            "description": "Currency of every price in this price book. A price book whose currency differs from the model currency is the only way a calculation ends up in a different currency."
           },
           "fallback_multiplier": {
             "anyOf": [
@@ -1297,7 +1305,12 @@
             "type": "number"
           },
           "currency": {
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/$defs/currency_code"
+              }
+            ],
+            "description": "Must equal the currency of the invoice."
           },
           "targets": {
             "anyOf": [
@@ -1990,12 +2003,13 @@
         "currency": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/currency_code"
             },
             {
               "type": "null"
             }
-          ]
+          ],
+          "description": "ISO 4217 currency of the amount. Null means the model currency."
         },
         "unit": {
           "anyOf": [
@@ -2590,6 +2604,11 @@
           }
         ]
       }
+    },
+    "currency_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code."
     }
   }
 }
