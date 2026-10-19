@@ -123,7 +123,7 @@ Every outcome is exactly one of these:
 | **Validation failure** | An input is invalid or incomplete: a hard-block rule, a missing quantity, an unresolved id. | No `InvoiceStatement`. An error result that names a `code` from Annex A, the path of the offending value, and every failure found. Its shape is outside this standard. An engine MAY include partial results. |
 | **Indeterminate** | The standard cannot express something the model contains, or an input is unknown. | A statement with a warning from Annex B, and with the affected amount absent or null as that section says. |
 
-A calculation never ends partway as a statement. It is a statement, or it is a validation failure.
+A calculation never ends partway as a statement. It is a statement, or it is a validation failure. [DN-24]
 
 ### 3.7 Currency
 
@@ -143,7 +143,7 @@ The model's `currency` is the base currency. A price whose `currency` is null us
 
 `contract_term_months` is the term. A recurring contract charge is the amount × (`contract_term_months` ÷ months per price period). If that quotient is not a whole number, that is the validation failure `term_not_multiple_of_period`. There is no implicit proration.
 
-A **billing period** of a price is one of those `N = contract_term_months ÷ months` periods, counted from 1.
+A **billing period** of a price is one of those `N = contract_term_months ÷ months` periods, counted from 1. [DN-21]
 
 ---
 
@@ -375,7 +375,7 @@ A grant whose `renewal_behavior`, `period` or `metric_type` is `unknown`, or a p
 | `credits_only` | The credit-package charges for the credit types in `targets.credit_type_ids` (all if empty). |
 | `contract_total` | Every charge: module charges, credit packages and overage. One-time fees are excluded unless `targets.module_ids` lists their module. |
 
-A `percentage` discount multiplies each charge in its base by (1 − value ÷ 100). A `flat` discount subtracts its value **once per contract** from the base, spread over the charges in proportion to their running amounts. A flat discount larger than its base is limited to the base, with a `discount_exceeds_base` warning. Each discount is reported as one adjustment.
+A `percentage` discount multiplies each charge in its base by (1 − value ÷ 100). A `flat` discount subtracts its value **once per contract** from the base, spread over the charges in proportion to their running amounts. A flat discount larger than its base is limited to the base, with a `discount_exceeds_base` warning. Each discount is reported as one adjustment. [DN-22]
 
 **Negotiated discounts and caps.** After the model discounts, the `discount_percentage`, `discount_amount` and `capped` overrides for modules and credit packages apply, in array order, to the running amount of their target. `capped` limits the target's running amount to `override_value`. A `discount_amount` is a flat amount, once per contract. An override is not discounted again.
 
@@ -428,7 +428,7 @@ For each credit type that has a pool or a billed quantity, `entitlement_summary`
 | `source_fields` | The price object used (`model#` pointer to the price in the model, or to the variant or price-book price that replaced it), then the quantity entry (`config#` pointer). A `flat` price has no quantity entry. |
 | `quantity`, `unit`, `unit_price`, `graduated_detail` | Informational. `quantity` is the first-period quantity. `graduated_detail` shows the first billing period. |
 
-A `source_fields` entry is `model#` or `config#` followed by an RFC 6901 JSON Pointer into that document as received. Because a pointer holds array positions, it is valid only against the exact documents it was made from. Minimum true-ups appear as adjustments. The line category `minimum_commitment_true_up` is not used.
+A `source_fields` entry is `model#` or `config#` followed by an RFC 6901 JSON Pointer into that document as received. [DN-20] Because a pointer holds array positions, it is valid only against the exact documents it was made from. Minimum true-ups appear as adjustments. The line category `minimum_commitment_true_up` is not used.
 
 ### 9.3 Adjustments
 
@@ -529,29 +529,34 @@ The reference rules are in `schemas/pricing_model.json`, in `$defs/referential_r
 
 ## Annex D. Drafting notes
 
-These are the places where this specification states a rule the register of decisions did not settle, or chooses between readings. Each is open to change before 2.0.0.
+These are the places where this specification states a rule the register of decisions did not settle, or chooses between readings. Each is open to change before 2.0.0. The last column says whether the point was raised before the specification was written.
 
-| # | Where | What was drafted |
-|---|---|---|
-| DN-1 | 2.4 | `period_type` other than `contract_total` reports period 1, with once-per-contract amounts in period 1. Only `contract_total` is required. |
-| DN-2 | 2.5 | Engines MUST use exact decimal arithmetic. Implied by "to the minor unit". |
-| DN-3 | 3.3 | A module is charged through its tier when the tier lists it or it is required. Add-ons are charged through no tier. |
-| DN-4 | 4.2 | `period_index` counts contract years, not billing periods. A price's billing period uses the contract year in which it starts. |
-| DN-5 | 4.6 | The derived metrics are `contract_term_months` and `gross_annual_recurring`. A credit-type metric is the contract-year-1 quantity summed over selections. |
-| DN-6 | 4.7 | The region code set and the `EU` and `EEA` groupings. Country beats grouping. |
-| DN-7 | 7.1 | Eligibility: where each restriction applies, and how selected-but-ineligible objects are handled. |
-| DN-8 | 7.2 | A variant's `enabled: true` overrides the object's own eligibility. |
-| DN-9 | 7.4 | A bundle that is selected but not fully matched follows `ineligible_selection_handling`. Several bundles compound in `bundle_selections` order. |
-| DN-10 | 7.4 | `fixed_price`, `custom_unit_price`, `waived` and `capped` semantics, the valid target and type table, and overage-price overrides. |
-| DN-11 | 7.5 | A `flat` credit-package price is not multiplied by the number of packages. |
-| DN-12 | 7.6 | Package units form the pool (`credit_type_id`, `one_time`, `consumable`). Rollover and expiration are informational at quote time. |
-| DN-13 | 7.6 | Overage is evaluated per pool per contract year, and the credit type's overage is the largest over its pools. Quantities are read in the pool's own period. |
-| DN-14 | 7.6 | Tier policies that disagree for one credit type are a validation failure. |
-| DN-15 | 7.6 | `accumulate` and `lifetime` carry-forward means the pool applies across the whole contract. |
-| DN-16 | 7.8 | True-ups count toward the annual basis and the contract total as recurring amounts. |
-| DN-17 | 8 | What `granted`, `committed_or_used`, `overage` mean when a credit type has several pools. |
-| DN-18 | 9.3 | The mapping from causes to `adjustment_type`, and the `applies_to` and `source` formats. Manual model discounts use `other`. |
-| DN-19 | 9.4 | Total contract value is the net of the whole contract, after adjustments. |
+| # | Where | What was drafted | Raised before? |
+|---|---|---|---|
+| DN-1 | 2.4 | `period_type` other than `contract_total` reports period 1, with once-per-contract amounts in period 1. Only `contract_total` is required. | The period-1 rule was a loose end (approved). The rest is new. |
+| DN-2 | 2.5 | Engines MUST use exact decimal arithmetic. Implied by "to the minor unit". | No |
+| DN-3 | 3.3 | A module is charged through its tier when the tier lists it or it is required. Add-ons are charged through no tier. | No |
+| DN-4 | 4.2 | `period_index` counts contract years, not billing periods. A price's billing period uses the contract year in which it starts. | No |
+| DN-5 | 4.6 | The derived metrics are `contract_term_months` and `gross_annual_recurring`. A credit-type metric is the contract-year-1 quantity summed over selections. | Yes: the register said the list was "still to be defined". |
+| DN-6 | 4.7 | The region code set and the `EU` and `EEA` groupings. Country beats grouping. | Partly: the register said "documented groupings" without a list. |
+| DN-7 | 7.1 | Eligibility: where each restriction applies, and how selected-but-ineligible objects are handled. | No |
+| DN-8 | 7.2 | A variant's `enabled: true` overrides the object's own eligibility. | No |
+| DN-9 | 7.4 | A bundle that is selected but not fully matched follows `ineligible_selection_handling`. Several bundles compound in `bundle_selections` order. | No |
+| DN-10 | 7.4 | `fixed_price`, `custom_unit_price`, `waived` and `capped` semantics, the valid target and type table, and overage-price overrides. | Partly: the overage-price override was flagged when the schemas were drafted. |
+| DN-11 | 7.5 | A `flat` credit-package price is not multiplied by the number of packages. | No |
+| DN-12 | 7.6 | Package units form the pool (`credit_type_id`, `one_time`, `consumable`). Rollover and expiration are informational at quote time. | Partly: the decision said packages join the pool. |
+| DN-13 | 7.6 | Overage is evaluated per pool per contract year, and the credit type's overage is the largest over its pools. Quantities are read in the pool's own period. | No |
+| DN-14 | 7.6 | A tier's policy applies to the credit types its selection grants. Tier policies that disagree for one credit type are a validation failure. | No |
+| DN-15 | 7.6 | `accumulate` and `lifetime` carry-forward means the pool applies across the whole contract. | Partly: the decision said carry-forward is quote-time only. |
+| DN-16 | 7.8 | True-ups count toward the annual basis and the contract total as recurring amounts. | The scope rule was a loose end (approved). The annual-basis part is new. |
+| DN-17 | 8 | What `granted`, `committed_or_used`, `overage` and `overage_cost` mean when a credit type has several pools. | No |
+| DN-18 | 9.3 | The mapping from causes to `adjustment_type`, and the `applies_to` and `source` formats. Manual model discounts use `other`. | No |
+| DN-19 | 9.4 | Total contract value is the net of the whole contract, after adjustments. | No: only the treatment of one-time fees was raised. |
+| DN-20 | 9.2 | `source_fields` entries are `model#` or `config#` plus an RFC 6901 pointer, and which pointers a line lists. | Yes, for the prefix, when the schemas were drafted. The list of pointers is new. |
+| DN-21 | 3.8 | The three period vocabularies are reconciled by a table of equivalents. The decision said "aliases plus deprecation", and the schemas have neither. | Yes: reported as not done when the schemas were drafted. |
+| DN-22 | 7.7 | A flat discount, and each whole-deal override, is spread over its base in proportion to running amounts. A flat discount above its base is limited, with a `discount_exceeds_base` warning. | No |
+| DN-23 | Annexes A, B | The names of every validation code and warning type. The decisions fixed the behavior for most, and named a few warnings (`estimated_quantity`, `unpriced_item`, `approval_required`, `indeterminate_entitlement`, `unevaluated_rule`). Codes and warnings such as `ambiguous_price_book`, `conflicting_overage_policy`, `mutual_exclusion`, `rule_warning`, `overage_not_priced` and `ineligible_selection` are new. | No |
+| DN-24 | 3.6 | A validation failure returns no `InvoiceStatement`. The 1.x LLM reference let an engine return partial results alongside an error. Here partial results are optional and outside the standard. | No |
 
 ## Annex E. Reverse-solve levers (informative)
 

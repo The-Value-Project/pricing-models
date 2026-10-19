@@ -266,7 +266,7 @@ pricing-models/
 ├── spec/
 │   ├── pricing-calculation-spec.md        Calculation specification v2.0.0 draft (CC BY 4.0)
 │   ├── migration-2.0.0.md                 Migration guide, 1.x to 2.0.0 (CC BY 4.0)
-│   ├── pricing-page-spec.md               Pricing page specification v2.1.0 (CC BY 4.0)
+│   ├── pricing-page-spec.md               Pricing page specification v3.0.0 (CC BY 4.0)
 │   └── pricing-model-llm-reference.md     LLM interpreter reference v2.0.0 (CC BY 4.0)
 └── examples/
     ├── acme_ai_platform_pms.json          Worked example PricingModel instance
@@ -284,7 +284,7 @@ pricing-models/
 | `DealConfiguration` | 1.0.0 | — | Implementation-Ready |
 | `InvoiceStatement` | 1.0.0 | — | Implementation-Ready |
 | Calculation specification (`spec/pricing-calculation-spec.md`) | 2.0.0 draft | 2.0.0 | Draft until the 2.0.0 release |
-| Pricing page specification (`spec/pricing-page-spec.md`) | 2.1.0 | 1.0.0 | Implementation-Ready |
+| Pricing page specification (`spec/pricing-page-spec.md`) | 3.0.0 | 2.0.0 | Implementation-Ready |
 | LLM interpreter reference (`spec/pricing-model-llm-reference.md`) | 2.0.0 | 2.0.0 | Implementation-Ready |
 
 Versions follow `MAJOR.MINOR.PATCH` (semver). Each schema has one version, which is its `x-version`. The `schema_version` field in each JSON instance must match it. Each specification document has its own version, and the table shows which schema version it targets. "PMS vX.Y.Z" in a document means a schema version.

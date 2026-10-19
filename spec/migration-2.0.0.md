@@ -51,6 +51,16 @@ New values that are not breaking: `unknown` for a grant's `renewal_behavior`, `p
 | `totals.annualized_total` and `totals.total_contract_value` are never null | Always emit a number when the calculation succeeds. |
 | `entitlement_summary[].overage` and `overage_cost` may be null | Null means indeterminate, for a credit type with an `unknown` grant field. |
 
+## Pricing pages (`spec/pricing-page-spec.md` 3.0.0)
+
+| Change | What to do |
+|---|---|
+| Front matter: `schema_version: "2.0.0"` and a new `model_id` | Set both. Front-matter `model_id`, `effective_date` and `currency` must equal the JSON's. |
+| §4b Price and Billing are redefined | Rewrite each tier's Price cell by the new rule. Billing lists the distinct periods. |
+| New conditional sections §4k, §4l and §4m | Add them if `credit_types[]`, `credit_packages[]`, `bundles[]` or `comparison_grid[]` is non-empty. |
+| The JSON block keeps every root field | Do not strip fields at the root. List any dropped nested field after the block. |
+| The LLM block and footer name "PMS v2.0.0" | Replace "1.4", which was never a published version. |
+
 ## Deprecated, not removed
 
 | Field | Replacement |
