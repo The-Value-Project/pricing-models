@@ -46,7 +46,7 @@
           "label",
           "modules",
           "tiers",
-          "plans"
+          "commitment_plans"
         ],
         "additionalProperties": false,
         "properties": {
@@ -160,7 +160,7 @@
               }
             }
           },
-          "plans": {
+          "commitment_plans": {
             "type": "array",
             "description": "Commitment-period pricing options.",
             "items": {

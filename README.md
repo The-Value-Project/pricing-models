@@ -59,7 +59,7 @@ PricingModel
 ├── products[]                Core product catalog
 │   ├── modules[]             Individually priced capabilities (each has exactly one price object)
 │   ├── tiers[]               Plan levels — sets of included module_ids + credit grants
-│   └── plans[]               Commitment-period options — percentage adjustments to module prices
+│   └── commitment_plans[]    Commitment-period options — percentage adjustments to module prices
 │
 ├── bundles[]                 Multi-product bundles with adjustment percentages
 ├── discounts[]               Available discounts (manual + strategy-driven)
@@ -146,7 +146,7 @@ InvoiceStatement
 │
 ├── subtotals                 recurring / one_time / gross
 ├── adjustments[]
-│   ├── adjustment_type       plan_adjustment | volume_discount | manual_discount | ...
+│   ├── adjustment_type       commitment_plan_adjustment | volume_discount | manual_discount | ...
 │   ├── amount                Signed (negative = discount, positive = true-up)
 │   └── source                Identifies the PricingModel object that drove this adjustment
 │

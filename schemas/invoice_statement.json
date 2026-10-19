@@ -215,7 +215,7 @@
           "adjustment_type": {
             "type": "string",
             "enum": [
-              "plan_adjustment",
+              "commitment_plan_adjustment",
               "negotiated_discount_percentage",
               "negotiated_discount_amount",
               "negotiated_fixed_price",

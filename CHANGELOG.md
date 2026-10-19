@@ -17,6 +17,16 @@ Not a breaking change: the set of valid `PricingModel` documents is unchanged.
 - Factored the three shapes that were repeated inline into `$defs`: `price` (6 sites), `credit_grant` (the item of `included_credit_grants[]`, 5 sites) and `eligibility` (6 sites). Each site is now a `$ref`. All 17 copies were identical before the change. Code generated from the schema will show one named type in place of several anonymous ones; that is not a change in what validates.
 - Technique and credit: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal defines its shared shapes the same way.
 
+### Changed (breaking) — `plans` renamed to `commitment_plans`
+
+Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec/migration-2.0.0.md`.
+
+- `PricingModel`: `products[].plans[]` is now `products[].commitment_plans[]`. In the schema, a "plan" meant a commitment-period option (annual, monthly). In most pricing usage a "plan" is what this standard calls a tier, so the old name led readers to the wrong object.
+- `InvoiceStatement`: the `adjustments[].adjustment_type` value `plan_adjustment` is now `commitment_plan_adjustment`.
+- `DealConfiguration`: `billing.plan_id` keeps its name. It now refers to `products[].commitment_plans[].id`.
+- `README.md`, `spec/pricing-page-spec.md` (§4c is now "Commitment plans") and `spec/pricing-model-llm-reference.md` use the new name.
+- Source: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal already uses `commitment_plans`, and its mapping tables record the clash.
+
 ---
 
 ## [2.0.0] — 2026-05-20

@@ -35,7 +35,7 @@ The JSON object has the following top-level arrays and objects. All are required
 
 | Field | Type | What it contains |
 |-------|------|-----------------|
-| `products` | array | The vendor's product catalog — modules, tiers, and plans |
+| `products` | array | The vendor's product catalog — modules, tiers, and commitment plans |
 | `bundles` | array | Multi-product bundles with discount adjustments |
 | `discounts` | array | Available discounts (manual and strategy-driven) |
 | `credit_types` | array | Entitlement pool definitions |
@@ -51,7 +51,7 @@ The JSON object has the following top-level arrays and objects. All are required
 
 ---
 
-## Products: Modules, Tiers, and Plans
+## Products: Modules, Tiers, and Commitment Plans
 
 Understanding the three-level product structure is essential.
 
@@ -59,9 +59,9 @@ Understanding the three-level product structure is essential.
 
 **Tiers** are plan levels — named bundles of module IDs. A tier does not have its own price; its price is the sum of the prices of its `included_modules`. Tiers also carry `included_credit_grants` and an `overage_policy`.
 
-**Plans** are commitment-period options. A plan applies a percentage `adjustment` to module prices for the tiers and modules listed in its `targets`. A negative `adjustment.percent` is a discount (e.g. `-20` = 20% off). Plans also carry additional `included_credit_grants`.
+**Commitment plans** (`commitment_plans[]`) are commitment-period options. A commitment plan applies a percentage `adjustment` to module prices for the tiers and modules listed in its `targets`. A negative `adjustment.percent` is a discount (e.g. `-20` = 20% off). Commitment plans also carry additional `included_credit_grants`.
 
-To compute the price of a configuration: identify the selected tier's `included_modules`, sum their module prices, then apply the selected plan's `adjustment.percent` to the targeted modules.
+To compute the price of a configuration: identify the selected tier's `included_modules`, sum their module prices, then apply the selected commitment plan's `adjustment.percent` to the targeted modules.
 
 ---
 
@@ -90,14 +90,14 @@ Each `credit_type` has:
 - `consumption_rules` — what actions consume credits and at what rate
 - `overage_policy` — what happens when the pool is exhausted: `pay_as_you_go`, `hard_cap`, `throttle`, `contact_sales`
 
-Credits are granted via `included_credit_grants` arrays on modules, tiers, plans, and bundles. Each grant specifies:
+Credits are granted via `included_credit_grants` arrays on modules, tiers, commitment plans, and bundles. Each grant specifies:
 - `credit_type_id` — which pool
 - `quantity` — how many granted (`-1` = unlimited)
 - `renewal_behavior` — `reset` (pool refills each period) or `accumulate` (unused carries forward)
 - `period` — grant period: `monthly`, `annual`, `per_billing_period`, `concurrent`, `lifetime`, `one_time`
 - `metric_type` — `consumable` (depletes and resets), `capacity` (concurrent limit), `cumulative` (grows over time), `one_time` (granted once)
 
-When multiple grants apply (from tier + plan + module), sum the quantities for the same `credit_type_id` unless they have different `period` values.
+When multiple grants apply (from tier + commitment plan + module), sum the quantities for the same `credit_type_id` unless they have different `period` values.
 
 ---
 
@@ -232,7 +232,7 @@ These are model authoring errors, not deal configuration errors. Report them as 
 
 ### Credit Grant Summation with Unlimited Grants
 
-When summing `included_credit_grants` for the same `credit_type_id` across tier, plan, module, and bundle:
+When summing `included_credit_grants` for the same `credit_type_id` across tier, commitment plan, module, and bundle:
 
 - If **any** applicable grant has `quantity: -1` (unlimited), the combined grant quantity is unlimited regardless of other grant values. Do not sum a finite quantity with -1.
 - If **all** applicable grants have finite quantities, sum them as specified.
@@ -258,7 +258,7 @@ Never silently substitute a default value to avoid surfacing an error. Silent su
 ## Answering Common Questions
 
 **"What does [Tier X] cost per month?"**
-Find the tier in `products[].tiers` by label or ID. Identify its `included_modules`. Sum the `price.amount` of each module (using the appropriate price primitive). Apply any active plan adjustment. Check applicable price books.
+Find the tier in `products[].tiers` by label or ID. Identify its `included_modules`. Sum the `price.amount` of each module (using the appropriate price primitive). Apply any active commitment plan adjustment. Check applicable price books.
 
 **"What's included in [Tier X]?"**
 List the `included_modules` IDs, resolve them to module labels and `features` arrays, and list the `included_credit_grants`.

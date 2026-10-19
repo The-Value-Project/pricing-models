@@ -108,7 +108,7 @@
       "properties": {
         "plan_id": {
           "type": "string",
-          "description": "References products[].plans[].id."
+          "description": "References products[].commitment_plans[].id."
         },
         "contract_start_date": {
           "type": "string"

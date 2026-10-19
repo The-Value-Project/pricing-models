@@ -108,7 +108,7 @@ Emit verbatim:
 The description is structured as follows:
 
 - **§4a Model Overview** — one section covering the whole model: what products exist, how they relate, and any shared infrastructure (shared credit types, shared discounts, shared business rules).
-- **§4b–4e Per-product sections** — one section per product covering that product's tiers, modules, plans, and product-specific rules. Cross-reference shared content rather than repeating it.
+- **§4b–4e Per-product sections** — one section per product covering that product's tiers, modules, commitment plans, and product-specific rules. Cross-reference shared content rather than repeating it.
 - **§4f–4i Model-level sections** — sections that span all products: discounts, business rules, pricing relationships, and key policies. These appear once, after all per-product sections.
 
 If the model contains only one product, §4a is a single introductory paragraph and the per-product section header may be omitted.
@@ -163,16 +163,16 @@ A table with one row per tier. Columns are fixed plus one column per credit type
 
 ---
 
-##### 4c. [Product Label] — Plans *(conditional)*
+##### 4c. [Product Label] — Commitment plans *(conditional)*
 
-Omit if this product has no plans.
+Omit if this product has no commitment plans.
 
 One paragraph describing the available billing commitment options and their effect on price. State:
 - The available commitment periods and the price adjustment each delivers (e.g. "Annual billing reduces the monthly equivalent by 25%")
-- Which tiers the plans apply to
-- Any credit grants included with a plan commitment (if present)
+- Which tiers the commitment plans apply to
+- Any credit grants included with a commitment plan (if present)
 
-Do not use a table unless there are four or more plans with meaningfully different structures. For simple annual/monthly pairs, prose is clearer.
+Do not use a table unless there are four or more commitment plans with meaningfully different structures. For simple annual/monthly pairs, prose is clearer.
 
 ---
 
@@ -314,7 +314,7 @@ pricing-models standard (PMS v1.4). Generated: <ISO date>.*
 |---------|--------|---------------------|
 | 4a Model Overview | `products[]` (all) | Always |
 | 4b Tiers | `products[n].tiers[]`, `included_credit_grants` | Always (per product) |
-| 4c Plans | `products[n].plans[]` | Conditional (per product) |
+| 4c Commitment plans | `products[n].commitment_plans[]` | Conditional (per product) |
 | 4d Add-ons | modules not in any tier's `included_modules` | Conditional (per product) |
 | 4e Notes | product-specific context | Conditional (per product) |
 | 4f Discounts | `discounts[]` | Conditional |
