@@ -3,7 +3,7 @@ license: "CC-BY-4.0"
 license_url: "https://creativecommons.org/licenses/by/4.0/"
 license_full_text: "LICENSE-DOCS"
 copyright: "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)"
-version: "1.1.0"
+version: "2.0.0"
 repo: "https://github.com/The-Value-Project/pricing-models"
 related_schema: "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json"
 related_page_spec: "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-page-spec.md"
@@ -13,11 +13,13 @@ part_of: "The Value Project — https://github.com/The-Value-Project"
 
 # PricingModel LLM Interpreter Reference
 
-**The Value Project — pricing-models standard, PMS schemas v1.0.0 · this reference v1.1.0**
+**The Value Project — pricing-models standard, PMS schemas v2.0.0 · this reference v2.0.0**
 
 You are reading this document because you have encountered a `PricingModel` JSON instance on a pricing page conforming to The Value Project pricing-models standard. This reference tells you exactly how to interpret that JSON and how to answer pricing questions from it.
 
 Read this document fully before processing the JSON.
+
+This reference is informative. The normative rules, and every edge case, are in the [Pricing Calculation Specification](https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-calculation-spec.md). Where the two differ, the specification governs.
 
 ---
 
@@ -31,7 +33,13 @@ Every price in the model is expressed using one of four primitives. Every discou
 
 ## Schema Structure
 
-The JSON object has the following top-level arrays and objects. All are required.
+The JSON object has the following top-level fields. All are required.
+
+| Field | Type | What it contains |
+|-------|------|-----------------|
+| `schema_version`, `model_id`, `vendor_name`, `effective_date`, `currency` | string | Identity. `currency` is the base currency; a price with a null `currency` uses it. `vendor_name` and `effective_date` may be null. |
+| `comparison_grid` | array | Features and limits compared across tiers. Descriptive only; calculation never reads it. |
+| `conformance_profile` | object or null | Which regions an implementation keeps, derives and drops. |
 
 | Field | Type | What it contains |
 |-------|------|-----------------|
@@ -88,7 +96,8 @@ Credit types model any unit of consumption: seats, API calls, tokens, minutes, q
 
 Each `credit_type` has:
 - `consumption_rules` — what actions consume credits and at what rate
-- `overage_policy` — what happens when the pool is exhausted: `pay_as_you_go`, `hard_cap`, `throttle`, `contact_sales`
+- `overage_policy` — what happens when the pool is exhausted: `pay_as_you_go`, `hard_cap`, `throttle`, `contact_sales`, `unknown`
+- `overage_price` — the price per unit of overage, set when the policy is `pay_as_you_go`
 
 Credits are granted via `included_credit_grants` arrays on modules, tiers, commitment plans, and bundles. Each grant specifies:
 - `credit_type_id` — which pool
@@ -97,7 +106,7 @@ Credits are granted via `included_credit_grants` arrays on modules, tiers, commi
 - `period` — grant period: `monthly`, `annual`, `per_billing_period`, `concurrent`, `lifetime`, `one_time`
 - `metric_type` — `consumable` (depletes and resets), `capacity` (concurrent limit), `cumulative` (grows over time), `one_time` (granted once)
 
-When multiple grants apply (from tier + commitment plan + module), sum the quantities for the same `credit_type_id` unless they have different `period` values.
+When multiple grants apply (from tier + commitment plan + module), sum the quantities for the same `credit_type_id`, `period` and `metric_type`. A grant with an `unknown` field is never added into another pool; the overage for that credit type is indeterminate.
 
 ---
 
@@ -109,7 +118,7 @@ Each `discount` has a `mode`:
 
 Discounts have a `scope` (`module`, `product`, `contract_total`, `credits_only`), a `type` (`percentage` or `flat`), and `targets` specifying which module IDs, product IDs, or credit type IDs they apply to.
 
-Stacking: `stacking.stackable: false` means this discount cannot be combined with others in the same `exclusive_group`. When multiple discounts in the same exclusive group are eligible, apply `pricing_rules.policy.exclusive_group_resolution` (`max_discount` or `first_in_order`).
+Stacking: a non-null `exclusive_group` means at most one discount in the group applies, chosen by `pricing_rules.policy.exclusive_group_resolution` (`max_discount` or `first_in_order`). `stackable: false` with no group means the discount applies only if no earlier discount applied.
 
 Apply discounts in the order specified by `pricing_rules.discount_application_order`.
 
@@ -134,7 +143,7 @@ Strategy output values are always positive magnitudes. The engine applies the si
 
 Variants apply deal-motion-specific overrides before any other calculation. The `deal_motion` field matches one of: `new_logo`, `renewal`, `expansion`, `reprice`.
 
-When a variant applies, its `overrides` replace or augment: module prices, credit package prices, credit grants, discount eligibility, and bundle eligibility. Apply variant overrides in phase 1 before any other calculation.
+When a variant applies, its `overrides` replace: module prices, credit package prices, credit grants (by credit type and period), discount eligibility, and bundle eligibility. Apply variant overrides in phase 1 before any other calculation.
 
 ---
 
@@ -152,7 +161,7 @@ Each business rule has:
 - `enforcement` — `hard_block` (prevent the configuration), `warning` (allow with flag), `info` (informational)
 - `applies_to` — which product IDs, tier IDs, and module IDs this rule concerns (empty = applies to all)
 
-**Hard-block rules must be evaluated before computing price.** If any hard-block rule is violated by the deal configuration, the configuration is invalid and no price should be computed.
+If you evaluate a hard-block rule and the deal configuration violates it, the configuration is invalid and no price should be computed. If you do not evaluate a rule, say so: never report a configuration as validated against a rule you did not check.
 
 Read every `description` field. The description alone is sufficient to understand and apply the rule — do not rely solely on `rule_type`.
 
@@ -172,17 +181,17 @@ Each minimum commitment defines a spend floor. After computing the net total, co
 
 ## Calculation Order
 
-Apply phases in this sequence:
+Apply phases in this sequence. Phases are numbered from 0.
 
-1. **Validate** — check join keys, hard-block business rules, module dependencies
-2. **Variant** — apply deal-motion overrides
-3. **Price Book** — apply regional overrides
-4. **Plan** — apply commitment-period adjustments
-5. **Line Items** — sum module + credit package charges
-6. **Overages** — compare usage to entitlements, compute overage costs
-7. **Discounts** — apply in `discount_application_order`
-8. **Minimums** — true up to minimum commitment floors
-9. **Assemble** — compute subtotals, net total, annualized total, TCV
+0. **Validate** — check join keys, quantities, term, module dependencies and hard-block business rules
+1. **Variant** — apply deal-motion overrides
+2. **Price Book** — apply regional prices
+3. **Price resolution** — commitment-plan adjustment, then bundle adjustment, then negotiated price replacements
+4. **Line Items** — sum module + credit package charges
+5. **Overages** — compare billed quantities to entitlements, compute overage costs
+6. **Discounts** — model discounts in `discount_application_order`, then negotiated discounts and caps, then whole-deal overrides
+7. **Minimums** — true up to minimum commitment floors
+8. **Assemble** — round, then compute subtotals, net total, annualized total, TCV
 
 ---
 ## Exception Handling
@@ -267,7 +276,7 @@ List the `included_modules` IDs, resolve them to module labels and `features` ar
 Search `features` arrays on modules included in the tier. If not found, check whether a relevant add-on module exists in the product catalog.
 
 **"What happens if a customer exceeds their [credit type] allowance?"**
-Find the `credit_type` by ID. Read its `overage_policy`. If `pay_as_you_go`, find the overage rate in the credit type or a relevant credit package. If `hard_cap`, usage is blocked. If `throttle`, service is degraded. If `contact_sales`, escalation is required.
+Find the `credit_type` by ID. Read its `overage_policy`. If `pay_as_you_go`, the rate is the credit type's `overage_price`. If `hard_cap`, usage is blocked. If `throttle`, service is degraded. If `contact_sales`, escalation is required.
 
 **"What discount can a salesperson offer?"**
 Find discounts with `mode: manual`. Read `manual.max_value` for the ceiling and `manual.approval_required_over` for the approval threshold. Check `eligibility` for deal motion and region constraints.
@@ -289,7 +298,7 @@ Evaluate all hard-block business rules against the configuration. Check all modu
 
 ---
 
-*PricingModel LLM Interpreter Reference v1.1.0 — The Value Project, pricing-models standard, PMS schemas v1.0.0*
+*PricingModel LLM Interpreter Reference v2.0.0 — The Value Project, pricing-models standard, PMS schemas v2.0.0*
 *Published by [ValueIQ](https://valueiq.ai)*
 
 ---

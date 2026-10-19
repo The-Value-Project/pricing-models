@@ -17,7 +17,7 @@
     "InvoiceStatement": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/invoice_statement.json",
     "ValueModel": "https://github.com/The-Value-Project/value-models/blob/main/schemas/value_model.json"
   },
-  "x-spec": "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-meta-model-spec.md",
+  "x-spec": "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-calculation-spec.md",
   "type": "object",
   "required": [
     "schema_version",

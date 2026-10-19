@@ -38,10 +38,14 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 - Deprecated, not removed: `discount_strategies[].input_keys`, `pricing_rules.calculation_order`, `billing.plan_id`. Each description says why and what replaces it.
 - Source: `$defs`, `position`, `commitment_months`, `default_for_tier_ids`, the grid, the conformance profile, the kind fields and the reference rules are from the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal. The rest comes from the audit of the published files.
 
+### Added — `spec/pricing-calculation-spec.md` (draft, for 2.0.0)
+
+The normative calculation specification that the README, the CHANGELOG and `x-spec` had linked to since 1.0.0, and that had never been committed. It defines scope, conformance and equality, conventions (ids, percentages, empty arrays, no silent defaults), inputs, price primitives and bands, the nine phases, entitlements and overage, rounding, output rules, validation failure codes and warning types. It states every calculation decision made for 2.0.0. Annex D lists the places that go beyond those decisions, for review. `x-spec` in `pricing_model.json` and the README now point to it.
+
 ### Changed — documentation
 
 - `spec/pricing-page-spec.md` 2.0.0 → 2.1.0 (MINOR): adds conditional sections §4k Credit Types and Packages and §4l Bundles, a conformance check that the JSON block validates against `schemas/pricing_model.json`, and the real rounding field names in §4j. The front-matter example, LLM instruction block and footer say `1.0.0` where they said `1.4`. A page published with `schema_version: "1.4"` should change it to the schema version it targets.
-- `spec/pricing-model-llm-reference.md` 1.0.0 → 1.1.0: records the 2026-06-03 change (explicit instructions for missing data and failure modes), which had no version or changelog entry. Volume bands are now described as `breakpoints`, matching the schema.
+- `spec/pricing-model-llm-reference.md` 1.0.0 → 2.0.0: records the 2026-06-03 change (explicit instructions for missing data and failure modes), which had no version or changelog entry. It now targets schemas 2.0.0: volume bands are `breakpoints`, phases are numbered from 0 with "Price resolution" in place of "Plan", variants replace, the overage rate is `overage_price`, and it says the calculation specification governs.
 - `README.md`: one versions table showing which schema version each specification document targets; a Terminology table; a table of the four price-reduction mechanisms, with only what the published documents state; the cross-repo tier join described as `label` to `name`.
 - `IMPLEMENTATIONS.md` and `MAINTAINERS.md` renamed from `pricing-models-IMPLEMENTATIONS.md` and `pricing-models-MAINTAINERS.md`, the names `GOVERNANCE.md` and the files themselves link to. The `IMPLEMENTATIONS.md` registration row names `1.0.0`. Licence links in `GOVERNANCE.md`, `IMPLEMENTATIONS.md` and `MAINTAINERS.md` point at `LICENSE-CODE` and `LICENSE-DOCS`. `CONTRIBUTING.md` uses the `proposal` label.
 
@@ -51,6 +55,8 @@ The 1.0.0 and 2.0.0 entries are history and are not rewritten. These statements 
 
 - 1.0.0 lists "tax policy" under `pricing_rules`. There is no tax policy field. Amounts in the schemas exclude tax.
 - 1.0.0 describes the cross-repo join as `products[].tiers[].name` to `tiers_and_modules[].name`. Tiers carry `label`, not `name`; the join is `label` to `name`.
+- 1.0.0 says the specification and the LLM reference define a reverse-solve algorithm and guidance for generating a `DealConfiguration`. Neither was ever written. Reverse-solve is an optimization that sits outside the deterministic calculation. The calculation specification lists its levers in an informative annex.
+- 1.0.0 lists `spec/pricing-meta-model-spec.md`, which was never committed. The calculation specification replaces it.
 - 2.0.0 (page spec) lists a "Revised `§4e Credit Types`" section, an "Added Module Type column" and an "adjustment percent rounding rule". The specification never had any of them. Credit types now have §4k in 2.1.0.
 
 ---

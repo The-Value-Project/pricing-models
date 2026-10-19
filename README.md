@@ -9,7 +9,7 @@ Part of [The Value Project](https://github.com/The-Value-Project) — open schem
 [![PricingModel](https://img.shields.io/badge/PricingModel-v1.0.0-brightgreen)](schemas/pricing_model.json)
 [![DealConfiguration](https://img.shields.io/badge/DealConfiguration-v1.0.0-brightgreen)](schemas/deal_configuration.json)
 [![InvoiceStatement](https://img.shields.io/badge/InvoiceStatement-v1.0.0-brightgreen)](schemas/invoice_statement.json)
-[![Spec](https://img.shields.io/badge/Spec-v1.0.0-blue)](spec/pricing-meta-model-spec.md)
+[![Spec](https://img.shields.io/badge/Spec-v2.0.0--draft-orange)](spec/pricing-calculation-spec.md)
 
 ---
 
@@ -23,7 +23,7 @@ This repository contains three interoperable JSON schemas and a full computation
 | `DealConfiguration` | `schemas/deal_configuration.json` | 1.0.0 | Apache-2.0 | What the customer buys |
 | `InvoiceStatement` | `schemas/invoice_statement.json` | 1.0.0 | Apache-2.0 | What the customer owes |
 
-The [Sales-Led Pricing Meta-Model Specification](spec/pricing-meta-model-spec.md) defines the 9-phase deterministic computation algorithm that transforms a PricingModel + DealConfiguration pair into an InvoiceStatement.
+The [Pricing Calculation Specification](spec/pricing-calculation-spec.md) defines the 9-phase deterministic computation algorithm that transforms a PricingModel + DealConfiguration pair into an InvoiceStatement.
 
 Specifications and documentation in `spec/` are licensed under **CC BY 4.0**.
 
@@ -161,21 +161,21 @@ Every line item traces to `source_fields[]`. Every adjustment identifies its sou
 
 ## The Computation Engine
 
-The [Sales-Led Pricing Meta-Model Specification](spec/pricing-meta-model-spec.md) defines a **9-phase deterministic evaluation algorithm:**
+The [Pricing Calculation Specification](spec/pricing-calculation-spec.md) defines a **9-phase deterministic evaluation algorithm:**
 
 | Phase | Name | What happens |
 |---|---|---|
 | 0 | Validate | Join keys, hard-block rules, module dependencies |
 | 1 | Variant | Apply deal-motion overrides |
 | 2 | Price Book | Apply regional price overrides |
-| 3 | Plan | Apply commitment-period adjustment |
+| 3 | Price resolution | Commitment-plan adjustment, bundle adjustment, negotiated price replacements |
 | 4 | Line Items | Compute module + credit package charges |
 | 5 | Overages | Compare committed quantities to entitlements |
 | 6 | Discounts | Apply in `discount_application_order` |
 | 7 | Minimums | True up to minimum commitment floors |
 | 8 | Assemble | Sum subtotals, net total, annualize, compute TCV |
 
-The specification also defines a **reverse-solve algorithm**: given a target price, work through available levers (discounts, plan commitment, bundles, quantity, tier downgrade) to find the configuration that hits it.
+The specification does not define a reverse-solve algorithm. Finding a configuration that reaches a target price is an optimization with more than one answer, so it sits outside the deterministic calculation. An informative annex lists the levers an application can vary.
 
 ---
 
@@ -219,9 +219,9 @@ The `products[].tiers[]` catalog in the PricingModel corresponds to `tiers_and_m
 
 ## Specifications
 
-### `spec/pricing-meta-model-spec.md` — [CC BY 4.0](LICENSE-DOCS)
+### `spec/pricing-calculation-spec.md` — [CC BY 4.0](LICENSE-DOCS)
 
-Normative computation specification. Defines the 9-phase algorithm, reverse-solve algorithm, price primitive semantics, discount strategy shapes, entitlement calculation, and conformance requirements.
+Normative calculation specification. Defines the scope, the 9-phase algorithm, price primitive semantics, discount strategy shapes, entitlement and overage calculation, rounding, output rules, and what makes two engines conformant. Draft until the 2.0.0 release.
 
 ### `spec/pricing-page-spec.md` — [CC BY 4.0](LICENSE-DOCS)
 
@@ -229,7 +229,7 @@ Specifies the format of a conforming **pricing model page**: a machine-readable 
 
 ### `spec/pricing-model-llm-reference.md` — [CC BY 4.0](LICENSE-DOCS)
 
-LLM interpreter instructions for the PricingModel JSON. Instructs frontier models how to apply price primitives, compute entitlements, apply discounts in order, enforce business rules, generate DealConfigurations, and run reverse-solve.
+LLM interpreter instructions for the PricingModel JSON. Instructs frontier models how to apply price primitives, compute entitlements, apply discounts in order, and enforce business rules.
 
 ---
 
@@ -264,9 +264,10 @@ pricing-models/
 │   ├── deal_configuration.json            DealConfiguration schema v1.0.0 (Apache-2.0)
 │   └── invoice_statement.json             InvoiceStatement schema v1.0.0 (Apache-2.0)
 ├── spec/
-│   ├── pricing-meta-model-spec.md         Computation specification v1.0.0 (CC BY 4.0)
+│   ├── pricing-calculation-spec.md        Calculation specification v2.0.0 draft (CC BY 4.0)
+│   ├── migration-2.0.0.md                 Migration guide, 1.x to 2.0.0 (CC BY 4.0)
 │   ├── pricing-page-spec.md               Pricing page specification v2.1.0 (CC BY 4.0)
-│   └── pricing-model-llm-reference.md     LLM interpreter reference v1.1.0 (CC BY 4.0)
+│   └── pricing-model-llm-reference.md     LLM interpreter reference v2.0.0 (CC BY 4.0)
 └── examples/
     ├── acme_ai_platform_pms.json          Worked example PricingModel instance
     ├── acme_deal_config.json              Worked example DealConfiguration
@@ -282,9 +283,9 @@ pricing-models/
 | `PricingModel` | 1.0.0 | — | Implementation-Ready |
 | `DealConfiguration` | 1.0.0 | — | Implementation-Ready |
 | `InvoiceStatement` | 1.0.0 | — | Implementation-Ready |
-| Computation Specification | 1.0.0 | 1.0.0 | Implementation-Ready |
+| Calculation specification (`spec/pricing-calculation-spec.md`) | 2.0.0 draft | 2.0.0 | Draft until the 2.0.0 release |
 | Pricing page specification (`spec/pricing-page-spec.md`) | 2.1.0 | 1.0.0 | Implementation-Ready |
-| LLM interpreter reference (`spec/pricing-model-llm-reference.md`) | 1.1.0 | 1.0.0 | Implementation-Ready |
+| LLM interpreter reference (`spec/pricing-model-llm-reference.md`) | 2.0.0 | 2.0.0 | Implementation-Ready |
 
 Versions follow `MAJOR.MINOR.PATCH` (semver). Each schema has one version, which is its `x-version`. The `schema_version` field in each JSON instance must match it. Each specification document has its own version, and the table shows which schema version it targets. "PMS vX.Y.Z" in a document means a schema version.
 

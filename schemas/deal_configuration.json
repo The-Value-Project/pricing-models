@@ -228,7 +228,7 @@
                           "period_index": {
                             "type": "integer",
                             "minimum": 1,
-                            "description": "Billing period the quantity applies to, counting from 1. Unique within the schedule. A period not in the schedule uses the starting quantity."
+                            "description": "Contract year the quantity applies to, counting from 1. Unique within the schedule. A year not in the schedule uses the entry's own quantity."
                           },
                           "quantity": {
                             "type": "number"
