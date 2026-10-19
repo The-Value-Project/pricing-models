@@ -107,7 +107,7 @@
           },
           "tiers": {
             "type": "array",
-            "description": "Plan levels including sets of modules.",
+            "description": "Tiers: named sets of modules.",
             "items": {
               "type": "object",
               "required": [

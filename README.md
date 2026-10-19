@@ -58,7 +58,7 @@ PricingModel
 │
 ├── products[]                Core product catalog
 │   ├── modules[]             Individually priced capabilities (each has exactly one price object)
-│   ├── tiers[]               Plan levels — sets of included module_ids + credit grants
+│   ├── tiers[]               Tiers — sets of included module_ids + credit grants
 │   └── commitment_plans[]    Commitment-period options — percentage adjustments to module prices
 │
 ├── bundles[]                 Multi-product bundles with adjustment percentages
@@ -176,6 +176,34 @@ The [Sales-Led Pricing Meta-Model Specification](spec/pricing-meta-model-spec.md
 | 8 | Assemble | Sum subtotals, net total, annualize, compute TCV |
 
 The specification also defines a **reverse-solve algorithm**: given a target price, work through available levers (discounts, plan commitment, bundles, quantity, tier downgrade) to find the configuration that hits it.
+
+---
+
+## Terminology
+
+| Term | Meaning |
+|---|---|
+| **Tier** | A named set of modules with credit grants. What most buyers call a "plan". |
+| **Commitment plan** | A commitment-period option (annual or monthly) with a percentage adjustment. `products[].commitment_plans[]`, renamed from `plans[]` in 2.0.0. |
+| **Credit type** | An entitlement pool of any unit (seats, API calls, GB). It is a quantity, not money. |
+| **Credit package** | A purchasable block of units of one credit type. |
+| **Grant** | Units of a credit type included by a module, tier, commitment plan or bundle (`included_credit_grants[]`). |
+| **Price adjustment** and **discount** | See the table below. |
+
+Readers coming from Currv or CPMS material should note that there a "plan" is what this standard calls a tier.
+
+## Price-reduction mechanisms
+
+Four mechanisms change a price. They differ in where they are defined, in sign and units, and in where they apply in the calculation. The phase numbers are the 0-based numbers in the table above.
+
+| Mechanism | Defined at | Sign and units today | Applied in phase |
+|---|---|---|---|
+| Commitment-plan adjustment | `products[].commitment_plans[].adjustment.percent` | Signed percentage points; negative is a discount | 3 |
+| Bundle adjustment | `bundles[].adjustment.percent` | Sign not documented | Not placed in any phase |
+| Model discounts (manual or strategy-driven) | `discounts[]` and `discount_strategies[]` | Positive magnitudes | 6 |
+| Negotiated overrides | `DealConfiguration.negotiated_overrides` | Per `override_type` | Not placed in any phase |
+
+Where the table says a sign or a phase is not documented, the published documents do not say. The normative specification will.
 
 ---
 

@@ -57,7 +57,7 @@ Understanding the three-level product structure is essential.
 
 **Modules** are the atomic unit of pricing. Every priced capability is a module. Each module has a `price` object, an `included_credit_grants` array, and a `features` list. The `required` boolean indicates whether it is mandatory for its product.
 
-**Tiers** are plan levels — named bundles of module IDs. A tier does not have its own price; its price is the sum of the prices of its `included_modules`. Tiers also carry `included_credit_grants` and an `overage_policy`.
+**Tiers** are named bundles of module IDs (what buyers often call a "plan"). A tier does not have its own price; its price is the sum of the prices of its `included_modules`. Tiers also carry `included_credit_grants` and an `overage_policy`.
 
 **Commitment plans** (`commitment_plans[]`) are commitment-period options. A commitment plan applies a percentage `adjustment` to module prices for the tiers and modules listed in its `targets`. A negative `adjustment.percent` is a discount (e.g. `-20` = 20% off). Commitment plans also carry additional `included_credit_grants`.
 
@@ -76,7 +76,7 @@ Every `price` object uses exactly one of four `type` values:
 | `tiered` | Graduated bands | Each unit charged at the rate of the band it falls in; sum across bands |
 | `volume` | Volume threshold | All units charged at the rate of the band the total quantity falls in |
 
-For `tiered` and `volume` types, use the `tiers` array. Each band has `min`, `max` (null = unbounded), and `value` (price per unit in that band). For `volume` pricing, apply the single matching band's rate to the entire quantity.
+For `tiered` prices use the `tiers` array. For `volume` prices use the `breakpoints` array. Each band has `min`, `max` (null = unbounded), and `value` (price per unit in that band). For `volume` pricing, apply the single matching band's rate to the entire quantity.
 
 The `period` field is the billing period: `month`, `quarter`, `year`, or `one_time`.
 
@@ -220,7 +220,7 @@ In all error cases, the discount is not applied and the error is surfaced in the
 
 ### Tiered and Volume Band Matching
 
-For `tiered` and `volume` price types, the `tiers` array must cover the input quantity without gaps. When evaluating:
+For `tiered` prices (`tiers`) and `volume` prices (`breakpoints`), the band array must cover the input quantity without gaps. When evaluating:
 
 - **No matching band:** If a quantity falls below the minimum of the first band, this is a malformed price definition. Return an error — do not assume a price of zero.
 - **Null `max` on the final band:** Treat as unbounded. Any quantity at or above that band's `min` matches.
