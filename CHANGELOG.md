@@ -10,7 +10,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Version
 
 ## [Unreleased]
 
-*No unreleased changes.*
+### Changed — `schemas/pricing_model.json`
+
+Not a breaking change: the set of valid `PricingModel` documents is unchanged.
+
+- Factored the three shapes that were repeated inline into `$defs`: `price` (6 sites), `credit_grant` (the item of `included_credit_grants[]`, 5 sites) and `eligibility` (6 sites). Each site is now a `$ref`. All 17 copies were identical before the change. Code generated from the schema will show one named type in place of several anonymous ones; that is not a change in what validates.
+- Technique and credit: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal defines its shared shapes the same way.
 
 ---
 

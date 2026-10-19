@@ -84,257 +84,16 @@
                   "description": "True if mandatory for the product."
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 },
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "eligibility": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "required": [
-                        "deal_motions",
-                        "regions",
-                        "min_metric"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "deal_motions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "enum": [
-                              "new_logo",
-                              "renewal",
-                              "expansion",
-                              "reprice"
-                            ]
-                          }
-                        },
-                        "regions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "min_metric": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "required": [
-                                "metric",
-                                "min"
-                              ],
-                              "additionalProperties": false,
-                              "properties": {
-                                "metric": {
-                                  "type": "string"
-                                },
-                                "min": {
-                                  "type": "number"
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "$ref": "#/$defs/eligibility"
                 },
                 "features": {
                   "type": "array",
@@ -377,54 +136,7 @@
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "overage_policy": {
@@ -511,114 +223,11 @@
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "eligibility": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "required": [
-                        "deal_motions",
-                        "regions",
-                        "min_metric"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "deal_motions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "enum": [
-                              "new_logo",
-                              "renewal",
-                              "expansion",
-                              "reprice"
-                            ]
-                          }
-                        },
-                        "regions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "min_metric": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "required": [
-                                "metric",
-                                "min"
-                              ],
-                              "additionalProperties": false,
-                              "properties": {
-                                "metric": {
-                                  "type": "string"
-                                },
-                                "min": {
-                                  "type": "number"
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "$ref": "#/$defs/eligibility"
                 }
               }
             }
@@ -668,114 +277,11 @@
           "included_credit_grants": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": [
-                "credit_type_id",
-                "quantity",
-                "renewal_behavior",
-                "period",
-                "metric_type"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "credit_type_id": {
-                  "type": "string",
-                  "description": "References credit_types[].id."
-                },
-                "quantity": {
-                  "type": "number",
-                  "description": "Amount granted. Use -1 for unlimited."
-                },
-                "renewal_behavior": {
-                  "type": "string",
-                  "enum": [
-                    "reset",
-                    "accumulate"
-                  ]
-                },
-                "period": {
-                  "type": "string",
-                  "enum": [
-                    "monthly",
-                    "annual",
-                    "per_billing_period",
-                    "concurrent",
-                    "lifetime",
-                    "one_time"
-                  ],
-                  "description": "How grant renews. concurrent=simultaneous limit."
-                },
-                "metric_type": {
-                  "type": "string",
-                  "enum": [
-                    "consumable",
-                    "capacity",
-                    "cumulative",
-                    "one_time"
-                  ],
-                  "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                }
-              }
+              "$ref": "#/$defs/credit_grant"
             }
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           }
         }
       }
@@ -867,63 +373,7 @@
             ]
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           },
           "targets": {
             "anyOf": [
@@ -1179,145 +629,7 @@
             "type": "number"
           },
           "price": {
-            "type": "object",
-            "required": [
-              "type",
-              "period",
-              "amount",
-              "currency",
-              "unit",
-              "tiers",
-              "breakpoints"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "flat",
-                  "per_unit",
-                  "tiered",
-                  "volume"
-                ],
-                "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-              },
-              "period": {
-                "type": "string",
-                "enum": [
-                  "month",
-                  "quarter",
-                  "year",
-                  "one_time"
-                ]
-              },
-              "amount": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "currency": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "unit": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "description": "What the price is per. Null for flat."
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "tiers": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "description": "Graduated bands (tiered type).",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "min",
-                        "max",
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "min": {
-                          "type": "number"
-                        },
-                        "max": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "value": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "breakpoints": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "description": "Volume bands (volume type).",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "min",
-                        "max",
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "min": {
-                          "type": "number"
-                        },
-                        "max": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "value": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            }
+            "$ref": "#/$defs/price"
           },
           "expiration_months": {
             "anyOf": [
@@ -1338,63 +650,7 @@
             ]
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           }
         }
       }
@@ -1686,145 +942,7 @@
                   "type": "string"
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 }
               }
             }
@@ -1843,145 +961,7 @@
                   "type": "string"
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 }
               }
             }
@@ -2042,145 +1022,7 @@
                       "type": "string"
                     },
                     "price": {
-                      "type": "object",
-                      "required": [
-                        "type",
-                        "period",
-                        "amount",
-                        "currency",
-                        "unit",
-                        "tiers",
-                        "breakpoints"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "flat",
-                            "per_unit",
-                            "tiered",
-                            "volume"
-                          ],
-                          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                        },
-                        "period": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "quarter",
-                            "year",
-                            "one_time"
-                          ]
-                        },
-                        "amount": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "currency": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "unit": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "description": "What the price is per. Null for flat."
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "tiers": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Graduated bands (tiered type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "breakpoints": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Volume bands (volume type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
+                      "$ref": "#/$defs/price"
                     }
                   }
                 }
@@ -2199,145 +1041,7 @@
                       "type": "string"
                     },
                     "price": {
-                      "type": "object",
-                      "required": [
-                        "type",
-                        "period",
-                        "amount",
-                        "currency",
-                        "unit",
-                        "tiers",
-                        "breakpoints"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "flat",
-                            "per_unit",
-                            "tiered",
-                            "volume"
-                          ],
-                          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                        },
-                        "period": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "quarter",
-                            "year",
-                            "one_time"
-                          ]
-                        },
-                        "amount": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "currency": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "unit": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "description": "What the price is per. Null for flat."
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "tiers": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Graduated bands (tiered type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "breakpoints": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Volume bands (volume type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
+                      "$ref": "#/$defs/price"
                     }
                   }
                 }
@@ -2345,54 +1049,7 @@
               "included_credit_grants": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "required": [
-                    "credit_type_id",
-                    "quantity",
-                    "renewal_behavior",
-                    "period",
-                    "metric_type"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "credit_type_id": {
-                      "type": "string",
-                      "description": "References credit_types[].id."
-                    },
-                    "quantity": {
-                      "type": "number",
-                      "description": "Amount granted. Use -1 for unlimited."
-                    },
-                    "renewal_behavior": {
-                      "type": "string",
-                      "enum": [
-                        "reset",
-                        "accumulate"
-                      ]
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "monthly",
-                        "annual",
-                        "per_billing_period",
-                        "concurrent",
-                        "lifetime",
-                        "one_time"
-                      ],
-                      "description": "How grant renews. concurrent=simultaneous limit."
-                    },
-                    "metric_type": {
-                      "type": "string",
-                      "enum": [
-                        "consumable",
-                        "capacity",
-                        "cumulative",
-                        "one_time"
-                      ],
-                      "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                    }
-                  }
+                  "$ref": "#/$defs/credit_grant"
                 }
               },
               "discount_eligibility_overrides": {
@@ -2505,63 +1162,7 @@
             ]
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           }
         }
       }
@@ -2828,6 +1429,258 @@
           }
         }
       }
+    }
+  },
+  "$defs": {
+    "price": {
+      "type": "object",
+      "required": [
+        "type",
+        "period",
+        "amount",
+        "currency",
+        "unit",
+        "tiers",
+        "breakpoints"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "flat",
+            "per_unit",
+            "tiered",
+            "volume"
+          ],
+          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "month",
+            "quarter",
+            "year",
+            "one_time"
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "What the price is per. Null for flat."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tiers": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "Graduated bands (tiered type).",
+              "items": {
+                "type": "object",
+                "required": [
+                  "min",
+                  "max",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "breakpoints": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "Volume bands (volume type).",
+              "items": {
+                "type": "object",
+                "required": [
+                  "min",
+                  "max",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "credit_grant": {
+      "type": "object",
+      "required": [
+        "credit_type_id",
+        "quantity",
+        "renewal_behavior",
+        "period",
+        "metric_type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "credit_type_id": {
+          "type": "string",
+          "description": "References credit_types[].id."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Amount granted. Use -1 for unlimited."
+        },
+        "renewal_behavior": {
+          "type": "string",
+          "enum": [
+            "reset",
+            "accumulate"
+          ]
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "annual",
+            "per_billing_period",
+            "concurrent",
+            "lifetime",
+            "one_time"
+          ],
+          "description": "How grant renews. concurrent=simultaneous limit."
+        },
+        "metric_type": {
+          "type": "string",
+          "enum": [
+            "consumable",
+            "capacity",
+            "cumulative",
+            "one_time"
+          ],
+          "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+        }
+      }
+    },
+    "eligibility": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "deal_motions",
+            "regions",
+            "min_metric"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "deal_motions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "new_logo",
+                  "renewal",
+                  "expansion",
+                  "reprice"
+                ]
+              }
+            },
+            "regions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "min_metric": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "metric",
+                    "min"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "metric": {
+                      "type": "string"
+                    },
+                    "min": {
+                      "type": "number"
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   }
 }
