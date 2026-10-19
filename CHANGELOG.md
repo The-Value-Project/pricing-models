@@ -27,6 +27,21 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 - `README.md`, `spec/pricing-page-spec.md` (§4c is now "Commitment plans") and `spec/pricing-model-llm-reference.md` use the new name.
 - Source: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal already uses `commitment_plans`, and its mapping tables record the clash.
 
+### Changed — documentation
+
+- `spec/pricing-page-spec.md` 2.0.0 → 2.1.0 (MINOR): adds conditional sections §4k Credit Types and Packages and §4l Bundles, a conformance check that the JSON block validates against `schemas/pricing_model.json`, and the real rounding field names in §4j. The front-matter example, LLM instruction block and footer say `1.0.0` where they said `1.4`. A page published with `schema_version: "1.4"` should change it to the schema version it targets.
+- `spec/pricing-model-llm-reference.md` 1.0.0 → 1.1.0: records the 2026-06-03 change (explicit instructions for missing data and failure modes), which had no version or changelog entry. Volume bands are now described as `breakpoints`, matching the schema.
+- `README.md`: one versions table showing which schema version each specification document targets; a Terminology table; a table of the four price-reduction mechanisms, with only what the published documents state; the cross-repo tier join described as `label` to `name`.
+- `IMPLEMENTATIONS.md` and `MAINTAINERS.md` renamed from `pricing-models-IMPLEMENTATIONS.md` and `pricing-models-MAINTAINERS.md`, the names `GOVERNANCE.md` and the files themselves link to. The `IMPLEMENTATIONS.md` registration row names `1.0.0`. Licence links in `GOVERNANCE.md`, `IMPLEMENTATIONS.md` and `MAINTAINERS.md` point at `LICENSE-CODE` and `LICENSE-DOCS`. `CONTRIBUTING.md` uses the `proposal` label.
+
+### Corrections to earlier entries
+
+The 1.0.0 and 2.0.0 entries are history and are not rewritten. These statements in them were not accurate:
+
+- 1.0.0 lists "tax policy" under `pricing_rules`. There is no tax policy field. Amounts in the schemas exclude tax.
+- 1.0.0 describes the cross-repo join as `products[].tiers[].name` to `tiers_and_modules[].name`. Tiers carry `label`, not `name`; the join is `label` to `name`.
+- 2.0.0 (page spec) lists a "Revised `§4e Credit Types`" section, an "Added Module Type column" and an "adjustment percent rounding rule". The specification never had any of them. Credit types now have §4k in 2.1.0.
+
 ---
 
 ## [2.0.0] — 2026-05-20
