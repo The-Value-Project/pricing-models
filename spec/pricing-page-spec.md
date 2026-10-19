@@ -109,7 +109,7 @@ The description is structured as follows:
 
 - **§4a Model Overview** — one section covering the whole model: what products exist, how they relate, and any shared infrastructure (shared credit types, shared discounts, shared business rules).
 - **§4b–4e Per-product sections** — one section per product covering that product's tiers, modules, commitment plans, and product-specific rules. Cross-reference shared content rather than repeating it.
-- **§4f–4i Model-level sections** — sections that span all products: discounts, business rules, pricing relationships, and key policies. These appear once, after all per-product sections.
+- **§4f–4l Model-level sections** — sections that span all products: discounts, discount strategies, business rules, pricing relationships, key policies, credit types and packages, and bundles. These appear once, after all per-product sections, in letter order.
 
 If the model contains only one product, §4a is a single introductory paragraph and the per-product section header may be omitted.
 
@@ -274,10 +274,53 @@ Always present. A bullet list covering the operational rules of the pricing engi
 
 - **Calculation order:** the ordered sequence from `pricing_rules.calculation_order`, in plain English
 - **Discount application order:** ordered list of discount labels from `pricing_rules.discount_application_order`; if empty, "No discounts defined"
-- **Rounding:** mode and precision from `pricing_rules.rounding`
+- **Rounding:** `mode` and `currency_minor_units` from `pricing_rules.rounding`
 - **Exclusive group resolution:** what happens when discounts in the same exclusive group conflict
 - **Ineligible selections:** behaviour from `pricing_rules.policy.ineligible_selection_handling`
 - **Missing strategy inputs:** behaviour from `pricing_rules.policy.missing_strategy_inputs_handling`
+
+---
+
+#### 4k. Credit Types and Packages *(conditional)*
+
+Omit if `credit_types[]` and `credit_packages[]` are both empty.
+
+A table of credit types, then, if `credit_packages[]` is non-empty, a table of packages.
+
+| Credit Type | Unit | Overage Policy | Consumption Rules |
+|-------------|------|----------------|-------------------|
+
+- **Credit Type:** the credit type's `label`
+- **Unit:** `unit_label`
+- **Overage Policy:** in plain English, as in §4b
+- **Consumption Rules:** one line per entry in `consumption_rules[]`: "[action]: [credits_per_unit] per unit", followed by `conditions` verbatim in parentheses when it is non-null. "—" if there are none.
+
+| Package | Credit Type | Quantity | Price | Expires | Rollover |
+|---------|-------------|----------|-------|---------|----------|
+
+- **Package:** the package's `label`
+- **Credit Type:** the `label` of the credit type that `credit_type_id` refers to
+- **Quantity:** `quantity`, with the credit type's `unit_label`
+- **Price:** apply the price rules in §4d
+- **Expires:** "[expiration_months] months", or "Not stated" if null
+- **Rollover:** `none` → "None"; `partial` → "Partial"; `full` → "Full"
+
+**Reviewer note:** every row must be verifiable against `credit_types[]` and `credit_packages[]` in the JSON.
+
+---
+
+#### 4l. Bundles *(conditional)*
+
+Omit if `bundles[]` is empty.
+
+| Bundle | Products | Adjustment | Included Credits | Eligible For |
+|--------|----------|------------|------------------|--------------|
+
+- **Bundle:** the bundle's `label`
+- **Products:** the `label` of each product in `product_ids`, comma-separated
+- **Adjustment:** `adjustment.percent` as stored, with its sign (for example "-10%")
+- **Included Credits:** each entry in `included_credit_grants[]` in the compact form used in §4b; "—" if there are none
+- **Eligible For:** as in §4f
 
 ---
 
@@ -322,6 +365,8 @@ pricing-models standard (PMS v1.0.0). Generated: <ISO date>.*
 | 4h Business Rules | `business_rules[]` | Always |
 | 4i Pricing Relationships | `pricing_relationships[]` | Conditional |
 | 4j Key Pricing Policies | `pricing_rules` | Always |
+| 4k Credit Types and Packages | `credit_types[]`, `credit_packages[]` | Conditional |
+| 4l Bundles | `bundles[]` | Conditional |
 
 **Not surfaced in the narrative (present in JSON only):** `variants[]`, `price_books[]`, `minimum_commitments[]`, `module_dependencies[]` (dependency information is surfaced in §4d Add-ons rather than as a standalone section). These arrays are present and complete in the JSON block and are interpretable via the LLM reference.
 
@@ -342,9 +387,20 @@ A pricing page conforms to this specification if:
 - [ ] §4j Key Pricing Policies is present
 - [ ] Conditional sections are present for non-empty arrays and absent for empty arrays
 - [ ] The JSON block is present, unwrapped, sanitised, and complete
+- [ ] The JSON block validates against `schemas/pricing_model.json`
 - [ ] The footer is present
 
 ---
+
+## Changes from v2.0.0
+
+| Change | Reason |
+|--------|--------|
+| Added §4k Credit Types and Packages and §4l Bundles | These arrays had no narrative section, so a reviewer could not check credit-type semantics or bundle adjustments without reading the JSON |
+| Added a check that the JSON block validates against `schemas/pricing_model.json` | The conformance list did not require it |
+| §4j Rounding names the schema fields (`mode`, `currency_minor_units`) | "Precision" matches no field |
+| The front-matter example, LLM instruction block and footer name `schema_version: "1.0.0"` / "PMS v1.0.0" | They said "1.4", which is not a published version. Pages published with "1.4" should change it to the schema version they target |
+| Corrected the v1.0.0 change list below | It listed a "Module Type column" and an "adjustment percent rounding rule" that the specification never contained |
 
 ## Changes from v1.0.0
 
@@ -353,7 +409,7 @@ A pricing page conforms to this specification if:
 | Added narrative design principles | v1 had no guidance on what level of detail the narrative should contain; authors over-specified |
 | Restructured as model overview + per-product sections + model-level sections | v1 was flat; multi-product models had no clear structure |
 | Added §4b Tiers and Entitlements table (per product) | v1 had no structured surface for per-tier entitlement quantities |
-| Added Module Type column and §4d Add-ons subsection | v1 could not distinguish base modules from add-ons |
+| Added §4d Add-ons subsection | v1 could not distinguish base modules from add-ons |
 | Replaced §4c Modules table with §4d Add-ons subsection | Full module table was too detailed for the narrative's purpose; add-ons are what a buyer needs to see |
 | Changed §4c Plans from table to prose-preferred | Simple annual/monthly plans are clearer in prose; table reserved for complex plan structures |
 | Added §4e Product Notes subsection | Provides a home for product-specific context without polluting structured sections |
@@ -364,7 +420,6 @@ A pricing page conforms to this specification if:
 | Removed standalone Variants and Price Books sections | Present in JSON; not surfaced in narrative (deal-motion and regional overrides are computed at deal time) |
 | Added cross-referencing guidance | v1 implied all content repeated per product; shared content should be noted once |
 | Added JSON sanitisation and unwrapping requirements | v1 said "emit exactly as received" — too loose |
-| Added adjustment percent rounding rule | v1 gave no guidance; caused display inconsistency |
 
 ---
 *License: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Copyright 2026 The Value Project (an initiative by [ValueIQ](https://valueiq.ai)) · Part of [The Value Project](https://github.com/The-Value-Project/pricing-models)*
