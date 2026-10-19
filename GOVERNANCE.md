@@ -191,7 +191,7 @@ The Value Project uses two licenses, applied by artifact type.
 
 ### JSON Schemas and Examples — Apache License 2.0
 
-All JSON Schema files (`schemas/*.json`) and example files (`examples/*.json`) are licensed under the [Apache License, Version 2.0](./LICENSE-APACHE).
+All JSON Schema files (`schemas/*.json`) and example files (`examples/*.json`) are licensed under the [Apache License, Version 2.0](./LICENSE-CODE).
 
 Apache 2.0 is chosen for schemas because it is maximally compatible with commercial software development, including proprietary systems. Implementors should not need to think twice about embedding these schemas in their products.
 
@@ -202,7 +202,7 @@ Apache 2.0 is chosen for schemas because it is maximally compatible with commerc
 
 ### Specification and Governance Documents — CC BY 4.0
 
-All specification documents (`spec/*.md`), governance documents (including this file), README files, and all other prose in this project are licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](./LICENSE-CC-BY-4.0).
+All specification documents (`spec/*.md`), governance documents (including this file), README files, and all other prose in this project are licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](./LICENSE-DOCS).
 
 CC BY 4.0 is chosen for specification and governance prose because it ensures attribution while remaining freely usable, shareable, and adaptable by anyone — including for commercial purposes.
 

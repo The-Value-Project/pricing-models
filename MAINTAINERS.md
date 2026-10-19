@@ -28,4 +28,4 @@ None yet.
 
 ---
 
-*Governed under [CC BY 4.0](./LICENSE-CC-BY-4.0). Part of [The Value Project](https://github.com/The-Value-Project) by [ValueIQ](https://valueiq.ai).*
+*Governed under [CC BY 4.0](./LICENSE-DOCS). Part of [The Value Project](https://github.com/The-Value-Project) by [ValueIQ](https://valueiq.ai).*

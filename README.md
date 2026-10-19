@@ -69,7 +69,7 @@ PricingModel
 ├── price_books[]             Regional price override tables
 ├── variants[]                Deal-motion-specific overrides (new_logo, renewal, expansion, reprice)
 ├── minimum_commitments[]     Minimum spend floors with true-up behavior
-├── pricing_rules             Computation config: discount order, rounding, currency policy
+├── pricing_rules             Computation config: discount order, rounding, exclusive-group and missing-input handling
 ├── business_rules[]          Plain-text constraints (hard_block | warning | info)
 ├── module_dependencies[]     Module dependency graph
 └── pricing_relationships[]   Cross-product rules
@@ -181,7 +181,7 @@ The specification also defines a **reverse-solve algorithm**: given a target pri
 
 ## Cross-Reference to value-models
 
-The `tiers_and_modules[]` catalog in the PricingModel corresponds by name to `tiers_and_modules[]` in the [value-models](https://github.com/The-Value-Project/value-models) repo's `ValueModel` schema. This is the cross-repo join:
+The `products[].tiers[]` catalog in the PricingModel corresponds to `tiers_and_modules[]` in the [value-models](https://github.com/The-Value-Project/value-models) repo's `ValueModel` schema. The join is on display text: a tier's `label` here matches `name` there, so renaming a tier on either side breaks the join. This is the cross-repo join:
 
 - The ValueModel answers: *what value does each tier unlock, and what ROI does it deliver for this customer?*
 - The PricingModel answers: *what does each tier cost, and how is that price computed?*

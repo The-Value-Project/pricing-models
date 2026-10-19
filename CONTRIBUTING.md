@@ -17,7 +17,7 @@ Open an issue in the relevant repository if you find:
 - An inconsistency in the join keys between schemas across the two repos
 
 ### 2. Propose a schema change
-Open an issue labelled `schema-proposal` before submitting a pull request. Discuss the change, its impact on backward compatibility, and which other schemas it touches. Breaking changes (those that invalidate existing conforming instances) require strong justification and increment the MAJOR version.
+Open an issue labelled `proposal` before submitting a pull request. Discuss the change, its impact on backward compatibility, and which other schemas it touches. Breaking changes (those that invalidate existing conforming instances) require strong justification and increment the MAJOR version.
 
 ### 3. Improve specifications or documentation
 Pull requests are welcome for:
