@@ -22,7 +22,7 @@ Implementations do not need to be public or open source. Proprietary commercial 
 
 | # | Organization | System | Schemas Used | Version | Registered |
 |---|---|---|---|---|---|
-| 1 | ValueIQ Technologies Inc. | ValueIQ Pricing Intelligence Agent | `PricingModel`, `DealConfiguration`, `InvoiceStatement` | 1.4 | May 2026 |
+| 1 | ValueIQ Technologies Inc. | ValueIQ Pricing Intelligence Agent | `PricingModel`, `DealConfiguration`, `InvoiceStatement` | 1.0.0 | May 2026 |
 
 ---
 
@@ -33,7 +33,7 @@ Open a pull request adding a row to the table above. Your PR must include:
 - **Organization** — your company or project name
 - **System** — the name of the product, service, or tool that implements the schema
 - **Schemas Used** — which schema(s) you implement (`PricingModel`, `DealConfiguration`, `InvoiceStatement`, or any combination)
-- **Version** — the schema version you are implementing against (e.g., `1.4`)
+- **Version** — the schema version you are implementing against (e.g., `1.0.0`)
 - **Registered** — month and year of registration
 - **Contact** *(optional, omit if you prefer not to make it public)* — a name or email for TSC nomination purposes when Stage 2 is triggered
 

@@ -3,7 +3,7 @@ license: "CC-BY-4.0"
 license_url: "https://creativecommons.org/licenses/by/4.0/"
 license_full_text: "LICENSE-DOCS"
 copyright: "Copyright 2026 The Value Project (an initiative by ValueIQ — https://valueiq.ai)"
-version: "2.0.0"
+version: "2.1.0"
 repo: "https://github.com/The-Value-Project/pricing-models"
 related_schema: "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json"
 related_llm_reference: "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-model-llm-reference.md"
@@ -59,7 +59,7 @@ YAML front matter declaring the document type and key metadata. Required fields:
 ```yaml
 ---
 document_type: pricing-model
-schema_version: "1.4"
+schema_version: "1.0.0"
 schema_ref: https://github.com/the-value-project/pricing-models/blob/main/schemas/pricing_model.json
 llm_ref: https://github.com/the-value-project/pricing-models/blob/main/spec/pricing-model-llm-reference.md
 vendor: <vendor name>
@@ -95,7 +95,7 @@ Emit verbatim:
 
 ```markdown
 > **For LLMs:** This page contains a machine-readable PricingModel JSON instance conforming to
-> The Value Project pricing-models standard (PMS v1.4). Before interpreting the JSON below,
+> The Value Project pricing-models standard (PMS v1.0.0). Before interpreting the JSON below,
 > read the interpreter reference at the `llm_ref` URL in the front matter. The human-readable
 > description in this document is a structured narrative summary of the JSON — use it to
 > validate your interpretation of the JSON, not as a substitute for it.
@@ -303,7 +303,7 @@ Emit verbatim, substituting the generated date:
 ```markdown
 ---
 *This pricing page conforms to [The Value Project](https://github.com/the-value-project)
-pricing-models standard (PMS v1.4). Generated: <ISO date>.*
+pricing-models standard (PMS v1.0.0). Generated: <ISO date>.*
 ```
 
 ---
