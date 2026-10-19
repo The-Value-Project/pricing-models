@@ -49,7 +49,11 @@
       "description": "Version of this schema that the document conforms to."
     },
     "model_id": {
-      "type": "string",
+      "allOf": [
+        {
+          "$ref": "#/$defs/id"
+        }
+      ],
       "description": "Stable unique identifier of this model. DealConfiguration.model_reference.model_id and InvoiceStatement.model_id refer to it."
     },
     "vendor_name": {
@@ -95,7 +99,11 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Stable kebab-case product identifier."
           },
           "label": {
@@ -119,7 +127,7 @@
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
@@ -170,7 +178,7 @@
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
@@ -178,7 +186,7 @@
                 "included_modules": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
                   },
                   "description": "Module IDs included in this tier."
                 },
@@ -231,7 +239,7 @@
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
@@ -271,13 +279,13 @@
                     "tier_ids": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "$ref": "#/$defs/id"
                       }
                     },
                     "module_ids": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "$ref": "#/$defs/id"
                       }
                     }
                   }
@@ -297,7 +305,7 @@
                 "default_for_tier_ids": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
                   },
                   "description": "Ids of this product's tiers for which this commitment plan is the preselected option. Empty if none. A tier appears in at most one commitment plan of a product."
                 }
@@ -326,7 +334,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -334,7 +342,7 @@
           "product_ids": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/$defs/id"
             }
           },
           "adjustment": {
@@ -382,7 +390,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -464,19 +472,19 @@
                   "module_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "product_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "credit_type_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   }
                 }
@@ -534,7 +542,7 @@
                 "additionalProperties": false,
                 "properties": {
                   "strategy_id": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
                   },
                   "caps": {
                     "anyOf": [
@@ -621,7 +629,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -733,13 +741,13 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
           },
           "credit_type_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "quantity": {
             "type": "number"
@@ -828,7 +836,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -1069,7 +1077,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "region": {
             "type": "string"
@@ -1098,7 +1106,7 @@
               "additionalProperties": false,
               "properties": {
                 "module_id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "price": {
                   "$ref": "#/$defs/price"
@@ -1117,7 +1125,7 @@
               "additionalProperties": false,
               "properties": {
                 "credit_package_id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "price": {
                   "$ref": "#/$defs/price"
@@ -1142,7 +1150,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "deal_motion": {
             "type": "string",
@@ -1178,7 +1186,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "module_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "price": {
                       "$ref": "#/$defs/price"
@@ -1197,7 +1205,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "credit_package_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "price": {
                       "$ref": "#/$defs/price"
@@ -1222,7 +1230,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "discount_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "enabled": {
                       "type": "boolean"
@@ -1241,7 +1249,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "bundle_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "enabled": {
                       "type": "boolean"
@@ -1271,7 +1279,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -1304,13 +1312,13 @@
                   "product_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "credit_type_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   }
                 }
@@ -1449,7 +1457,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "rule_type": {
             "type": "string",
@@ -1488,21 +1496,21 @@
               "product_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               },
               "tier_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               },
               "module_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               }
@@ -1527,18 +1535,48 @@
         "type": "object",
         "required": [
           "dependent_id",
+          "dependent_kind",
           "requires_id",
+          "requires_kind",
           "description"
         ],
         "additionalProperties": false,
         "properties": {
           "dependent_id": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Module/credit_package that has the dependency."
           },
-          "requires_id": {
+          "dependent_kind": {
             "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object dependent_id is. Ids are unique within a kind, so a module and a tier may share an id."
+          },
+          "requires_id": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Module/tier/product that must be selected."
+          },
+          "requires_kind": {
+            "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object requires_id is."
           },
           "description": {
             "type": "string",
@@ -1556,13 +1594,15 @@
           "id",
           "relationship_type",
           "subject",
+          "subject_kind",
           "related_to",
+          "related_to_kind",
           "description"
         ],
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "relationship_type": {
             "type": "string",
@@ -1579,14 +1619,45 @@
             ]
           },
           "subject": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Originating product/tier/module."
+          },
+          "subject_kind": {
+            "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object subject is."
           },
           "related_to": {
             "anyOf": [
               {
+                "$ref": "#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Target. Null if unilateral."
+          },
+          "related_to_kind": {
+            "anyOf": [
+              {
                 "type": "string",
-                "description": "Target. Null if unilateral."
+                "enum": [
+                  "module",
+                  "tier",
+                  "product",
+                  "credit_package"
+                ],
+                "description": "What kind of object related_to is. Null if related_to is null."
               },
               {
                 "type": "null"
@@ -1616,10 +1687,14 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "product_id": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "References products[].id."
           },
           "label": {
@@ -1653,7 +1728,11 @@
               "additionalProperties": false,
               "properties": {
                 "tier_id": {
-                  "type": "string",
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/id"
+                    }
+                  ],
                   "description": "References products[].tiers[].id of the row's product."
                 },
                 "state": {
@@ -2008,13 +2087,13 @@
         "credit_type_id": {
           "anyOf": [
             {
-              "type": "string",
-              "description": "References credit_types[].id. The quantity of this credit type is the quantity the price applies to. Required (non-null) for per_unit, tiered and volume module prices; null for flat prices and for credit-package prices."
+              "$ref": "#/$defs/id"
             },
             {
               "type": "null"
             }
-          ]
+          ],
+          "description": "References credit_types[].id. The quantity of this credit type is the quantity the price applies to. Required (non-null) for per_unit, tiered and volume module prices; null for flat prices and for credit-package prices."
         }
       },
       "allOf": [
@@ -2123,7 +2202,11 @@
       "additionalProperties": false,
       "properties": {
         "credit_type_id": {
-          "type": "string",
+          "allOf": [
+            {
+              "$ref": "#/$defs/id"
+            }
+          ],
           "description": "References credit_types[].id."
         },
         "quantity": {
@@ -2235,6 +2318,278 @@
         }
       ],
       "description": "Display order among siblings. Dense, zero-based and unique within the immediate parent. Null means array order. For ordering only, never an identifier or a diff key."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An id: opaque and case-sensitive, lower-case words joined by hyphens. It stays the same across versions of a model while its object exists, and is never reused for a different object."
+    },
+    "referential_rules": {
+      "description": "Reference only. Nothing in properties or required refers to it, so it never changes validation. JSON Schema draft-07 cannot express rules that cross arrays, so they are listed here as data in const. A conformant importer, or a validator, runs these rules as a second pass after schema validation. Ids are unique across the model within each kind.",
+      "const": {
+        "unique": [
+          {
+            "kind": "product",
+            "path": "products[].id"
+          },
+          {
+            "kind": "module",
+            "path": "products[].modules[].id"
+          },
+          {
+            "kind": "tier",
+            "path": "products[].tiers[].id"
+          },
+          {
+            "kind": "commitment_plan",
+            "path": "products[].commitment_plans[].id"
+          },
+          {
+            "kind": "bundle",
+            "path": "bundles[].id"
+          },
+          {
+            "kind": "discount",
+            "path": "discounts[].id"
+          },
+          {
+            "kind": "credit_type",
+            "path": "credit_types[].id"
+          },
+          {
+            "kind": "credit_package",
+            "path": "credit_packages[].id"
+          },
+          {
+            "kind": "discount_strategy",
+            "path": "discount_strategies[].id"
+          },
+          {
+            "kind": "price_book",
+            "path": "price_books[].id"
+          },
+          {
+            "kind": "variant",
+            "path": "variants[].id"
+          },
+          {
+            "kind": "minimum_commitment",
+            "path": "minimum_commitments[].id"
+          },
+          {
+            "kind": "business_rule",
+            "path": "business_rules[].id"
+          },
+          {
+            "kind": "pricing_relationship",
+            "path": "pricing_relationships[].id"
+          },
+          {
+            "kind": "comparison_row",
+            "path": "comparison_grid[].id"
+          }
+        ],
+        "resolves": [
+          {
+            "from": "products[].tiers[].included_modules[]",
+            "to": "module",
+            "note": "a module of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].targets.tier_ids[]",
+            "to": "tier",
+            "note": "a tier of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].targets.module_ids[]",
+            "to": "module",
+            "note": "a module of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].default_for_tier_ids[]",
+            "to": "tier",
+            "note": "a tier of the same product"
+          },
+          {
+            "from": "bundles[].product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "discounts[].targets.module_ids[]",
+            "to": "module"
+          },
+          {
+            "from": "discounts[].targets.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "discounts[].targets.credit_type_ids[]",
+            "to": "credit_type"
+          },
+          {
+            "from": "discounts[].strategy.strategy_id",
+            "to": "discount_strategy"
+          },
+          {
+            "from": "credit_packages[].credit_type_id",
+            "to": "credit_type"
+          },
+          {
+            "from": "price_books[].module_prices[].module_id",
+            "to": "module"
+          },
+          {
+            "from": "price_books[].credit_package_prices[].credit_package_id",
+            "to": "credit_package"
+          },
+          {
+            "from": "variants[].overrides.module_price_overrides[].module_id",
+            "to": "module"
+          },
+          {
+            "from": "variants[].overrides.credit_package_price_overrides[].credit_package_id",
+            "to": "credit_package"
+          },
+          {
+            "from": "variants[].overrides.discount_eligibility_overrides[].discount_id",
+            "to": "discount"
+          },
+          {
+            "from": "variants[].overrides.bundle_eligibility_overrides[].bundle_id",
+            "to": "bundle"
+          },
+          {
+            "from": "minimum_commitments[].targets.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "minimum_commitments[].targets.credit_type_ids[]",
+            "to": "credit_type"
+          },
+          {
+            "from": "business_rules[].applies_to.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "business_rules[].applies_to.tier_ids[]",
+            "to": "tier"
+          },
+          {
+            "from": "business_rules[].applies_to.module_ids[]",
+            "to": "module"
+          },
+          {
+            "from": "module_dependencies[].dependent_id",
+            "to": "kind given by dependent_kind"
+          },
+          {
+            "from": "module_dependencies[].requires_id",
+            "to": "kind given by requires_kind"
+          },
+          {
+            "from": "pricing_relationships[].subject",
+            "to": "kind given by subject_kind"
+          },
+          {
+            "from": "pricing_relationships[].related_to",
+            "to": "kind given by related_to_kind"
+          },
+          {
+            "from": "comparison_grid[].product_id",
+            "to": "product"
+          },
+          {
+            "from": "comparison_grid[].cells[].tier_id",
+            "to": "tier",
+            "note": "a tier of the row's product"
+          },
+          {
+            "from": "every credit_grant.credit_type_id (modules, tiers, commitment plans, bundles, variant overrides)",
+            "to": "credit_type"
+          },
+          {
+            "from": "every price.credit_type_id that is non-null",
+            "to": "credit_type"
+          },
+          {
+            "from": "DealConfiguration: product_selections[].product_id, tier_id, commitment_plan_id; quantities[].credit_type_id; credit_package_selections[].credit_package_id; bundle_selections[].bundle_id; discount_selections[].discount_id; module_selections[].module_id",
+            "to": "the matching object in this model",
+            "note": "checked across documents"
+          }
+        ],
+        "disjoint": [
+          {
+            "path": "products[].commitment_plans[].default_for_tier_ids[]",
+            "within": "the commitment plans of one product",
+            "rule": "No tier id appears in more than one commitment plan."
+          }
+        ],
+        "dense_and_unique_within_parent": [
+          {
+            "path": "products[].position",
+            "parent": "the model"
+          },
+          {
+            "path": "products[].modules[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "products[].tiers[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "products[].commitment_plans[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "comparison_grid[].position",
+            "parent": "the model"
+          },
+          {
+            "path": "comparison_grid[].cells[].position",
+            "parent": "the row"
+          },
+          {
+            "rule": "Among siblings, either every position is null (array order), or the positions are distinct integers that form 0 to n-1 with no gaps."
+          }
+        ],
+        "type_matched": [
+          {
+            "id": "module_dependencies[].dependent_id",
+            "kind": "module_dependencies[].dependent_kind"
+          },
+          {
+            "id": "module_dependencies[].requires_id",
+            "kind": "module_dependencies[].requires_kind"
+          },
+          {
+            "id": "pricing_relationships[].subject",
+            "kind": "pricing_relationships[].subject_kind"
+          },
+          {
+            "id": "pricing_relationships[].related_to",
+            "kind": "pricing_relationships[].related_to_kind"
+          }
+        ],
+        "derived_agreement": [
+          {
+            "path": "products[].modules[].price.credit_type_id",
+            "rule": "Non-null when price.type is per_unit, tiered or volume. Null when it is flat."
+          },
+          {
+            "path": "credit_packages[].price.credit_type_id",
+            "rule": "Null. The quantity is credit_package_selections[].quantity."
+          },
+          {
+            "path": "credit_types[].overage_price.credit_type_id",
+            "rule": "Null. The unit is the credit type itself."
+          },
+          {
+            "path": "products[].tiers[].included_modules[]",
+            "rule": "A module marked required is charged whether or not a tier lists it, and once. A module in no tier's included_modules is an add-on."
+          }
+        ]
+      }
     }
   }
 }
