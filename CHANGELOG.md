@@ -27,6 +27,17 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 - `README.md`, `spec/pricing-page-spec.md` (§4c is now "Commitment plans") and `spec/pricing-model-llm-reference.md` use the new name.
 - Source: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal already uses `commitment_plans`, and its mapping tables record the clash.
 
+### Changed (breaking) — schemas, in progress for 2.0.0
+
+`x-version` and `schema_version` move to 2.0.0 in the release commit. The full list of paths is in `spec/migration-2.0.0.md`. New fields are required, and are nullable where a value can be unknown.
+
+- All three schemas: `schema_version` (`const`), ids that match a kebab-case pattern, ISO 4217 currency codes.
+- `PricingModel`: identity fields (`model_id`, `vendor_name`, `effective_date`, `currency`); `position` for ordering; `comparison_grid` and `conformance_profile`; `default_for_tier_ids` on commitment plans; nullable `commitment_months`; `price.credit_type_id` and enforced pairing of price type with `tiers` or `breakpoints`; `credit_types[].overage_price`; `credit_packages[].rollover_percent`; `rounding.method`; `unknown` for grant `renewal_behavior`, `period` and `metric_type` and for package `rollover_policy`; `*_kind` fields on dependencies and relationships; a reference-only `$defs/referential_rules`.
+- `DealConfiguration`: `module_selections`, `product_selections[].commitment_plan_id`, `growth_schedule[].period_index`, `price_overrides[].target_kind` (a null `target_id` for the whole deal, and `credit_type_overage` for overage prices), `credit_grant_overrides[].period`.
+- `InvoiceStatement`: `model_id`; nullable `line_items[].product_id`; `source_fields` as `model#` or `config#` JSON Pointers; annualized total and total contract value never null; nullable `overage` and `overage_cost` for an indeterminate entitlement.
+- Deprecated, not removed: `discount_strategies[].input_keys`, `pricing_rules.calculation_order`, `billing.plan_id`. Each description says why and what replaces it.
+- Source: `$defs`, `position`, `commitment_months`, `default_for_tier_ids`, the grid, the conformance profile, the kind fields and the reference rules are from the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal. The rest comes from the audit of the published files.
+
 ### Changed — documentation
 
 - `spec/pricing-page-spec.md` 2.0.0 → 2.1.0 (MINOR): adds conditional sections §4k Credit Types and Packages and §4l Bundles, a conformance check that the JSON block validates against `schemas/pricing_model.json`, and the real rounding field names in §4j. The front-matter example, LLM instruction block and footer say `1.0.0` where they said `1.4`. A page published with `schema_version: "1.4"` should change it to the schema version it targets.
