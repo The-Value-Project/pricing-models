@@ -1,8 +1,10 @@
 # Triage of spec gaps
 
-Disposition of the 16 reference-engine findings (F-1 to F-16) and the 37 entries of `NOTES.md` (N-1 to N-37). "Written" means the specification now says it. "Decide" means the two readings differ, only one reading exists, or the point depends on a practitioner question, so it is left to the specification's owner.
+Disposition of the 16 reference-engine findings (F-1 to F-16) and the 37 entries of `NOTES.md` (N-1 to N-37).
 
 ## Written into the specification
+
+Settled the same way by both engines, with no open practitioner question behind them:
 
 | Where | What | From |
 |---|---|---|
@@ -16,25 +18,35 @@ Disposition of the 16 reference-engine findings (F-1 to F-16) and the 37 entries
 | 9.2 | `target_id` per line category; `source_fields` pointer for a `fallback_multiplier` price | F-8, F-4 |
 | 9.3 | Adjustments are listed line by line; zero-amount adjustments are not reported | F-5, N-8, F-1, N-22 |
 
+Decided by the specification's owner (2026-10-22):
+
+| Where | Decision | From |
+|---|---|---|
+| 6 | An unresolved id ends the calculation after step 1 of 7.1 | N-1 |
+| 4.7 | Country codes are those assigned in ISO 3166-1 on 1 January 2026; later codes only in a MINOR release | N-2 |
+| 4.4 | A required module that is also in `module_selections` is charged once, with no failure | N-35 |
+| 7.3 | A price-book entry with a null `currency` is in the book's currency | F-3, N-31 |
+| 7.4 | `invalid_override`: also a missing target, any `credit_type_overage` override on a credit type with no `overage_price`, and `custom_unit_price` on a module price with no `credit_type_id` | F-10, F-11, N-7 |
+| 7.6 | `consumption_conditions_ignored` is given for credit types with a pool or a billed quantity | F-14, N-6 |
+| 7.7 | A `step_tiers` input in a gap between brackets gives 0 | N-25 |
+| 7.7 | `module` and `product` discount scopes include one-time charges | F-7, N-20 |
+| 9.3 | `applies_to` is the one line, product or credit type matched, else `contract_total`; the same rule for minimum true-ups | F-2, N-21, N-26 |
+| 9.4 | `annualized_total` sums rounded recurring lines and the rounded recurring share of spread adjustments | F-6, N-28 |
+
 ## Already in the specification, no change
 
 N-5, N-11, N-12, N-13, N-17, N-18, N-27, N-30, N-32, N-33, N-34, F-16.
 
-## Decide
+## Waiting on the practitioner sheet
 
-| Item | The question | Engines |
-|---|---|---|
-| N-1 | Unresolved ids: report only the reference failures and stop, or keep going (section 6 says report every failure)? | Second engine stops |
-| N-2 | Region codes: list the ISO 3166-1 codes in the spec, or accept any two capital letters? | Second engine accepts any two |
-| F-2, N-21 | `applies_to` of a discount over several lines or products: join the ids, or `contract_total`? | Differ; no vector covers a module-scope discount over several lines |
-| F-3, N-31 | A price-book entry with a null `currency`: the book's currency or the model's? | Not separated by any vector |
-| F-6, N-28 | `annualized_total` when an adjustment spans recurring and one-time lines: round the parts separately or the exact amount? | Differ |
-| F-7, N-20 | Do `module` and `product` discount scopes include one-time modules? | Agree, but close to Q5 |
-| F-10 | `custom_unit_price` on a `flat` module price: `invalid_override`? | Reference only; second engine builds a `per_unit` price |
-| F-11, N-7 | `waived` on `credit_type_overage` with no `overage_price`; the full meaning of "invalid override" | Differ |
-| F-14, N-6 | `consumption_conditions_ignored`: credit types in the deal, or every credit type in the model? | Differ; invisible to the comparison |
-| N-25 | `step_tiers` value in a gap between brackets: 0? | Second engine only |
-| N-26 | `applies_to` of a minimum with several target products | Second engine only |
-| N-35 | A required module also listed in `module_selections`: charged once, no error? | Second engine; near Q10 |
-| N-9, N-23, F-12, N-14, F-15, N-15 | Replacement and negotiated-override details, and pools (Q3, Q8, DN-10, DN-13, DN-17) | Wait for the sheet |
-| N-36, N-37 | Done in section 9.2, except the overage entry when several contribute | See DN-20 |
+N-9, N-23, F-12 and N-14 (Q3, Q8, DN-10, DN-12 to DN-14), F-15 and N-15 (DN-17). Also the `quantities` entry an overage line lists when several contribute (N-37, DN-20); no vector covers it.
+
+## Where the second engine now differs from the specification
+
+The engine in this folder is the blind run and has not been changed. It differs from the specification on points no vector covers:
+
+- N-2: it accepts any two capital letters as a country.
+- F-10: it builds a `per_unit` price for `custom_unit_price` on a flat module price.
+- F-11, N-7: it accepts `waived` on an overage with no `overage_price`.
+- F-14, N-6: it warns for every credit type that has a consumption rule.
+- N-26: a minimum over several products is named after the first one.
