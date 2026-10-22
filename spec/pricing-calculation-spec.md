@@ -49,7 +49,7 @@ Two statements are equal if all of these are equal:
 - `entitlement_summary`, matched by `credit_type_id`
 - the `warnings`, compared as a set of (`type`, `severity`) pairs
 
-Not compared: `computation_method`, `computation_notes`, warning `message`, and the informational line fields `quantity`, `unit`, `unit_price` and `graduated_detail`. Numbers are compared after rounding to the currency's minor unit.
+Not compared: `invoice_id`, `period`, `computation_method`, `computation_notes`, warning `message`, and the informational line fields `description`, `quantity`, `unit`, `unit_price` and `graduated_detail`. Numbers are compared after rounding to the currency's minor unit.
 
 ### 2.3 The five tests
 
@@ -184,7 +184,7 @@ A product selection charges these modules, each once:
 2. every module with `required: true` for the product, whether or not the tier lists it
 3. the modules in `module_selections`
 
-A module in `module_selections` that the chosen tier already includes is the validation failure `module_selection_in_tier`.
+A module in `module_selections` that the chosen tier already includes is the validation failure `module_selection_in_tier`. A required module that is also in `module_selections` is charged once and is not a failure.
 
 ### 4.5 Selecting a commitment plan
 
@@ -204,7 +204,7 @@ A metric name is resolved in this order:
 
 ### 4.7 Region
 
-`customer.region` is an ISO 3166-1 alpha-2 country code, or null. A code that is neither a country code nor in the grouping list below is the validation failure `unknown_region`. Matching is exact and case-sensitive. A `price_books[].region` is a country code or a grouping code. Groupings: `EU` (AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE) and `EEA` (the EU plus IS, LI, NO). Groupings are added only in a MINOR release. [DN-6]
+`customer.region` is an ISO 3166-1 alpha-2 country code, or null. The country codes are those assigned in ISO 3166-1 on 1 January 2026. A code assigned later is added only in a MINOR release, as groupings are. A code that is neither a country code nor in the grouping list below is the validation failure `unknown_region`. Matching is exact and case-sensitive. A `price_books[].region` is a country code or a grouping code. Groupings: `EU` (AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE) and `EEA` (the EU plus IS, LI, NO). Groupings are added only in a MINOR release. [DN-6]
 
 ---
 
@@ -251,7 +251,7 @@ The calculation has nine phases, numbered from 0. They run in this order.
 | 7 | Minimums | True-ups to minimum commitments. |
 | 8 | Assemble | Rounding, totals and output. |
 
-A phase that finds a validation failure does not stop the others from finding more. An engine reports every failure it can find.
+A phase that finds a validation failure does not stop the others from finding more. An engine reports every failure it can find. The exception is step 1 of section 7.1: if an id does not resolve, the engine reports the failures of that step and stops, because the later checks would read ids that do not exist.
 
 ---
 
@@ -263,11 +263,11 @@ An engine checks, and reports each failure with the code in Annex A:
 
 1. **Join and references** (sections 4.1, Annex C).
 2. **Term and quantities** (sections 3.8, 4.2, 4.5).
-3. **Eligibility.** A deal motion, region or metric restriction applies to an object through its `eligibility`: the deal's `deal_motion` MUST be in `deal_motions` and the customer's region in `regions` (a grouping contains its member countries), and `min_metric` MUST be met (the metric's value is at least `min`), unless the list is empty or the object is null. An object that is explicitly selected and ineligible follows `pricing_rules.policy.ineligible_selection_handling`: `error` is the validation failure `ineligible_selection`, and `drop_with_warning` treats it as not selected and emits an `ineligible_selection` warning. An ineligible mandatory discount or minimum commitment simply does not apply, with no warning. Variants can override a discount's or bundle's enabled state (section 7.2). [DN-7]
-4. **Module dependencies.** A dependency is met only if the required object is selected or included in the configuration: a module that is charged, a tier that is chosen, a product that is selected, or a credit package that is selected. It is an exact match with no tier ordering (`dependency_unmet`).
+3. **Eligibility.** A deal motion, region or metric restriction applies to an object through its `eligibility`: the deal's `deal_motion` MUST be in `deal_motions` and the customer's region in `regions` (a grouping contains its member countries), and `min_metric` MUST be met (the metric's value is at least `min`), unless the list is empty or the object is null. An object that is explicitly selected and ineligible follows `pricing_rules.policy.ineligible_selection_handling`: `error` is the validation failure `ineligible_selection`, and `drop_with_warning` treats it as not selected and emits an `ineligible_selection` warning. A commitment plan counts as selected whether it comes from `commitment_plan_id` or from `billing.plan_id`, and an ineligible one is handled the same way. The grants of an ineligible plan do not join the entitlement pools. An ineligible mandatory discount or minimum commitment simply does not apply, with no warning. Variants can override a discount's or bundle's enabled state (section 7.2). [DN-7]
+4. **Module dependencies.** A dependency is met only if the required object is selected or included in the configuration: a module that is charged, a tier that is chosen, a product that is selected, or a credit package that is selected. It is an exact match with no tier ordering (`dependency_unmet`). A dependency applies only when the dependent object is present (a module that is charged, a tier that is chosen in any selection, a product that is selected, or a credit package that is selected). The required object may be present in any product selection of the deal.
 5. **Business rules.** An engine that evaluates rules reports a violated `hard_block` rule as the validation failure `hard_block_rule`, and a triggered `warning` rule as a `rule_warning` warning. An engine that does not evaluate a rule MUST NOT report the configuration as validated against it. It emits one `unevaluated_rule` info warning that lists the ids of the rules it did not evaluate. Rules are text. The engine MUST NOT turn an unevaluated rule into a price.
-6. **Relationships.** `pricing_relationships` of type `prerequisite` and `mutual_exclusion` are enforced like dependencies (`dependency_unmet`, `mutual_exclusion`). `upgrade_path`, `migration_path` and `other` are informational. `bundle_discount`, `volume_across_products`, `credit_sharing` and `entitlement_pooling` imply a calculation that has no parameters: the engine treats them as informational and emits a `relationship_not_modeled` warning. Use `bundles[]` for a bundle discount.
-7. **Model integrity.** At most one variant per `deal_motion` (`multiple_variants_for_motion`). `discount_application_order` MUST list every discount that applies to the deal (`discount_not_ordered`). A discount with `mode: manual` and `discretion: mandatory` is invalid (`invalid_discount`).
+6. **Relationships.** `pricing_relationships` of type `prerequisite` and `mutual_exclusion` are enforced like dependencies (`dependency_unmet`, `mutual_exclusion`): for a `prerequisite`, the subject present and the `related_to` object missing is `dependency_unmet`, and for a `mutual_exclusion`, both objects present is `mutual_exclusion`. `upgrade_path`, `migration_path` and `other` are informational. `bundle_discount`, `volume_across_products`, `credit_sharing` and `entitlement_pooling` imply a calculation that has no parameters: the engine treats them as informational and emits a `relationship_not_modeled` warning whenever the model holds such a relationship, whether or not its objects are selected. Use `bundles[]` for a bundle discount.
+7. **Model integrity.** At most one variant per `deal_motion` (`multiple_variants_for_motion`). `discount_application_order` MUST list every discount that applies to the deal (`discount_not_ordered`). A discount with `mode: manual` and `discretion: mandatory` is invalid (`invalid_discount`) and is not applied, so it gives no `missing_manual_value` as well.
 
 ### 7.2 Phase 1: Variant
 
@@ -281,7 +281,7 @@ The variant whose `deal_motion` equals the deal's applies. If none does, there a
 
 The price book whose `region` equals the customer's region applies. If none does, a book whose region is a grouping that contains it applies. If more than one grouping matches, that is `ambiguous_price_book`. A null region, or a valid region with no price book, means base prices apply.
 
-A price-book entry for a module or package replaces the price. A module that a variant overrode is **not** overridden by the price book: a price set for a specific kind of deal is final. For any other module or package, the price book's `fallback_multiplier` applies when the book has no entry for it: the amount and every band `value` of the price after phase 1 are multiplied by the multiplier, and the result is in the book's currency. A null `fallback_multiplier` means the post-phase-1 price is used only if its currency equals the book's, and otherwise the result is `mixed_currency`.
+A price-book entry for a module or package replaces the price. A price in an entry with a null `currency` is in the book's currency. A module that a variant overrode is **not** overridden by the price book: a price set for a specific kind of deal is final. For any other module or package, the price book's `fallback_multiplier` applies when the book has no entry for it: the amount and every band `value` of the price after phase 1 are multiplied by the multiplier, and the result is in the book's currency. A null `fallback_multiplier` means the post-phase-1 price is used only if its currency equals the book's, and otherwise the result is `mixed_currency`.
 
 ### 7.4 Phase 3: Price resolution
 
@@ -308,6 +308,8 @@ The valid combinations of `target_kind` and `override_type`:
 | `total_deal` | none | `discount_percentage`, `discount_amount`, `capped`, `fixed_price` |
 
 Any other combination is `invalid_override`, and so is a null `override_value` except for `waived`. `custom_unit_price` on `credit_type_overage` sets the overage price to a `per_unit` price of that amount, with the period of the credit type's `overage_price`. If the credit type has no `overage_price`, that is `invalid_override`. [DN-10]
+
+Three more cases are `invalid_override`: a target that is not a charged module or credit package of the deal (or, for `credit_type_overage`, not a credit type); any `credit_type_overage` override on a credit type with no `overage_price`; and a `custom_unit_price` on a module whose price has no `credit_type_id`, because there is no quantity to multiply. An override on a credit type that has an `overage_price` but no overage in this deal is accepted and changes nothing.
 
 ### 7.5 Phase 4: Line items
 
@@ -339,7 +341,7 @@ A grant whose `renewal_behavior`, `period` or `metric_type` is `unknown`, or a p
 | `throttle`, `contact_sales` | No charge, and an `overage_not_priced` warning. |
 | `unknown` | No charge, and an `indeterminate_entitlement` warning. |
 
-**Consumption rules.** `credit_types[].consumption_rules` are informational at quote time. An engine MUST NOT evaluate their `conditions`. A rule with non-null `conditions` gives a `consumption_conditions_ignored` info warning.
+**Consumption rules.** `credit_types[].consumption_rules` are informational at quote time. An engine MUST NOT evaluate their `conditions`. A rule with non-null `conditions` gives a `consumption_conditions_ignored` info warning, for a credit type that has a pool or a billed quantity (the credit types of section 8).
 
 **Not modeled.** Metered usage and rollover from period to period are outside this standard. Carry-forward for `accumulate` and `lifetime` grants is defined for the quote-time comparison only, and means the pool's quantity applies across the whole contract. [DN-15]
 
@@ -349,7 +351,7 @@ A grant whose `renewal_behavior`, `period` or `metric_type` is `unknown`, or a p
 
 **Order and stacking.** Discounts apply in `discount_application_order`.
 
-- A non-null `exclusive_group` means at most one discount per group applies, chosen by `pricing_rules.policy.exclusive_group_resolution`: `max_discount` takes the one with the largest reduction at its turn, `first_in_order` the first in the order. The `stackable` value makes no difference.
+- A non-null `exclusive_group` means at most one discount per group applies, chosen by `pricing_rules.policy.exclusive_group_resolution`: `max_discount` takes the one with the largest reduction at its turn, `first_in_order` the first in the order. The `stackable` value makes no difference. The turn of a group is the position of its first member in the order, and the reductions are compared by computing each member there. A tie goes to the member that comes first in the order. For the `stackable: false` rule below, a group has applied once its chosen member has applied.
 - `stackable: false` with a null group means the discount applies only if no earlier discount applied.
 - `stackable: true` with a null group combines freely. A null `stacking` object means the same.
 
@@ -361,12 +363,12 @@ A grant whose `renewal_behavior`, `period` or `metric_type` is `unknown`, or a p
 
 | Shape | Value for the input *x* |
 |---|---|
-| `step_tiers` | The `value` of the bracket with `min` ≤ *x* < `max`. Below the lowest `min`: 0. At or above the highest `max`: the highest bracket's `value`. |
+| `step_tiers` | The `value` of the bracket with `min` ≤ *x* < `max`. Below the lowest `min`: 0. In a gap between two brackets: 0. At or above the highest `max`: the highest bracket's `value`. |
 | `linear_ramp` | 0 below `start_at`. From `start_at`: `start_value` + `slope_per_unit` × (*x* − `start_at`), at most `max_value` when that is non-null. |
 | `piecewise_linear` | `points` need at least 2 entries with strictly increasing `x`. Linear between neighbours. Below the first `x`: 0. Above the last `x`: the last `y`. At most `max_value`. |
 | `lookup_table` | The `value` of the entry whose `key` equals the canonical decimal string of *x* (no leading zeros, no trailing fractional zeros), compared as case-sensitive strings. No match is an unresolved metric. |
 
-**What each scope discounts.** The base is the running amount of the charges in scope, after phase 3:
+**What each scope discounts.** The base is the running amount of the charges in scope, after phase 3. The `module` and `product` scopes include one-time charges:
 
 | `scope` | Base |
 |---|---|
@@ -406,7 +408,7 @@ For each credit type that has a pool or a billed quantity, `entitlement_summary`
 
 - `granted`: the quantity of the pool that gives the reported overage, -1 for unlimited, and null if the credit type has no pool or is indeterminate.
 - `committed_or_used`: the largest demand over the contract years.
-- `overage` and `overage_cost`: the largest yearly overage, and the total overage charge over the contract. Null if indeterminate.
+- `overage` and `overage_cost`: the largest yearly overage, and the total overage charge over the contract. Null if indeterminate. When a credit type is determinate and no overage charge arises, `overage_cost` is 0: this includes `throttle`, `contact_sales` and `hard_cap`.
 - `overage_policy`: the governing policy.
 
 [DN-17]
@@ -426,7 +428,8 @@ For each credit type that has a pool or a billed quantity, `entitlement_summary`
 | `line_id` | 1 to *n*, in phase order (phase 4, then phase 5), then input order: product selections in the order of the deal configuration, and within one, modules in the order of `products[].modules[]`, then credit-package selections in deal order. `position` does not matter. |
 | `category` | `module_charge`, `credit_package`, `one_time_fee`, or `usage_overage`. |
 | `product_id` | The product of the module, for a module line. `null` for a credit-package line and for an overage line: credit packages and credit types belong to the model, not to a product. |
-| `source_fields` | The price object used (`model#` pointer to the price in the model, or to the variant or price-book price that replaced it), then the quantity entry (`config#` pointer). A `flat` module price has no quantity entry. A credit-package line lists its `credit_package_selections` entry, whatever its price type. An overage line lists the credit type's `overage_price`, then the entry of `quantities` that gives the overage. |
+| `target_id` | The id of the charged object: the module id for a module line, the credit package id for a credit-package line, and the credit type id for an overage line. |
+| `source_fields` | The price object used (`model#` pointer to the price in the model, or to the variant or price-book price that replaced it; for a price made by a price book's `fallback_multiplier`, the pointer to the price that was multiplied), then the quantity entry (`config#` pointer). A `flat` module price has no quantity entry. A credit-package line lists its `credit_package_selections` entry, whatever its price type. An overage line lists the credit type's `overage_price`, then the entry of `quantities` that gives the overage. |
 | `quantity`, `unit`, `unit_price`, `graduated_detail` | Informational. `quantity` is the first-period quantity. `graduated_detail` shows the first billing period. |
 
 A `source_fields` entry is `model#` or `config#` followed by an RFC 6901 JSON Pointer into that document as received. [DN-20] Because a pointer holds array positions, it is valid only against the exact documents it was made from. Minimum true-ups appear as adjustments. The line category `minimum_commitment_true_up` is not used.
@@ -448,14 +451,14 @@ Each adjustment has an `adjustment_type`, a signed `amount`, an `applies_to` and
 | `capped` | `price_cap` | scope as above | pointer to the override |
 | Minimum true-up | `minimum_true_up` | `contract_total`, `product:<id>` or `credit_type:<id>` | pointer to the minimum |
 
-Adjustments are listed in the order they were applied. The type `volume_discount` is not produced by anything in this specification. [DN-18]
+For a discount or override, `applies_to` names the one line (`module` scope), the one product (`product` scope) or the one credit type (`credits_only` scope) that it matches, and is `contract_total` when it matches more than one or when its scope is `contract_total`. A minimum true-up follows the same rule with its `product` and `credits_only` scopes, and is `contract_total` for the `contract_total` and `annual` scopes. Adjustments are listed in the order they were applied. The phase 3 adjustments are applied line by line (section 7.4), so they are listed line by line: for each line the commitment plan, then each bundle in `bundle_selections` order, then the replacement. Phase 6 adjustments follow, then phase 7. An adjustment whose amount is 0 is not reported. The type `volume_discount` is not produced by anything in this specification. [DN-18]
 
 ### 9.4 Totals
 
 - `subtotals.recurring`: the sum of the `line_total` of recurring lines (module charges, credit packages that recur, and overage). `subtotals.one_time`: the sum of the one-time lines. `subtotals.gross`: both.
 - `totals.total_adjustments`: the sum of the adjustments.
 - `totals.net_total`: `gross` plus `total_adjustments`, for the period the statement covers.
-- `totals.annualized_total`: the recurring net divided by (`contract_term_months` ÷ 12). One-time charges, and the adjustments that apply to them, are excluded. They are reported separately, not spread over the term.
+- `totals.annualized_total`: the recurring net divided by (`contract_term_months` ÷ 12). One-time charges, and the adjustments that apply to them, are excluded. They are reported separately, not spread over the term. An adjustment spread over both recurring and one-time lines contributes its recurring share, rounded once on its own. `annualized_total` is the sum of the rounded recurring line totals and these rounded shares, divided by (`contract_term_months` ÷ 12) and rounded.
 - `totals.total_contract_value`: the net of the whole contract: the per-period recurring charges (following the growth schedule) plus the one-time charges, after adjustments.
 
 Both `annualized_total` and `total_contract_value` are non-null whenever a statement is produced. If an `unpriced_item` warning is present, they cover priced items only and are a lower bound. [DN-19]
