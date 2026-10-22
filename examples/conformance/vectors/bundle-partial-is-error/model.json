@@ -1,0 +1,130 @@
+{
+  "schema_version": "2.0.0",
+  "model_id": "acme",
+  "vendor_name": "Acme Software",
+  "effective_date": "2026-01-01",
+  "currency": "USD",
+  "products": [
+    {
+      "id": "p1",
+      "label": "p1",
+      "position": null,
+      "modules": [
+        {
+          "id": "m1",
+          "label": "m1",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 100,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        }
+      ],
+      "tiers": [
+        {
+          "id": "t1",
+          "label": "t1",
+          "position": null,
+          "included_modules": [
+            "m1"
+          ],
+          "included_credit_grants": [],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        }
+      ],
+      "commitment_plans": []
+    },
+    {
+      "id": "p2",
+      "label": "p2",
+      "position": null,
+      "modules": [
+        {
+          "id": "m2",
+          "label": "m2",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 200,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        }
+      ],
+      "tiers": [
+        {
+          "id": "t2",
+          "label": "t2",
+          "position": null,
+          "included_modules": [
+            "m2"
+          ],
+          "included_credit_grants": [],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        }
+      ],
+      "commitment_plans": []
+    }
+  ],
+  "bundles": [
+    {
+      "id": "b",
+      "label": "b",
+      "product_ids": [
+        "p1",
+        "p2"
+      ],
+      "adjustment": {
+        "percent": -10
+      },
+      "included_credit_grants": [],
+      "eligibility": null
+    }
+  ],
+  "discounts": [],
+  "credit_types": [],
+  "credit_packages": [],
+  "discount_strategies": [],
+  "price_books": [],
+  "variants": [],
+  "minimum_commitments": [],
+  "pricing_rules": {
+    "calculation_order": [],
+    "discount_application_order": [],
+    "rounding": {
+      "mode": "currency_minor_units",
+      "method": "half_away_from_zero",
+      "currency_minor_units": 2
+    },
+    "policy": {
+      "exclusive_group_resolution": "max_discount",
+      "ineligible_selection_handling": "error",
+      "missing_strategy_inputs_handling": "error"
+    }
+  },
+  "business_rules": [],
+  "module_dependencies": [],
+  "pricing_relationships": [],
+  "comparison_grid": [],
+  "conformance_profile": null
+}

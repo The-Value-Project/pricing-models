@@ -1,0 +1,68 @@
+{
+  "vector": "minimum-annual-scope",
+  "title": "An annual floor works on the annualized basis",
+  "spec_sections": [
+    "7.8"
+  ],
+  "status": "provisional",
+  "open_question": "Q6",
+  "worked": "Recurring $80,000 over 2 years: $40,000 a year. Floor $50,000: shortfall $10,000 a year × 2 = $20,000. Net $100,000, annualized $50,000.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2027-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 40000,
+          "line_total": 80000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 80000,
+        "one_time": 0,
+        "gross": 80000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "minimum_true_up",
+          "description": "Minimum commitment f",
+          "amount": 20000,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/minimum_commitments/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": 20000,
+        "net_total": 100000,
+        "annualized_total": 50000,
+        "total_contract_value": 100000
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

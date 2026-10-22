@@ -1,0 +1,16 @@
+{
+  "vector": "module-selection-in-tier",
+  "title": "An add-on already in the tier fails",
+  "spec_sections": [
+    "4.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "m is in the tier.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "module_selection_in_tier"
+    ]
+  }
+}

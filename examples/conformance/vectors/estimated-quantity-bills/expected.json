@@ -1,0 +1,75 @@
+{
+  "vector": "estimated-quantity-bills",
+  "title": "An estimated quantity bills, with a warning",
+  "spec_sections": [
+    "4.2"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "5 × $10 × 12 = $600, and an estimated_quantity warning.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 5,
+          "unit": "unit",
+          "unit_price": 10,
+          "line_total": 600,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price",
+            "config#/product_selections/0/quantities/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 600,
+        "one_time": 0,
+        "gross": 600
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 600,
+        "annualized_total": 600,
+        "total_contract_value": 600
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "seats",
+          "granted": null,
+          "committed_or_used": 5,
+          "overage": 0,
+          "overage_cost": 0,
+          "overage_policy": "throttle"
+        }
+      ],
+      "warnings": [
+        {
+          "type": "estimated_quantity",
+          "message": "seats",
+          "severity": "warning"
+        }
+      ],
+      "computation_notes": []
+    }
+  }
+}

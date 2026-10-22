@@ -1,0 +1,16 @@
+{
+  "vector": "term-below-commitment",
+  "title": "The term must reach the plan's commitment",
+  "spec_sections": [
+    "4.5"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Plan needs 12 months. The term is 6.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "term_below_commitment"
+    ]
+  }
+}

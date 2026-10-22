@@ -1,0 +1,59 @@
+{
+  "schema_version": "2.0.0",
+  "config_id": "acme-quote-1",
+  "config_date": "2026-01-01",
+  "model_reference": {
+    "model_id": "acme-ai-platform"
+  },
+  "customer": {
+    "name": "Northwind Traders",
+    "domain": "northwind.example",
+    "region": "US"
+  },
+  "deal_motion": "new_logo",
+  "billing": {
+    "plan_id": null,
+    "contract_start_date": "2026-01-01",
+    "contract_term_months": 24,
+    "payment_terms": null
+  },
+  "product_selections": [
+    {
+      "product_id": "platform",
+      "tier_id": "business",
+      "commitment_plan_id": "annual-prepay",
+      "module_selections": [
+        {
+          "module_id": "premium-support"
+        },
+        {
+          "module_id": "onboarding"
+        }
+      ],
+      "quantities": [
+        {
+          "credit_type_id": "seats",
+          "quantity": 60,
+          "quantity_type": "committed",
+          "growth_schedule": null
+        },
+        {
+          "credit_type_id": "api-calls",
+          "quantity": 250000,
+          "quantity_type": "committed",
+          "growth_schedule": null
+        }
+      ],
+      "credit_package_selections": []
+    }
+  ],
+  "bundle_selections": [],
+  "discount_selections": [
+    {
+      "discount_id": "partner",
+      "manual_value": 5
+    }
+  ],
+  "negotiated_overrides": null,
+  "config_notes": []
+}

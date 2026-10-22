@@ -1,0 +1,68 @@
+{
+  "vector": "negotiated-capped",
+  "title": "A cap limits the charge",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "provisional",
+  "open_question": "Q8",
+  "worked": "$12,000 capped at $10,000: -$2,000.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 1000,
+          "line_total": 12000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 12000,
+        "one_time": 0,
+        "gross": 12000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "price_cap",
+          "description": "Override capped",
+          "amount": -2000,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "config#/negotiated_overrides/price_overrides/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -2000,
+        "net_total": 10000,
+        "annualized_total": 10000,
+        "total_contract_value": 10000
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}
