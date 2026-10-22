@@ -1,0 +1,92 @@
+{
+  "vector": "bundle-applies-when-all-selected",
+  "title": "A bundle applies when every product is selected",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Lines $1,200 and $2,400. Bundle -10% on each line: -$120 and -$240. Net $3,240.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m1",
+          "product_id": "p1",
+          "target_id": "m1",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "module_charge",
+          "description": "m2",
+          "product_id": "p2",
+          "target_id": "m2",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 200,
+          "line_total": 2400,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/1/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 3600,
+        "one_time": 0,
+        "gross": 3600
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b",
+          "amount": -120,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/0"
+        },
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b",
+          "amount": -240,
+          "applies_to": "line:2",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -360,
+        "net_total": 3240,
+        "annualized_total": 3240,
+        "total_contract_value": 3240
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

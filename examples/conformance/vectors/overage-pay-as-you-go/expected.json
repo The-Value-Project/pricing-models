@@ -1,0 +1,85 @@
+{
+  "vector": "overage-pay-as-you-go",
+  "title": "Overage is priced per period",
+  "spec_sections": [
+    "7.6"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Granted 4,000 a month, billed 5,000: overage 1,000. $0.01 × 1,000 = $10 a month × 12 = $120. Lines: $1,200 and $120. Net $1,320.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "usage_overage",
+          "description": "Overage: api",
+          "product_id": null,
+          "target_id": "api",
+          "quantity": 1000,
+          "unit": "unit",
+          "unit_price": 0.12,
+          "line_total": 120,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/credit_types/0/overage_price",
+            "config#/product_selections/0/quantities/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1320,
+        "one_time": 0,
+        "gross": 1320
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 1320,
+        "annualized_total": 1320,
+        "total_contract_value": 1320
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "api",
+          "granted": 4000,
+          "committed_or_used": 5000,
+          "overage": 1000,
+          "overage_cost": 120,
+          "overage_policy": "pay_as_you_go"
+        }
+      ],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

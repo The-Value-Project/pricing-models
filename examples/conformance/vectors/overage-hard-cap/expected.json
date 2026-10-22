@@ -1,0 +1,16 @@
+{
+  "vector": "overage-hard-cap",
+  "title": "Overage under a hard cap is a validation failure",
+  "spec_sections": [
+    "7.6"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Policy hard_cap, billed above granted.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "hard_cap_exceeded"
+    ]
+  }
+}

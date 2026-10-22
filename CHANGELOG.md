@@ -10,7 +10,54 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Version
 
 ## [Unreleased]
 
-*No unreleased changes.*
+### Changed — `schemas/pricing_model.json`
+
+Not a breaking change: the set of valid `PricingModel` documents is unchanged.
+
+- Factored the three shapes that were repeated inline into `$defs`: `price` (6 sites), `credit_grant` (the item of `included_credit_grants[]`, 5 sites) and `eligibility` (6 sites). Each site is now a `$ref`. All 17 copies were identical before the change. Code generated from the schema will show one named type in place of several anonymous ones; that is not a change in what validates.
+- Technique and credit: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal defines its shared shapes the same way.
+
+### Changed (breaking) — `plans` renamed to `commitment_plans`
+
+Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec/migration-2.0.0.md`.
+
+- `PricingModel`: `products[].plans[]` is now `products[].commitment_plans[]`. In the schema, a "plan" meant a commitment-period option (annual, monthly). In most pricing usage a "plan" is what this standard calls a tier, so the old name led readers to the wrong object.
+- `InvoiceStatement`: the `adjustments[].adjustment_type` value `plan_adjustment` is now `commitment_plan_adjustment`.
+- `DealConfiguration`: `billing.plan_id` keeps its name. It now refers to `products[].commitment_plans[].id`.
+- `README.md`, `spec/pricing-page-spec.md` (§4c is now "Commitment plans") and `spec/pricing-model-llm-reference.md` use the new name.
+- Source: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal already uses `commitment_plans`, and its mapping tables record the clash.
+
+### Changed (breaking) — schemas, in progress for 2.0.0
+
+`x-version` and `schema_version` move to 2.0.0 in the release commit. The full list of paths is in `spec/migration-2.0.0.md`. New fields are required, and are nullable where a value can be unknown.
+
+- All three schemas: `schema_version` (`const`), ids that match a kebab-case pattern, ISO 4217 currency codes.
+- `PricingModel`: identity fields (`model_id`, `vendor_name`, `effective_date`, `currency`); `position` for ordering; `comparison_grid` and `conformance_profile`; `default_for_tier_ids` on commitment plans; nullable `commitment_months`; `price.credit_type_id` and enforced pairing of price type with `tiers` or `breakpoints`; `credit_types[].overage_price`; `credit_packages[].rollover_percent`; `rounding.method`; `unknown` for grant `renewal_behavior`, `period` and `metric_type` and for package `rollover_policy`; `*_kind` fields on dependencies and relationships; a reference-only `$defs/referential_rules`.
+- `DealConfiguration`: `module_selections`, `product_selections[].commitment_plan_id`, `growth_schedule[].period_index`, `price_overrides[].target_kind` (a null `target_id` for the whole deal, and `credit_type_overage` for overage prices), `credit_grant_overrides[].period`.
+- `InvoiceStatement`: `model_id`; nullable `line_items[].product_id`; `source_fields` as `model#` or `config#` JSON Pointers; annualized total and total contract value never null; nullable `overage` and `overage_cost` for an indeterminate entitlement.
+- Deprecated, not removed: `discount_strategies[].input_keys`, `pricing_rules.calculation_order`, `billing.plan_id`. Each description says why and what replaces it.
+- Source: `$defs`, `position`, `commitment_months`, `default_for_tier_ids`, the grid, the conformance profile, the kind fields and the reference rules are from the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal. The rest comes from the audit of the published files.
+
+### Added — `spec/pricing-calculation-spec.md` (draft, for 2.0.0)
+
+The normative calculation specification that the README, the CHANGELOG and `x-spec` had linked to since 1.0.0, and that had never been committed. It defines scope, conformance and equality, conventions (ids, percentages, empty arrays, no silent defaults), inputs, price primitives and bands, the nine phases, entitlements and overage, rounding, output rules, validation failure codes and warning types. It states every calculation decision made for 2.0.0. Annex D lists the places that go beyond those decisions, for review. `x-spec` in `pricing_model.json` and the README now point to it.
+
+### Changed — documentation
+
+- `spec/pricing-page-spec.md` 2.0.0 → 3.0.0 (MAJOR, targets schemas 2.0.0): a page written to 2.0.0 does not conform. The §4b tier price rule is defined for every price type (the 2.0.0 rule summed unit prices with flat charges and showed fully priced tiered tiers as "Contact sales"), and "dominant" billing period is gone. Adds §4k Credit Types and Packages, §4l Bundles and §4m Comparison Grid. Front matter requires `model_id` and `schema_version: "2.0.0"`, equal to the JSON's. The JSON block keeps every root field and lists every dropped nested field. Conformance gains five checks. `calculation_order` is no longer narrated as model data. The front-matter example, LLM instruction block and footer say 2.0.0 where they said `1.4`; a page published with `schema_version: "1.4"` should change it to the schema version it targets.
+- `spec/pricing-model-llm-reference.md` 1.0.0 → 2.0.0: records the 2026-06-03 change (explicit instructions for missing data and failure modes), which had no version or changelog entry. It now targets schemas 2.0.0: volume bands are `breakpoints`, phases are numbered from 0 with "Price resolution" in place of "Plan", variants replace, the overage rate is `overage_price`, and it says the calculation specification governs.
+- `README.md`: one versions table showing which schema version each specification document targets; a Terminology table; a table of the four price-reduction mechanisms, with only what the published documents state; the cross-repo tier join described as `label` to `name`.
+- `IMPLEMENTATIONS.md` and `MAINTAINERS.md` renamed from `pricing-models-IMPLEMENTATIONS.md` and `pricing-models-MAINTAINERS.md`, the names `GOVERNANCE.md` and the files themselves link to. The `IMPLEMENTATIONS.md` registration row names `1.0.0`. Licence links in `GOVERNANCE.md`, `IMPLEMENTATIONS.md` and `MAINTAINERS.md` point at `LICENSE-CODE` and `LICENSE-DOCS`. `CONTRIBUTING.md` uses the `proposal` label.
+
+### Corrections to earlier entries
+
+The 1.0.0 and 2.0.0 entries are history and are not rewritten. These statements in them were not accurate:
+
+- 1.0.0 lists "tax policy" under `pricing_rules`. There is no tax policy field. Amounts in the schemas exclude tax.
+- 1.0.0 describes the cross-repo join as `products[].tiers[].name` to `tiers_and_modules[].name`. Tiers carry `label`, not `name`; the join is `label` to `name`.
+- 1.0.0 says the specification and the LLM reference define a reverse-solve algorithm and guidance for generating a `DealConfiguration`. Neither was ever written. Reverse-solve is an optimization that sits outside the deterministic calculation. The calculation specification lists its levers in an informative annex.
+- 1.0.0 lists `spec/pricing-meta-model-spec.md`, which was never committed. The calculation specification replaces it.
+- 2.0.0 (page spec) lists a "Revised `§4e Credit Types`" section, an "Added Module Type column" and an "adjustment percent rounding rule". The specification never had any of them. Credit types now have §4k in 3.0.0.
 
 ---
 

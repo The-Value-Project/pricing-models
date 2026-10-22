@@ -1,0 +1,178 @@
+{
+  "schema_version": "2.0.0",
+  "invoice_id": "inv-acme-quote-1",
+  "config_id": "acme-quote-1",
+  "model_id": "acme-ai-platform",
+  "period": {
+    "label": "Contract",
+    "start_date": "2026-01-01",
+    "end_date": "2027-12-31",
+    "period_type": "contract_total"
+  },
+  "currency": "USD",
+  "line_items": [
+    {
+      "line_id": 1,
+      "category": "module_charge",
+      "description": "workspace",
+      "product_id": "platform",
+      "target_id": "workspace",
+      "quantity": 1,
+      "unit": "",
+      "unit_price": 1500,
+      "line_total": 36000,
+      "graduated_detail": null,
+      "computation_method": "contract charge",
+      "source_fields": [
+        "model#/products/0/modules/0/price"
+      ]
+    },
+    {
+      "line_id": 2,
+      "category": "module_charge",
+      "description": "seats",
+      "product_id": "platform",
+      "target_id": "seats",
+      "quantity": 60,
+      "unit": "seat",
+      "unit_price": 40,
+      "line_total": 57600,
+      "graduated_detail": null,
+      "computation_method": "contract charge",
+      "source_fields": [
+        "model#/products/0/modules/1/price",
+        "config#/product_selections/0/quantities/0"
+      ]
+    },
+    {
+      "line_id": 3,
+      "category": "module_charge",
+      "description": "premium-support",
+      "product_id": "platform",
+      "target_id": "premium-support",
+      "quantity": 1,
+      "unit": "",
+      "unit_price": 600,
+      "line_total": 14400,
+      "graduated_detail": null,
+      "computation_method": "contract charge",
+      "source_fields": [
+        "model#/products/0/modules/2/price"
+      ]
+    },
+    {
+      "line_id": 4,
+      "category": "one_time_fee",
+      "description": "onboarding",
+      "product_id": "platform",
+      "target_id": "onboarding",
+      "quantity": 1,
+      "unit": "",
+      "unit_price": 4000,
+      "line_total": 4000,
+      "graduated_detail": null,
+      "computation_method": "contract charge",
+      "source_fields": [
+        "model#/products/0/modules/3/price"
+      ]
+    },
+    {
+      "line_id": 5,
+      "category": "usage_overage",
+      "description": "Overage: api-calls",
+      "product_id": null,
+      "target_id": "api-calls",
+      "quantity": 50000,
+      "unit": "unit",
+      "unit_price": 0.048,
+      "line_total": 2400,
+      "graduated_detail": null,
+      "computation_method": "contract charge",
+      "source_fields": [
+        "model#/credit_types/1/overage_price",
+        "config#/product_selections/0/quantities/1"
+      ]
+    }
+  ],
+  "subtotals": {
+    "recurring": 110400,
+    "one_time": 4000,
+    "gross": 114400
+  },
+  "adjustments": [
+    {
+      "adjustment_type": "commitment_plan_adjustment",
+      "description": "Commitment plan annual-prepay",
+      "amount": -3600,
+      "applies_to": "line:1",
+      "computation_method": "adjustment",
+      "source": "model#/products/0/commitment_plans/0"
+    },
+    {
+      "adjustment_type": "commitment_plan_adjustment",
+      "description": "Commitment plan annual-prepay",
+      "amount": -5760,
+      "applies_to": "line:2",
+      "computation_method": "adjustment",
+      "source": "model#/products/0/commitment_plans/0"
+    },
+    {
+      "adjustment_type": "commitment_plan_adjustment",
+      "description": "Commitment plan annual-prepay",
+      "amount": -1440,
+      "applies_to": "line:3",
+      "computation_method": "adjustment",
+      "source": "model#/products/0/commitment_plans/0"
+    },
+    {
+      "adjustment_type": "commitment_plan_adjustment",
+      "description": "Commitment plan annual-prepay",
+      "amount": -400,
+      "applies_to": "line:4",
+      "computation_method": "adjustment",
+      "source": "model#/products/0/commitment_plans/0"
+    },
+    {
+      "adjustment_type": "strategy_discount",
+      "description": "Discount volume",
+      "amount": -4980,
+      "applies_to": "contract_total",
+      "computation_method": "adjustment",
+      "source": "model#/discounts/0"
+    },
+    {
+      "adjustment_type": "other",
+      "description": "Discount partner",
+      "amount": -4731,
+      "applies_to": "contract_total",
+      "computation_method": "adjustment",
+      "source": "model#/discounts/1"
+    }
+  ],
+  "totals": {
+    "total_adjustments": -20911,
+    "net_total": 93489,
+    "annualized_total": 44944.5,
+    "total_contract_value": 93489
+  },
+  "entitlement_summary": [
+    {
+      "credit_type_id": "seats",
+      "granted": null,
+      "committed_or_used": 60,
+      "overage": 0,
+      "overage_cost": 0,
+      "overage_policy": "throttle"
+    },
+    {
+      "credit_type_id": "api-calls",
+      "granted": 200000,
+      "committed_or_used": 250000,
+      "overage": 50000,
+      "overage_cost": 2400,
+      "overage_policy": "pay_as_you_go"
+    }
+  ],
+  "warnings": [],
+  "computation_notes": []
+}

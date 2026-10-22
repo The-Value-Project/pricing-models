@@ -1,0 +1,16 @@
+{
+  "vector": "bands-gap-is-malformed",
+  "title": "Bands with a gap are a model authoring error",
+  "spec_sections": [
+    "5.2"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "The second band starts at 11, not at the first band's max of 10.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "malformed_bands"
+    ]
+  }
+}

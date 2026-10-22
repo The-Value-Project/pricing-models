@@ -1,0 +1,102 @@
+{
+  "vector": "overage-package-units-count",
+  "title": "Package units join the pool",
+  "spec_sections": [
+    "7.6"
+  ],
+  "status": "provisional",
+  "open_question": "Q3",
+  "worked": "Pools: tier monthly 4,000, and a one-time package pool of 2,000. Billed 5,000. Monthly pool overage 1,000. Package pool overage 3,000. The largest, 3,000, governs: $0.01 × 3,000 = $30 a month × 12 = $360. Lines: $1,200, $50 package, $360. Net $1,610. This shows how DN-13 can produce a surprising result: a small one-time package pool raises overage.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "one_time_fee",
+          "description": "pk",
+          "product_id": null,
+          "target_id": "pk",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 50,
+          "line_total": 50,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/credit_packages/0/price",
+            "config#/product_selections/0/credit_package_selections/0"
+          ]
+        },
+        {
+          "line_id": 3,
+          "category": "usage_overage",
+          "description": "Overage: api",
+          "product_id": null,
+          "target_id": "api",
+          "quantity": 3000,
+          "unit": "unit",
+          "unit_price": 0.12,
+          "line_total": 360,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/credit_types/0/overage_price",
+            "config#/product_selections/0/quantities/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1560,
+        "one_time": 50,
+        "gross": 1610
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 1610,
+        "annualized_total": 1560,
+        "total_contract_value": 1610
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "api",
+          "granted": 2000,
+          "committed_or_used": 5000,
+          "overage": 3000,
+          "overage_cost": 360,
+          "overage_policy": "pay_as_you_go"
+        }
+      ],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

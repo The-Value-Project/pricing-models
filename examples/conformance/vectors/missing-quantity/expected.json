@@ -1,0 +1,16 @@
+{
+  "vector": "missing-quantity",
+  "title": "A per-unit price with no quantity is a validation failure",
+  "spec_sections": [
+    "4.3"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "No billed quantity for seats.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "missing_quantity"
+    ]
+  }
+}

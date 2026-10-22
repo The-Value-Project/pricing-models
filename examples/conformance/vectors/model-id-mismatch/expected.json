@@ -1,0 +1,16 @@
+{
+  "vector": "model-id-mismatch",
+  "title": "The deal must name the model",
+  "spec_sections": [
+    "4.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "model_id differs.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unresolved_reference"
+    ]
+  }
+}
