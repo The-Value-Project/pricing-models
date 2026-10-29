@@ -193,7 +193,7 @@ The specification does not define a reverse-solve algorithm. Finding a configura
 | **Grant** | Units of a credit type included by a module, tier, commitment plan or bundle (`included_credit_grants[]`). |
 | **Price adjustment** and **discount** | See the table below. |
 
-Readers coming from Currv or CPMS material should note that there a "plan" is what this standard calls a tier.
+Readers coming from other pricing schemas should note that in some of them a "plan" is what this standard calls a tier.
 
 ## Price-reduction mechanisms
 
