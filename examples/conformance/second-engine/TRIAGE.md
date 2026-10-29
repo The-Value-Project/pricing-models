@@ -65,3 +65,13 @@ The engine in this folder is the blind run and has not been changed. It differs 
 | `override-target-not-in-model`, `grant-override-credit-type-not-in-model` | The engine reports `invalid_override`. The specification now says an id that is not in the model is `unresolved_reference` (found in step 1 of 7.1), and `invalid_override` is for a target that is in the model but not charged. |
 
 Where the two engines agree on the new vectors: the override replacement of an overage price, reported as an adjustment of -$60 on `credit_type:api` (`overage-price-override-is-an-adjustment`), and every exclusive-group, scope, dependency, relationship and annualized-total vector.
+
+## Three vectors added after the blind run (2026-10-29)
+
+Three vectors test rules written after the blind run, in the follow-up on findings F-17 to F-19 and DN-20. The second engine was run on them unchanged and differs on all three. It follows the earlier text, so each difference is a gap in that text and not an error in the engine.
+
+| Vector | Why it differs |
+|---|---|
+| `failures-stop-at-first-failing-phase` | F-19, DN-26: the earlier text said every phase reports its failures. The engine reports `hard_cap_exceeded` (phase 5) as well as `module_selection_in_tier` (phase 0). The specification now says the calculation stops at the end of the first failing phase. |
+| `required-module-in-tier-and-selected` | F-18, DN-25: the earlier text did not say which rule wins for a required module that the tier includes and that is also selected. The engine reports `module_selection_in_tier`. The specification now says the required rule wins. |
+| `overage-from-two-selections` | DN-20: the engine lists only the `overage_price` in `source_fields`. The specification now says an overage line also lists every billed `quantities` entry of the credit type, in selection order. |

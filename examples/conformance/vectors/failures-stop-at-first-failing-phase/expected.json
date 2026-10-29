@@ -1,0 +1,18 @@
+{
+  "vector": "failures-stop-at-first-failing-phase",
+  "title": "Only the first failing phase reports",
+  "spec_sections": [
+    "6",
+    "7.1",
+    "7.6"
+  ],
+  "status": "provisional",
+  "open_question": "DN-26",
+  "worked": "Two faults: m is an add-on that tier t already includes (phase 0), and 5,000 is billed against a hard cap of 4,000 (phase 5). Phase 0 fails, so the calculation stops and only module_selection_in_tier is reported.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "module_selection_in_tier"
+    ]
+  }
+}

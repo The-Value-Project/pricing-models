@@ -3,7 +3,9 @@
   "vectors": [
     "consumption-conditions-credit-type-not-in-deal",
     "custom-unit-price-on-flat-module",
+    "failures-stop-at-first-failing-phase",
     "grant-override-credit-type-not-in-model",
+    "overage-from-two-selections",
     "overage-mixed-period-pools",
     "overage-override-without-overage-price",
     "overage-package-units-count",
@@ -13,6 +15,7 @@
     "package-flat-price-ignores-count",
     "package-per-unit-price",
     "region-code-not-iso-assigned",
-    "region-unassigned-code"
+    "region-unassigned-code",
+    "required-module-in-tier-and-selected"
   ]
 }
