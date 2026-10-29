@@ -75,6 +75,12 @@ A conformant engine MUST support `contract_total`. It MAY support the others. An
 
 Engines MUST use exact decimal arithmetic for money, quantities and percentages. Binary floating point can give different cents on different platforms. Intermediate values are not rounded. Rounding happens only where section 9.1 says. [DN-2]
 
+### 2.6 Conformance claims and provisional rules
+
+An engine conforms to a release of this specification if it passes every conformance vector whose status is `settled` for that release (`examples/conformance/`). An engine SHOULD state in `computation_notes` the version of this specification it implements.
+
+A **provisional** rule is one that this release publishes before it has been confirmed against how pricing works in practice. The provisional rules are the drafting notes listed in Annex D that are not marked settled, and the vectors with status `provisional` test them. A provisional rule can be changed or settled in a MINOR release, after the review that a MINOR needs. The prices an engine calculates under a provisional rule can therefore differ between 2.x releases. A rule that is not provisional changes only in a MAJOR release, except that a change which only clarifies it is a MINOR. A MINOR release does not add a provisional rule: that needs a MAJOR.
+
 ---
 
 ## 3. Conventions
@@ -533,7 +539,7 @@ The reference rules are in `schemas/pricing_model.json`, in `$defs/referential_r
 
 ## Annex D. Drafting notes
 
-These are the places where this specification states a rule the register of decisions did not settle, or chooses between readings. Each is open to change before 2.0.0. The last column says whether the point was raised before the specification was written.
+These are the places where this specification states a rule the register of decisions did not settle, or chooses between readings. Each is open to change before 2.0.0. From the 2.0.0 release, each one that is not marked settled is a provisional rule (section 2.6). The last column says whether the point was raised before the specification was written.
 
 | # | Where | What was drafted | Raised before? |
 |---|---|---|---|
