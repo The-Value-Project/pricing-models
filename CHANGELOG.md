@@ -42,6 +42,14 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 
 The normative calculation specification that the README, the CHANGELOG and `x-spec` had linked to since 1.0.0, and that had never been committed. It defines scope, conformance and equality, conventions (ids, percentages, empty arrays, no silent defaults), inputs, price primitives and bands, the nine phases, entitlements and overage, rounding, output rules, validation failure codes and warning types. It states every calculation decision made for 2.0.0. Annex D lists the places that go beyond those decisions, for review. `x-spec` in `pricing_model.json` and the README now point to it.
 
+### Changed — calculation specification follow-ups
+
+- Section 8: `overage_cost` is the charge after a replaced overage price and before phase 6 discounts (F-17).
+- Section 4.4: a required module that the tier includes and that is also selected is charged once and is not a failure (F-18, DN-25).
+- Section 6: a phase reports every validation failure it can find and the calculation continues to the next phase. A step is skipped only when it reads an amount or an id that an earlier failure left undefined, and the skips are listed (F-19, DN-26). The earlier text said this but the reference engine stopped at the first failing phase.
+- Section 9.2: an overage line lists every billed `quantities` entry of the credit type, in selection order (DN-20, now settled).
+- Six conformance vectors for these rules (`required-module-in-tier-and-selected`, `failures-in-several-phases`, `failure-in-lines-and-in-entitlements`, `failures-in-phase-0-and-phase-6`, `discount-checks-need-priced-lines`, `overage-from-two-selections`). The second engine differs on three, explained in `second-engine/TRIAGE.md`.
+
 ### Changed — versioning policy
 
 - `schema_version` in all three schemas accepts any 2.x (`^2\.[0-9]+(\.[0-9]+)?$`), not only `2.0.0`, so that later 2.x releases accept 2.0 documents.
@@ -51,7 +59,7 @@ The normative calculation specification that the README, the CHANGELOG and `x-sp
 ### Added — worked example, conformance suite and CI
 
 - `examples/acme_ai_platform_pms.json`, `acme_deal_config.json` and `acme_invoice.json`: the worked example that the README had promised since 1.0.0 and the repository never held. The numbers are worked out by hand.
-- `examples/conformance/`: 125 vectors, each with a `PricingModel`, a `DealConfiguration` and an expected result (a statement or a set of failure codes) with the arithmetic shown. 104 follow decided rules and 21 are `provisional` where a drafting note or a practitioner question is still open. A second engine, written blind from the specification, runs on them: its differences from the expected results are explained in `second-engine/TRIAGE.md`.
+- `examples/conformance/`: 131 vectors, each with a `PricingModel`, a `DealConfiguration` and an expected result (a statement or a set of failure codes) with the arithmetic shown. 105 follow decided rules and 26 are `provisional` where a drafting note or a practitioner question is still open. A second engine, written blind from the specification, runs on them: its differences from the expected results are explained in `second-engine/TRIAGE.md`.
 - `examples/conformance/tools/check.py` and `.github/workflows/check.yml`: check that the schemas are valid draft-07, that every vector validates against them and uses only codes and warning types from the specification, and that the second engine differs only where `known-differences.json` says.
 
 ### Changed — documentation

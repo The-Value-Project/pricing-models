@@ -190,7 +190,7 @@ A product selection charges these modules, each once:
 2. every module with `required: true` for the product, whether or not the tier lists it
 3. the modules in `module_selections`
 
-A module in `module_selections` that the chosen tier already includes is the validation failure `module_selection_in_tier`. A required module that is also in `module_selections` is charged once and is not a failure.
+A module in `module_selections` that the chosen tier already includes is the validation failure `module_selection_in_tier`. A required module that is also in `module_selections` is charged once and is not a failure, whether or not the tier includes it: the required rule wins over `module_selection_in_tier`. [DN-25]
 
 ### 4.5 Selecting a commitment plan
 
@@ -257,7 +257,12 @@ The calculation has nine phases, numbered from 0. They run in this order.
 | 7 | Minimums | True-ups to minimum commitments. |
 | 8 | Assemble | Rounding, totals and output. |
 
-A phase that finds a validation failure does not stop the others from finding more. An engine reports every failure it can find. The exception is step 1 of section 7.1: if an id does not resolve, the engine reports the failures of that step and stops, because the later checks would read ids that do not exist.
+A phase reports every validation failure it can find, and the calculation goes on to the next phase. A step is skipped only when it reads something that an earlier failure left undefined. [DN-26] The skips are these:
+
+- If an id does not resolve (step 1 of section 7.1), the engine reports the failures of that step and stops, because the later checks would read ids that do not exist.
+- If the price book cannot be chosen (`ambiguous_price_book`), the lines of phase 4 are not built.
+- If a line cannot be priced, the statement currency and the line amounts are undefined. The overage is not priced, and the currency check on the overage price is not made. The other checks of phase 5 are made.
+- Phases 6 and 7 read the amounts of the lines and of the overage. If a line or the overage could not be priced, they are not run. Phase 7 reads the amounts that phase 6 leaves, so it is not run if phase 6 found a failure. A failure that does not change an amount (for example `module_selection_in_tier` or `hard_cap_exceeded`) does not stop them.
 
 ---
 
@@ -414,7 +419,7 @@ For each credit type that has a pool or a billed quantity, `entitlement_summary`
 
 - `granted`: the quantity of the pool that gives the reported overage, -1 for unlimited, and null if the credit type has no pool or is indeterminate.
 - `committed_or_used`: the largest demand over the contract years.
-- `overage` and `overage_cost`: the largest yearly overage, and the total overage charge over the contract. Null if indeterminate. When a credit type is determinate and no overage charge arises, `overage_cost` is 0: this includes `throttle`, `contact_sales` and `hard_cap`.
+- `overage` and `overage_cost`: the largest yearly overage, and the total overage charge over the contract. The charge is the one the customer pays after a replaced overage price (section 7.4), so it equals the overage line's `line_total` plus the adjustment that carries the replacement. It is before the discounts of phase 6. Null if indeterminate. When a credit type is determinate and no overage charge arises, `overage_cost` is 0: this includes `throttle`, `contact_sales` and `hard_cap`.
 - `overage_policy`: the governing policy.
 
 [DN-17]
@@ -435,7 +440,7 @@ For each credit type that has a pool or a billed quantity, `entitlement_summary`
 | `category` | `module_charge`, `credit_package`, `one_time_fee`, or `usage_overage`. |
 | `product_id` | The product of the module, for a module line. `null` for a credit-package line and for an overage line: credit packages and credit types belong to the model, not to a product. |
 | `target_id` | The id of the charged object: the module id for a module line, the credit package id for a credit-package line, and the credit type id for an overage line. |
-| `source_fields` | The price object used (`model#` pointer to the price in the model, or to the variant or price-book price that replaced it; for a price made by a price book's `fallback_multiplier`, the pointer to the price that was multiplied), then the quantity entry (`config#` pointer). A `flat` module price has no quantity entry. A credit-package line lists its `credit_package_selections` entry, whatever its price type. An overage line lists the credit type's `overage_price`, then the entry of `quantities` that gives the overage. |
+| `source_fields` | The price object used (`model#` pointer to the price in the model, or to the variant or price-book price that replaced it; for a price made by a price book's `fallback_multiplier`, the pointer to the price that was multiplied), then the quantity entry (`config#` pointer). A `flat` module price has no quantity entry. A credit-package line lists its `credit_package_selections` entry, whatever its price type. An overage line lists the credit type's `overage_price`, then every billed entry (`committed`, `estimated` or `starting`) of `quantities` for that credit type, in the order of `product_selections` and then of `quantities`: together they make the demand. [DN-20] |
 | `quantity`, `unit`, `unit_price`, `graduated_detail` | Informational. `quantity` is the first-period quantity. `graduated_detail` shows the first billing period. |
 
 A `source_fields` entry is `model#` or `config#` followed by an RFC 6901 JSON Pointer into that document as received. [DN-20] Because a pointer holds array positions, it is valid only against the exact documents it was made from. Minimum true-ups appear as adjustments. The line category `minimum_commitment_true_up` is not used.
@@ -562,11 +567,13 @@ These are the places where this specification states a rule the register of deci
 | DN-17 | 8 | What `granted`, `committed_or_used`, `overage` and `overage_cost` mean when a credit type has several pools. | No |
 | DN-18 | 9.3 | The mapping from causes to `adjustment_type`, and the `applies_to` and `source` formats. Manual model discounts use `other`. **Settled 2026-10-22:** the `applies_to` rule, line-by-line order of adjustments, and no zero-amount adjustments. The mapping to `adjustment_type` is still drafted. | No |
 | DN-19 | 9.4 | Total contract value is the net of the whole contract, after adjustments. | No: only the treatment of one-time fees was raised. |
-| DN-20 | 9.2 | `source_fields` entries are `model#` or `config#` plus an RFC 6901 pointer, and which pointers a line lists. `product_id` is `null` on credit-package and overage lines. Which `quantities` entry an overage line lists when the overage comes from more than one entry is not yet decided. **Settled 2026-10-22:** `target_id` per line category, and the pointer for a price made by `fallback_multiplier`. | Yes, for the prefix, when the schemas were drafted. The list of pointers and the `null` product are new. Raised by the second-engine run (`examples/conformance/second-engine/NOTES.md`, entries 36 and 37). |
+| DN-20 | 9.2 | `source_fields` entries are `model#` or `config#` plus an RFC 6901 pointer, and which pointers a line lists. `product_id` is `null` on credit-package and overage lines. **Settled 2026-10-22:** `target_id` per line category, and the pointer for a price made by `fallback_multiplier`. **Settled 2026-10-29:** an overage line lists every billed `quantities` entry of the credit type, in selection order. | Yes, for the prefix, when the schemas were drafted. The list of pointers and the `null` product are new. Raised by the second-engine run (`examples/conformance/second-engine/NOTES.md`, entries 36 and 37). |
 | DN-21 | 3.8 | The three period vocabularies are reconciled by a table of equivalents. The decision said "aliases plus deprecation", and the schemas have neither. | Yes: reported as not done when the schemas were drafted. |
 | DN-22 | 7.7 | A flat discount, and each whole-deal override, is spread over its base in proportion to running amounts. A flat discount above its base is limited, with a `discount_exceeds_base` warning. | No |
 | DN-23 | Annexes A, B | The names of every validation code and warning type. The decisions fixed the behavior for most, and named a few warnings (`estimated_quantity`, `unpriced_item`, `approval_required`, `indeterminate_entitlement`, `unevaluated_rule`). Codes and warnings such as `ambiguous_price_book`, `conflicting_overage_policy`, `mutual_exclusion`, `rule_warning`, `overage_not_priced` and `ineligible_selection` are new. | No |
 | DN-24 | 3.6 | A validation failure returns no `InvoiceStatement`. The 1.x LLM reference let an engine return partial results alongside an error. Here partial results are optional and outside the standard. | No |
+| DN-25 | 4.4 | A required module that the tier includes and that is also in `module_selections` is charged once and is not a failure. The required rule wins over `module_selection_in_tier`. | No |
+| DN-26 | 6 | Failures from several phases are all reported, and the cases where a step is skipped are listed in section 6: no price book, a line or the overage that cannot be priced, and phase 7 after a phase 6 failure. The earlier text said every phase reports; the reference engine stopped at the first failing phase. Which failures leave an amount undefined is a judgement, and the listed cases are the ones the vectors test. | No. Raised by reading the engine against the text (finding F-19). |
 
 ## Annex E. Reverse-solve levers (informative)
 
