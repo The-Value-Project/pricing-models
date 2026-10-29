@@ -3,7 +3,7 @@
   "vectors": [
     "consumption-conditions-credit-type-not-in-deal",
     "custom-unit-price-on-flat-module",
-    "failures-stop-at-first-failing-phase",
+    "discount-checks-need-priced-lines",
     "grant-override-credit-type-not-in-model",
     "overage-from-two-selections",
     "overage-mixed-period-pools",

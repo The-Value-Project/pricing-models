@@ -46,9 +46,9 @@ The normative calculation specification that the README, the CHANGELOG and `x-sp
 
 - Section 8: `overage_cost` is the charge after a replaced overage price and before phase 6 discounts (F-17).
 - Section 4.4: a required module that the tier includes and that is also selected is charged once and is not a failure (F-18, DN-25).
-- Section 6: the calculation stops at the end of the first phase that finds a validation failure, so only that phase's failures are reported (F-19, DN-26). The earlier text said every phase reports.
+- Section 6: a phase reports every validation failure it can find and the calculation continues to the next phase. A step is skipped only when it reads an amount or an id that an earlier failure left undefined, and the skips are listed (F-19, DN-26). The earlier text said this but the reference engine stopped at the first failing phase.
 - Section 9.2: an overage line lists every billed `quantities` entry of the credit type, in selection order (DN-20, now settled).
-- Three conformance vectors for these rules (`required-module-in-tier-and-selected`, `failures-stop-at-first-failing-phase`, `overage-from-two-selections`). The second engine differs on all three, explained in `second-engine/TRIAGE.md`.
+- Six conformance vectors for these rules (`required-module-in-tier-and-selected`, `failures-in-several-phases`, `failure-in-lines-and-in-entitlements`, `failures-in-phase-0-and-phase-6`, `discount-checks-need-priced-lines`, `overage-from-two-selections`). The second engine differs on three, explained in `second-engine/TRIAGE.md`.
 
 ### Changed — versioning policy
 
@@ -59,7 +59,7 @@ The normative calculation specification that the README, the CHANGELOG and `x-sp
 ### Added — worked example, conformance suite and CI
 
 - `examples/acme_ai_platform_pms.json`, `acme_deal_config.json` and `acme_invoice.json`: the worked example that the README had promised since 1.0.0 and the repository never held. The numbers are worked out by hand.
-- `examples/conformance/`: 128 vectors, each with a `PricingModel`, a `DealConfiguration` and an expected result (a statement or a set of failure codes) with the arithmetic shown. 105 follow decided rules and 23 are `provisional` where a drafting note or a practitioner question is still open. A second engine, written blind from the specification, runs on them: its differences from the expected results are explained in `second-engine/TRIAGE.md`.
+- `examples/conformance/`: 131 vectors, each with a `PricingModel`, a `DealConfiguration` and an expected result (a statement or a set of failure codes) with the arithmetic shown. 105 follow decided rules and 26 are `provisional` where a drafting note or a practitioner question is still open. A second engine, written blind from the specification, runs on them: its differences from the expected results are explained in `second-engine/TRIAGE.md`.
 - `examples/conformance/tools/check.py` and `.github/workflows/check.yml`: check that the schemas are valid draft-07, that every vector validates against them and uses only codes and warning types from the specification, and that the second engine differs only where `known-differences.json` says.
 
 ### Changed — documentation

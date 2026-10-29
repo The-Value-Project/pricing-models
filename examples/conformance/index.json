@@ -759,12 +759,48 @@
     "outcome": "validation_failure"
   },
   {
-    "id": "failures-stop-at-first-failing-phase",
-    "title": "Only the first failing phase reports",
+    "id": "failures-in-several-phases",
+    "title": "Failures from different phases are all reported",
     "rules": [
       "6",
       "7.1",
       "7.6"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "failure-in-lines-and-in-entitlements",
+    "title": "A line that cannot be priced does not hide an overage failure",
+    "rules": [
+      "6",
+      "5.2",
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "failures-in-phase-0-and-phase-6",
+    "title": "A discount failure is reported with a phase 0 failure",
+    "rules": [
+      "6",
+      "7.1",
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "discount-checks-need-priced-lines",
+    "title": "Phases 6 and 7 do not run when a line cannot be priced",
+    "rules": [
+      "6",
+      "5.2",
+      "7.7"
     ],
     "status": "provisional",
     "question": "DN-26",

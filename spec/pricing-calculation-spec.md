@@ -257,7 +257,12 @@ The calculation has nine phases, numbered from 0. They run in this order.
 | 7 | Minimums | True-ups to minimum commitments. |
 | 8 | Assemble | Rounding, totals and output. |
 
-A phase reports every validation failure it can find. The calculation stops at the end of the first phase that finds one, because the later phases read the results of the earlier ones. The failures reported are those of that one phase, and a deal with faults in two phases reports only the earlier phase's failures until they are fixed. [DN-26] Inside phase 0, step 1 of section 7.1 is a further exception: if an id does not resolve, the engine reports the failures of that step and stops, because the later checks would read ids that do not exist.
+A phase reports every validation failure it can find, and the calculation goes on to the next phase. A step is skipped only when it reads something that an earlier failure left undefined. [DN-26] The skips are these:
+
+- If an id does not resolve (step 1 of section 7.1), the engine reports the failures of that step and stops, because the later checks would read ids that do not exist.
+- If the price book cannot be chosen (`ambiguous_price_book`), the lines of phase 4 are not built.
+- If a line cannot be priced, the statement currency and the line amounts are undefined. The overage is not priced, and the currency check on the overage price is not made. The other checks of phase 5 are made.
+- Phases 6 and 7 read the amounts of the lines and of the overage. If a line or the overage could not be priced, they are not run. Phase 7 reads the amounts that phase 6 leaves, so it is not run if phase 6 found a failure. A failure that does not change an amount (for example `module_selection_in_tier` or `hard_cap_exceeded`) does not stop them.
 
 ---
 
@@ -568,7 +573,7 @@ These are the places where this specification states a rule the register of deci
 | DN-23 | Annexes A, B | The names of every validation code and warning type. The decisions fixed the behavior for most, and named a few warnings (`estimated_quantity`, `unpriced_item`, `approval_required`, `indeterminate_entitlement`, `unevaluated_rule`). Codes and warnings such as `ambiguous_price_book`, `conflicting_overage_policy`, `mutual_exclusion`, `rule_warning`, `overage_not_priced` and `ineligible_selection` are new. | No |
 | DN-24 | 3.6 | A validation failure returns no `InvoiceStatement`. The 1.x LLM reference let an engine return partial results alongside an error. Here partial results are optional and outside the standard. | No |
 | DN-25 | 4.4 | A required module that the tier includes and that is also in `module_selections` is charged once and is not a failure. The required rule wins over `module_selection_in_tier`. | No |
-| DN-26 | 6 | The calculation stops at the end of the first phase that finds a validation failure, so only that phase's failures are reported. The earlier text said every phase reports; the reference engine stopped. Reporting failures from later phases as well is a possible change. | No. Raised by reading the engine against the text (finding F-19). |
+| DN-26 | 6 | Failures from several phases are all reported, and the cases where a step is skipped are listed in section 6: no price book, a line or the overage that cannot be priced, and phase 7 after a phase 6 failure. The earlier text said every phase reports; the reference engine stopped at the first failing phase. Which failures leave an amount undefined is a judgement, and the listed cases are the ones the vectors test. | No. Raised by reading the engine against the text (finding F-19). |
 
 ## Annex E. Reverse-solve levers (informative)
 
