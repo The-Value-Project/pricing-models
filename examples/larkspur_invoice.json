@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0.0",
-  "invoice_id": "inv-acme-quote-1",
-  "config_id": "acme-quote-1",
-  "model_id": "acme-ai-platform",
+  "invoice_id": "inv-larkspur-quote-1",
+  "config_id": "larkspur-quote-1",
+  "model_id": "larkspur-platform",
   "period": {
     "label": "Contract",
     "start_date": "2026-01-01",

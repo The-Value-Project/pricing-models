@@ -14,7 +14,7 @@
       "schema_version": "2.0.0",
       "invoice_id": "inv-cfg-1",
       "config_id": "cfg-1",
-      "model_id": "acme",
+      "model_id": "larkspur",
       "period": {
         "label": "Contract",
         "start_date": "2026-01-01",

@@ -104,8 +104,8 @@ def check_vectors():
     index = {i['id']: i for i in load('examples', 'conformance', 'index.json')}
     if sorted(index) != ids: bad('index.json lists %d vectors, the directory has %d' % (len(index), len(ids)))
     print('vectors: %d checked against the schemas and Annexes A and B' % n)
-    for f in ('acme_ai_platform_pms.json', 'acme_deal_config.json', 'acme_invoice.json'):
-        key = {'acme_ai_platform_pms.json': 'pricing_model', 'acme_deal_config.json': 'deal_configuration', 'acme_invoice.json': 'invoice_statement'}[f]
+    for f in ('larkspur_platform_pms.json', 'larkspur_deal_config.json', 'larkspur_invoice.json'):
+        key = {'larkspur_platform_pms.json': 'pricing_model', 'larkspur_deal_config.json': 'deal_configuration', 'larkspur_invoice.json': 'invoice_statement'}[f]
         for e in list(V[key].iter_errors(load('examples', f)))[:2]: bad('examples/%s: %s' % (f, e.message[:100]))
     print('examples: 3 worked-example files checked')
 

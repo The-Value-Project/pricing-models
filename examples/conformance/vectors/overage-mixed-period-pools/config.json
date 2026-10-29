@@ -3,7 +3,7 @@
   "config_id": "cfg-1",
   "config_date": "2026-01-01",
   "model_reference": {
-    "model_id": "acme"
+    "model_id": "larkspur"
   },
   "customer": {
     "name": "Customer",

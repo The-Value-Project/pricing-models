@@ -1,13 +1,13 @@
 {
   "schema_version": "2.0.0",
-  "config_id": "acme-quote-1",
+  "config_id": "larkspur-quote-1",
   "config_date": "2026-01-01",
   "model_reference": {
-    "model_id": "acme-ai-platform"
+    "model_id": "larkspur-platform"
   },
   "customer": {
-    "name": "Northwind Traders",
-    "domain": "northwind.example",
+    "name": "Harborline Foods",
+    "domain": "harborline.example",
     "region": "US"
   },
   "deal_motion": "new_logo",

@@ -273,9 +273,9 @@ pricing-models/
 │   ├── pricing-page-spec.md               Pricing page specification v3.0.0 (CC BY 4.0)
 │   └── pricing-model-llm-reference.md     LLM interpreter reference v2.0.0 (CC BY 4.0)
 └── examples/
-    ├── acme_ai_platform_pms.json          Worked example PricingModel instance
-    ├── acme_deal_config.json              Worked example DealConfiguration
-    ├── acme_invoice.json                  Worked example InvoiceStatement
+    ├── larkspur_platform_pms.json         Worked example PricingModel instance
+    ├── larkspur_deal_config.json          Worked example DealConfiguration
+    ├── larkspur_invoice.json              Worked example InvoiceStatement
     └── conformance/                       Conformance vectors, a second engine and a check script (see its README)
 ```
 

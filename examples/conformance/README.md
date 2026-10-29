@@ -27,7 +27,9 @@ These vectors test an implementation of the [Pricing Calculation Specification](
 
 Every expected figure was worked out by hand first (the `worked` text shows the arithmetic) and then checked against a reference engine written from the specification. A vector is not added until the hand-worked figures and the engine agree. The same person wrote the hand calculations and the engine, so this shows they are consistent with each other. It does not show that a second, independent reading of the specification would agree. That check was done once, with an engine written from the specification alone (`second-engine/`): 89 of 94 vectors matched, and the 5 differences were gaps in section 9.2 about credit-package and overage lines, now specified in section 9.2.
 
-The worked example in `examples/acme_ai_platform_pms.json`, `acme_deal_config.json` and `acme_invoice.json` is the same kind of test: one realistic quote.
+The worked example in `examples/larkspur_platform_pms.json`, `larkspur_deal_config.json` and `larkspur_invoice.json` is the same kind of test: one realistic quote.
+
+The companies in the examples and vectors (Larkspur Software, Harborline Foods) are fictional. Any resemblance to a real company is coincidental.
 
 ## Running your engine
 

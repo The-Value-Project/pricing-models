@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0.0",
-  "model_id": "acme-ai-platform",
-  "vendor_name": "Acme AI",
+  "model_id": "larkspur-platform",
+  "vendor_name": "Larkspur Software",
   "effective_date": "2026-01-01",
   "currency": "USD",
   "products": [
