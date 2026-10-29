@@ -259,6 +259,7 @@ pricing-models/
 ├── README.md                              This file (CC BY 4.0)
 ├── CONTRIBUTING.md                        Contribution guide (CC BY 4.0)
 ├── CHANGELOG.md                           Version history (CC BY 4.0)
+├── .github/workflows/check.yml            CI: schemas, vectors, worked example, second engine
 ├── schemas/
 │   ├── pricing_model.json                 PricingModel schema v1.0.0 (Apache-2.0)
 │   ├── deal_configuration.json            DealConfiguration schema v1.0.0 (Apache-2.0)
@@ -271,7 +272,8 @@ pricing-models/
 └── examples/
     ├── acme_ai_platform_pms.json          Worked example PricingModel instance
     ├── acme_deal_config.json              Worked example DealConfiguration
-    └── acme_invoice.json                  Worked example InvoiceStatement
+    ├── acme_invoice.json                  Worked example InvoiceStatement
+    └── conformance/                       Conformance vectors, a second engine and a check script (see its README)
 ```
 
 ---
