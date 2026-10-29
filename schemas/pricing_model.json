@@ -2526,7 +2526,7 @@
             "to": "credit_type"
           },
           {
-            "from": "DealConfiguration: product_selections[].product_id, tier_id, commitment_plan_id; quantities[].credit_type_id; credit_package_selections[].credit_package_id; bundle_selections[].bundle_id; discount_selections[].discount_id; module_selections[].module_id",
+            "from": "DealConfiguration: product_selections[].product_id, tier_id, commitment_plan_id; quantities[].credit_type_id; credit_package_selections[].credit_package_id; bundle_selections[].bundle_id; discount_selections[].discount_id; module_selections[].module_id; negotiated_overrides.price_overrides[].target_id (by target_kind; none for total_deal); negotiated_overrides.credit_grant_overrides[].credit_type_id",
             "to": "the matching object in this model",
             "note": "checked across documents"
           }
