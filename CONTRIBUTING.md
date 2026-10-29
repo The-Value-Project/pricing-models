@@ -17,7 +17,7 @@ Open an issue in the relevant repository if you find:
 - An inconsistency in the join keys between schemas across the two repos
 
 ### 2. Propose a schema change
-Open an issue labelled `schema-proposal` before submitting a pull request. Discuss the change, its impact on backward compatibility, and which other schemas it touches. Breaking changes (those that invalidate existing conforming instances) require strong justification and increment the MAJOR version.
+Open an issue labelled `proposal` before submitting a pull request. Discuss the change, its impact on backward compatibility, and which other schemas it touches. Breaking changes (those that invalidate existing conforming instances) require strong justification and increment the MAJOR version.
 
 ### 3. Improve specifications or documentation
 Pull requests are welcome for:
@@ -67,9 +67,9 @@ Use a clear descriptive title. For schema issues, include:
 
 ## License
 
-By contributing to JSON schema files (`schemas/`), you agree your contributions will be licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+By contributing to JSON schema files (`schemas/`) and to examples (`examples/`), you agree your contributions will be licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-By contributing to specification and documentation files (`spec/`, `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `examples/`), you agree your contributions will be licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+By contributing to specification and documentation files (`spec/`, `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`), you agree your contributions will be licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
 ---
 

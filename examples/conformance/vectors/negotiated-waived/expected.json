@@ -1,0 +1,68 @@
+{
+  "vector": "negotiated-waived",
+  "title": "A waived charge is zero",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "provisional",
+  "open_question": "Q8",
+  "worked": "The charge is waived: adjustment -$12,000.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 1000,
+          "line_total": 12000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 12000,
+        "one_time": 0,
+        "gross": 12000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "waived_fee",
+          "description": "Override waived",
+          "amount": -12000,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "config#/negotiated_overrides/price_overrides/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -12000,
+        "net_total": 0,
+        "annualized_total": 0,
+        "total_contract_value": 0
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

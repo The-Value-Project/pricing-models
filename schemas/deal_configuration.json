@@ -20,6 +20,7 @@
   "type": "object",
   "additionalProperties": true,
   "required": [
+    "schema_version",
     "config_id",
     "config_date",
     "model_reference",
@@ -32,8 +33,13 @@
     "negotiated_overrides"
   ],
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^2\\.[0-9]+(\\.[0-9]+)?$",
+      "description": "Version of this schema that the document conforms to: any 2.x release, for example 2.0.0. Later 2.x releases accept every document that is valid under an earlier 2.x release."
+    },
     "config_id": {
-      "type": "string"
+      "$ref": "#/$defs/id"
     },
     "config_date": {
       "type": "string",
@@ -47,7 +53,11 @@
       "additionalProperties": false,
       "properties": {
         "model_id": {
-          "type": "string",
+          "allOf": [
+            {
+              "$ref": "#/$defs/id"
+            }
+          ],
           "description": "Matches pricing_model context."
         }
       }
@@ -107,8 +117,15 @@
       "additionalProperties": false,
       "properties": {
         "plan_id": {
-          "type": "string",
-          "description": "References products[].plans[].id."
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Deprecated in 2.0.0. References products[].commitment_plans[].id. It can address the commitment plans of only one product, so it cannot describe a multi-product deal. It is the default for any product selection whose commitment_plan_id is null, for the product that owns the plan it names. Null means no default. Replaced by product_selections[].commitment_plan_id. Earliest removal: two MINOR releases after 2.0.0."
         },
         "contract_start_date": {
           "type": "string"
@@ -135,16 +152,29 @@
         "required": [
           "product_id",
           "tier_id",
+          "commitment_plan_id",
           "quantities",
+          "module_selections",
           "credit_package_selections"
         ],
         "additionalProperties": false,
         "properties": {
           "product_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "tier_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
+          },
+          "commitment_plan_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "References products[].commitment_plans[].id of this product. Null means billing.plan_id applies if it names a plan of this product, and otherwise no commitment plan."
           },
           "quantities": {
             "type": "array",
@@ -159,7 +189,11 @@
               "additionalProperties": false,
               "properties": {
                 "credit_type_id": {
-                  "type": "string",
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/id"
+                    }
+                  ],
                   "description": "References credit_types[].id."
                 },
                 "quantity": {
@@ -182,12 +216,19 @@
                         "type": "object",
                         "required": [
                           "period_label",
+                          "period_index",
                           "quantity"
                         ],
                         "additionalProperties": false,
                         "properties": {
                           "period_label": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Display text only. Calculation uses period_index."
+                          },
+                          "period_index": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "description": "Contract year the quantity applies to, counting from 1. Unique within the schedule. A year not in the schedule uses the entry's own quantity."
                           },
                           "quantity": {
                             "type": "number"
@@ -203,6 +244,27 @@
               }
             }
           },
+          "module_selections": {
+            "type": "array",
+            "description": "Modules selected in addition to the tier: add-ons, which are modules in no tier's included_modules. Empty when none. A module that the chosen tier already includes MUST NOT appear here.",
+            "items": {
+              "type": "object",
+              "required": [
+                "module_id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "module_id": {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/id"
+                    }
+                  ],
+                  "description": "References products[].modules[].id of this product."
+                }
+              }
+            }
+          },
           "credit_package_selections": {
             "type": "array",
             "items": {
@@ -214,7 +276,7 @@
               "additionalProperties": false,
               "properties": {
                 "credit_package_id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "quantity": {
                   "type": "number"
@@ -235,7 +297,7 @@
         "additionalProperties": false,
         "properties": {
           "bundle_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           }
         }
       }
@@ -251,7 +313,7 @@
         "additionalProperties": false,
         "properties": {
           "discount_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "manual_value": {
             "anyOf": [
@@ -283,6 +345,7 @@
               "items": {
                 "type": "object",
                 "required": [
+                  "target_kind",
                   "target_id",
                   "override_type",
                   "override_value",
@@ -290,9 +353,26 @@
                 ],
                 "additionalProperties": false,
                 "properties": {
-                  "target_id": {
+                  "target_kind": {
                     "type": "string",
-                    "description": "module_id, credit_package_id, or 'total_deal'."
+                    "enum": [
+                      "module",
+                      "credit_package",
+                      "credit_type_overage",
+                      "total_deal"
+                    ],
+                    "description": "What target_id is. module and credit_package: a priced item. credit_type_overage: the overage price of a credit type (override_type custom_unit_price replaces the price per unit of overage). total_deal: the whole deal, and target_id is null."
+                  },
+                  "target_id": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/id"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Id of the module, credit package or credit type. Null when target_kind is total_deal."
                   },
                   "override_type": {
                     "type": "string",
@@ -318,7 +398,35 @@
                   "description": {
                     "type": "string"
                   }
-                }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "target_kind": {
+                          "const": "total_deal"
+                        }
+                      },
+                      "required": [
+                        "target_kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "target_id": {
+                          "type": "null"
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "target_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                ]
               }
             },
             "credit_grant_overrides": {
@@ -327,16 +435,30 @@
                 "type": "object",
                 "required": [
                   "credit_type_id",
+                  "period",
                   "new_quantity",
                   "description"
                 ],
                 "additionalProperties": false,
                 "properties": {
                   "credit_type_id": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": [
+                      "monthly",
+                      "annual",
+                      "per_billing_period",
+                      "concurrent",
+                      "lifetime",
+                      "one_time"
+                    ],
+                    "description": "The grant period this override replaces. The override replaces the pool for (credit_type_id, period)."
                   },
                   "new_quantity": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "Replaces the granted quantity of the pool. Use -1 for unlimited."
                   },
                   "description": {
                     "type": "string"
@@ -365,7 +487,8 @@
                       "termination_right",
                       "data_terms",
                       "other"
-                    ]
+                    ],
+                    "description": "custom_overage_rate is informational. A rate the engine calculates with is a price override with target_kind credit_type_overage."
                   },
                   "description": {
                     "type": "string"
@@ -385,6 +508,13 @@
       "items": {
         "type": "string"
       }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An id: opaque and case-sensitive, lower-case words joined by hyphens. It stays the same across versions of a model while its object exists, and is never reused for a different object."
     }
   }
 }

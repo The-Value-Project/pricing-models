@@ -1,0 +1,17 @@
+{
+  "vector": "discount-not-in-order-list",
+  "title": "Every applicable discount must be in the order list",
+  "spec_sections": [
+    "7.1",
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "d applies but discount_application_order is empty.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "discount_not_ordered"
+    ]
+  }
+}

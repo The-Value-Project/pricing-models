@@ -19,8 +19,10 @@
   "type": "object",
   "additionalProperties": true,
   "required": [
+    "schema_version",
     "invoice_id",
     "config_id",
+    "model_id",
     "period",
     "currency",
     "line_items",
@@ -31,11 +33,24 @@
     "warnings"
   ],
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^2\\.[0-9]+(\\.[0-9]+)?$",
+      "description": "Version of this schema that the document conforms to: any 2.x release, for example 2.0.0. Later 2.x releases accept every document that is valid under an earlier 2.x release."
+    },
     "invoice_id": {
-      "type": "string"
+      "$ref": "#/$defs/id"
     },
     "config_id": {
-      "type": "string"
+      "$ref": "#/$defs/id"
+    },
+    "model_id": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/id"
+        }
+      ],
+      "description": "References PricingModel.model_id."
     },
     "period": {
       "type": "object",
@@ -68,7 +83,12 @@
       }
     },
     "currency": {
-      "type": "string"
+      "allOf": [
+        {
+          "$ref": "#/$defs/currency_code"
+        }
+      ],
+      "description": "Currency of every amount in this statement. One currency per statement."
     },
     "line_items": {
       "type": "array",
@@ -90,7 +110,8 @@
         "additionalProperties": false,
         "properties": {
           "line_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Line number, 1 to n, in phase order and then input-array order."
           },
           "category": {
             "type": "string",
@@ -107,18 +128,26 @@
             "type": "string"
           },
           "product_id": {
-            "type": "string"
-          },
-          "target_id": {
             "anyOf": [
               {
-                "type": "string",
-                "description": "module_id, credit_package_id, etc."
+                "$ref": "#/$defs/id"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Product the line belongs to. Null for a line that belongs to no single product, such as a contract-level true-up."
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "module_id, credit_package_id, etc."
           },
           "quantity": {
             "type": "number"
@@ -172,8 +201,10 @@
           "source_fields": {
             "type": "array",
             "items": {
-              "type": "string"
-            }
+              "type": "string",
+              "pattern": "^(model|config)#(/([^/~]|~[01])*)*$"
+            },
+            "description": "Where the numbers on this line come from. Each entry is \"model#\" or \"config#\" followed by an RFC 6901 JSON Pointer into that document as received, for example \"model#/products/0/modules/1/price/amount\"."
           }
         }
       }
@@ -215,7 +246,7 @@
           "adjustment_type": {
             "type": "string",
             "enum": [
-              "plan_adjustment",
+              "commitment_plan_adjustment",
               "negotiated_discount_percentage",
               "negotiated_discount_amount",
               "negotiated_fixed_price",
@@ -264,24 +295,12 @@
           "type": "number"
         },
         "annualized_total": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": "number",
+          "description": "Recurring net divided by (contract term in months / 12). Excludes one-time charges. Always present when the calculation succeeds."
         },
         "total_contract_value": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": "number",
+          "description": "Sum of the per-period recurring charges over the contract, following any growth schedule, plus one-time charges. Always present when the calculation succeeds. If an unpriced_item warning is present, it covers priced items only and is a lower bound."
         }
       }
     },
@@ -300,7 +319,7 @@
         "additionalProperties": false,
         "properties": {
           "credit_type_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "granted": {
             "anyOf": [
@@ -316,10 +335,26 @@
             "type": "number"
           },
           "overage": {
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number",
+                "description": "Quantity above the grant. Null means indeterminate, for a credit type with an unknown grant field."
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "overage_cost": {
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number",
+                "description": "Charge for the overage. Null means indeterminate."
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "overage_policy": {
             "type": "string",
@@ -367,6 +402,18 @@
       "items": {
         "type": "string"
       }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An id: opaque and case-sensitive, lower-case words joined by hyphens. It stays the same across versions of a model while its object exists, and is never reused for a different object."
+    },
+    "currency_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code."
     }
   }
 }

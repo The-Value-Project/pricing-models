@@ -1,0 +1,16 @@
+{
+  "vector": "multiple-variants-for-motion",
+  "title": "Two variants for one deal motion fail",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Two variants for new_logo.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "multiple_variants_for_motion"
+    ]
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "2.0.0",
+  "model_id": "larkspur",
+  "vendor_name": "Larkspur Software",
+  "effective_date": "2026-01-01",
+  "currency": "USD",
+  "products": [
+    {
+      "id": "p",
+      "label": "p",
+      "position": null,
+      "modules": [
+        {
+          "id": "m",
+          "label": "m",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 100,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        }
+      ],
+      "tiers": [
+        {
+          "id": "t",
+          "label": "t",
+          "position": null,
+          "included_modules": [
+            "m"
+          ],
+          "included_credit_grants": [],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        }
+      ],
+      "commitment_plans": []
+    }
+  ],
+  "bundles": [],
+  "discounts": [],
+  "credit_types": [],
+  "credit_packages": [],
+  "discount_strategies": [],
+  "price_books": [],
+  "variants": [
+    {
+      "id": "v1",
+      "deal_motion": "new_logo",
+      "label": "v1",
+      "overrides": {
+        "module_price_overrides": [],
+        "credit_package_price_overrides": [],
+        "included_credit_grants": [],
+        "discount_eligibility_overrides": [],
+        "bundle_eligibility_overrides": []
+      }
+    },
+    {
+      "id": "v2",
+      "deal_motion": "new_logo",
+      "label": "v2",
+      "overrides": {
+        "module_price_overrides": [],
+        "credit_package_price_overrides": [],
+        "included_credit_grants": [],
+        "discount_eligibility_overrides": [],
+        "bundle_eligibility_overrides": []
+      }
+    }
+  ],
+  "minimum_commitments": [],
+  "pricing_rules": {
+    "calculation_order": [],
+    "discount_application_order": [],
+    "rounding": {
+      "mode": "currency_minor_units",
+      "method": "half_away_from_zero",
+      "currency_minor_units": 2
+    },
+    "policy": {
+      "exclusive_group_resolution": "max_discount",
+      "ineligible_selection_handling": "error",
+      "missing_strategy_inputs_handling": "error"
+    }
+  },
+  "business_rules": [],
+  "module_dependencies": [],
+  "pricing_relationships": [],
+  "comparison_grid": [],
+  "conformance_profile": null
+}

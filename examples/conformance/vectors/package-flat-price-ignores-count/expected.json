@@ -1,0 +1,86 @@
+{
+  "vector": "package-flat-price-ignores-count",
+  "title": "A flat package price ignores the number of packages",
+  "spec_sections": [
+    "5.1",
+    "7.5"
+  ],
+  "status": "provisional",
+  "open_question": "Q2",
+  "worked": "A flat price does not depend on quantity: $900 once.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "one_time_fee",
+          "description": "pk",
+          "product_id": null,
+          "target_id": "pk",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 900,
+          "line_total": 900,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/credit_packages/0/price",
+            "config#/product_selections/0/credit_package_selections/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1200,
+        "one_time": 900,
+        "gross": 2100
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 2100,
+        "annualized_total": 1200,
+        "total_contract_value": 2100
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "api",
+          "granted": 30000,
+          "committed_or_used": 0,
+          "overage": 0,
+          "overage_cost": 0,
+          "overage_policy": "throttle"
+        }
+      ],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

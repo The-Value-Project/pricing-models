@@ -1,0 +1,19 @@
+{
+  "vector": "failures-in-several-phases",
+  "title": "Failures from different phases are all reported",
+  "spec_sections": [
+    "6",
+    "7.1",
+    "7.6"
+  ],
+  "status": "provisional",
+  "open_question": "DN-26",
+  "worked": "Two faults: m is an add-on that tier t already includes (phase 0), and 5,000 is billed against a hard cap of 4,000 (phase 5). Neither stops the other from being found, so both are reported.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "hard_cap_exceeded",
+      "module_selection_in_tier"
+    ]
+  }
+}

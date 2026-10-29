@@ -1,0 +1,295 @@
+{
+  "schema_version": "2.0.0",
+  "model_id": "larkspur-platform",
+  "vendor_name": "Larkspur Software",
+  "effective_date": "2026-01-01",
+  "currency": "USD",
+  "products": [
+    {
+      "id": "platform",
+      "label": "platform",
+      "position": null,
+      "modules": [
+        {
+          "id": "workspace",
+          "label": "workspace",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 1500,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        },
+        {
+          "id": "seats",
+          "label": "seats",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "per_unit",
+            "period": "month",
+            "amount": 40,
+            "currency": null,
+            "unit": "seat",
+            "credit_type_id": "seats",
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        },
+        {
+          "id": "premium-support",
+          "label": "premium-support",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 600,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        },
+        {
+          "id": "onboarding",
+          "label": "onboarding",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "one_time",
+            "amount": 4000,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        }
+      ],
+      "tiers": [
+        {
+          "id": "team",
+          "label": "team",
+          "position": null,
+          "included_modules": [
+            "workspace",
+            "seats"
+          ],
+          "included_credit_grants": [
+            {
+              "credit_type_id": "api-calls",
+              "quantity": 50000,
+              "renewal_behavior": "reset",
+              "period": "monthly",
+              "metric_type": "consumable"
+            }
+          ],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        },
+        {
+          "id": "business",
+          "label": "business",
+          "position": null,
+          "included_modules": [
+            "workspace",
+            "seats"
+          ],
+          "included_credit_grants": [
+            {
+              "credit_type_id": "api-calls",
+              "quantity": 200000,
+              "renewal_behavior": "reset",
+              "period": "monthly",
+              "metric_type": "consumable"
+            }
+          ],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        }
+      ],
+      "commitment_plans": [
+        {
+          "id": "annual-prepay",
+          "label": "annual-prepay",
+          "position": null,
+          "commitment_months": 12,
+          "adjustment": {
+            "percent": -10
+          },
+          "targets": {
+            "tier_ids": [],
+            "module_ids": []
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "default_for_tier_ids": []
+        }
+      ]
+    }
+  ],
+  "bundles": [],
+  "discounts": [
+    {
+      "id": "volume",
+      "label": "volume",
+      "scope": "contract_total",
+      "mode": "strategy",
+      "type": "percentage",
+      "discretion": "mandatory",
+      "stacking": null,
+      "eligibility": null,
+      "targets": {
+        "module_ids": [],
+        "product_ids": [],
+        "credit_type_ids": []
+      },
+      "manual": null,
+      "strategy": {
+        "strategy_id": "seat-volume",
+        "caps": null
+      }
+    },
+    {
+      "id": "partner",
+      "label": "partner",
+      "scope": "contract_total",
+      "mode": "manual",
+      "type": "percentage",
+      "discretion": "discretionary",
+      "stacking": null,
+      "eligibility": null,
+      "targets": {
+        "module_ids": [],
+        "product_ids": [],
+        "credit_type_ids": []
+      },
+      "manual": {
+        "max_value": 15,
+        "approval_required_over": 10
+      },
+      "strategy": null
+    }
+  ],
+  "credit_types": [
+    {
+      "id": "seats",
+      "label": "seats",
+      "unit_label": "seats",
+      "consumption_rules": [],
+      "overage_policy": "throttle",
+      "overage_price": null
+    },
+    {
+      "id": "api-calls",
+      "label": "api-calls",
+      "unit_label": "api-calls",
+      "consumption_rules": [],
+      "overage_policy": "pay_as_you_go",
+      "overage_price": {
+        "type": "per_unit",
+        "period": "month",
+        "amount": 0.002,
+        "currency": null,
+        "unit": "unit",
+        "credit_type_id": null,
+        "tiers": null,
+        "breakpoints": null
+      }
+    }
+  ],
+  "credit_packages": [],
+  "discount_strategies": [
+    {
+      "id": "seat-volume",
+      "label": "seat-volume",
+      "output_type": "percentage",
+      "input_keys": [],
+      "shape": {
+        "type": "step_tiers",
+        "step_tiers": {
+          "metric": "seats",
+          "tiers": [
+            {
+              "min": 0,
+              "max": 25,
+              "value": 0
+            },
+            {
+              "min": 25,
+              "max": 100,
+              "value": 5
+            },
+            {
+              "min": 100,
+              "max": null,
+              "value": 10
+            }
+          ]
+        },
+        "linear_ramp": null,
+        "piecewise_linear": null,
+        "lookup_table": null
+      }
+    }
+  ],
+  "price_books": [],
+  "variants": [],
+  "minimum_commitments": [
+    {
+      "id": "floor",
+      "label": "floor",
+      "scope": "contract_total",
+      "amount": 30000,
+      "currency": "USD",
+      "targets": {
+        "product_ids": [],
+        "credit_type_ids": []
+      },
+      "eligibility": null
+    }
+  ],
+  "pricing_rules": {
+    "calculation_order": [],
+    "discount_application_order": [
+      "volume",
+      "partner"
+    ],
+    "rounding": {
+      "mode": "currency_minor_units",
+      "method": "half_away_from_zero",
+      "currency_minor_units": 2
+    },
+    "policy": {
+      "exclusive_group_resolution": "max_discount",
+      "ineligible_selection_handling": "error",
+      "missing_strategy_inputs_handling": "error"
+    }
+  },
+  "business_rules": [],
+  "module_dependencies": [],
+  "pricing_relationships": [],
+  "comparison_grid": [],
+  "conformance_profile": null
+}

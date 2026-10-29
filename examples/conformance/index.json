@@ -1,0 +1,1352 @@
+[
+  {
+    "id": "bands-tiered-boundary",
+    "title": "Tiered price at exactly a band boundary",
+    "rules": [
+      "5.1",
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-volume-boundary",
+    "title": "Volume price at exactly a band boundary",
+    "rules": [
+      "5.1",
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-tiered-multiband",
+    "title": "Tiered price across three bands",
+    "rules": [
+      "5.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-volume-multiband",
+    "title": "Volume price in the top band",
+    "rules": [
+      "5.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-zero-quantity",
+    "title": "Quantity 0 gives a charge of 0",
+    "rules": [
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-fractional-quantity",
+    "title": "A fractional quantity is used as it is",
+    "rules": [
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bands-gap-is-malformed",
+    "title": "Bands with a gap are a model authoring error",
+    "rules": [
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "bands-first-min-not-zero",
+    "title": "The first band must start at 0",
+    "rules": [
+      "5.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "per-unit-charge",
+    "title": "A per-unit price",
+    "rules": [
+      "5.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "missing-quantity",
+    "title": "A per-unit price with no quantity is a validation failure",
+    "rules": [
+      "4.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "unpriced-item",
+    "title": "A price that is not published adds no charge and warns",
+    "rules": [
+      "5.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "period-year-in-14-months",
+    "title": "A yearly price on a 14-month term is invalid",
+    "rules": [
+      "3.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "period-quarter-in-18-months",
+    "title": "A quarterly price on an 18-month term",
+    "rules": [
+      "3.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "one-time-charge",
+    "title": "A one-time price is charged once",
+    "rules": [
+      "5.1",
+      "7.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "estimated-quantity-bills",
+    "title": "An estimated quantity bills, with a warning",
+    "rules": [
+      "4.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "growth-schedule-by-contract-year",
+    "title": "A growth schedule counts contract years",
+    "rules": [
+      "4.2"
+    ],
+    "status": "provisional",
+    "question": "Q1",
+    "outcome": "statement"
+  },
+  {
+    "id": "growth-schedule-quarterly-price",
+    "title": "Billing periods take the quantity of the year they start in",
+    "rules": [
+      "4.2"
+    ],
+    "status": "provisional",
+    "question": "Q1",
+    "outcome": "statement"
+  },
+  {
+    "id": "maximum-ceiling-exceeded",
+    "title": "A billed quantity above the maximum entry fails",
+    "rules": [
+      "4.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "maximum-ceiling-respected",
+    "title": "The maximum entry never bills",
+    "rules": [
+      "4.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "duplicate-billed-quantity",
+    "title": "Two billed entries for one credit type fail",
+    "rules": [
+      "4.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "duplicate-period-index",
+    "title": "A growth schedule repeats an index",
+    "rules": [
+      "4.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "model-id-mismatch",
+    "title": "The deal must name the model",
+    "rules": [
+      "4.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "unknown-region-code",
+    "title": "A region that is not a code fails",
+    "rules": [
+      "4.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "module-selection-in-tier",
+    "title": "An add-on already in the tier fails",
+    "rules": [
+      "4.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "required-module-and-addon-targeting",
+    "title": "Required modules are charged through the tier, add-ons are not",
+    "rules": [
+      "3.3",
+      "4.4",
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q10",
+    "outcome": "statement"
+  },
+  {
+    "id": "required-module-in-tier-and-selected",
+    "title": "A required module that the tier includes and that is also selected is charged once",
+    "rules": [
+      "4.4"
+    ],
+    "status": "provisional",
+    "question": "DN-25",
+    "outcome": "statement"
+  },
+  {
+    "id": "plan-targets-other-tier",
+    "title": "A commitment plan aimed at another tier does not apply",
+    "rules": [
+      "3.3",
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "plan-empty-targets-unrestricted",
+    "title": "Empty targets mean unrestricted",
+    "rules": [
+      "3.3",
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "term-below-commitment",
+    "title": "The term must reach the plan's commitment",
+    "rules": [
+      "4.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "commitment-months-null-no-minimum",
+    "title": "A null commitment_months means no minimum term",
+    "rules": [
+      "4.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "billing-plan-id-default",
+    "title": "billing.plan_id is the default for a selection with no plan",
+    "rules": [
+      "4.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "percentages-compound",
+    "title": "Commitment plan, bundle and discount compound",
+    "rules": [
+      "3.2",
+      "7.4",
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bundle-partial-is-error",
+    "title": "A selected bundle with a missing product fails by default",
+    "rules": [
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q9",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "bundle-partial-dropped",
+    "title": "A selected bundle with a missing product is dropped with a warning",
+    "rules": [
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q9",
+    "outcome": "statement"
+  },
+  {
+    "id": "bundle-applies-when-all-selected",
+    "title": "A bundle applies when every product is selected",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "bundles-overlap-compound",
+    "title": "Two bundles on one product compound in selection order",
+    "rules": [
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q9",
+    "outcome": "statement"
+  },
+  {
+    "id": "variant-beats-price-book",
+    "title": "A variant price is final; the price book fills the rest",
+    "rules": [
+      "7.2",
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-entry-without-variant",
+    "title": "A price book entry replaces the price",
+    "rules": [
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-no-region-uses-base",
+    "title": "A null region means base prices",
+    "rules": [
+      "4.7",
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-grouping-match",
+    "title": "A grouping price book matches a member country",
+    "rules": [
+      "4.7",
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-other-currency-multiplier",
+    "title": "A multiplier moves the result into the book currency",
+    "rules": [
+      "3.7",
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-null-multiplier-currency-mismatch",
+    "title": "No multiplier and a different currency fails",
+    "rules": [
+      "3.7",
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "mixed-currency-prices",
+    "title": "Prices in two currencies fail",
+    "rules": [
+      "3.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "negotiated-fixed-price",
+    "title": "A fixed price replaces the price",
+    "rules": [
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q8",
+    "outcome": "statement"
+  },
+  {
+    "id": "negotiated-waived",
+    "title": "A waived charge is zero",
+    "rules": [
+      "7.4"
+    ],
+    "status": "provisional",
+    "question": "Q8",
+    "outcome": "statement"
+  },
+  {
+    "id": "negotiated-capped",
+    "title": "A cap limits the charge",
+    "rules": [
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "Q8",
+    "outcome": "statement"
+  },
+  {
+    "id": "negotiated-discount-percentage",
+    "title": "A negotiated percentage discount",
+    "rules": [
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "Q8",
+    "outcome": "statement"
+  },
+  {
+    "id": "negotiated-total-deal-fixed-price",
+    "title": "A whole-deal fixed price sets the total",
+    "rules": [
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "Q8",
+    "outcome": "statement"
+  },
+  {
+    "id": "negotiated-invalid-combination",
+    "title": "A waived total deal is invalid",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "negotiated-price-meets-minimum",
+    "title": "A negotiated price is still subject to a minimum",
+    "rules": [
+      "7.4",
+      "7.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "flat-discount-once-per-contract",
+    "title": "A flat discount comes off once, not every period",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "flat-discount-spread-in-proportion",
+    "title": "A flat discount is spread in proportion to running amounts",
+    "rules": [
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "Q7",
+    "outcome": "statement"
+  },
+  {
+    "id": "discount-not-in-order-list",
+    "title": "Every applicable discount must be in the order list",
+    "rules": [
+      "7.1",
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "mandatory-manual-discount-invalid",
+    "title": "A mandatory discount cannot be manual",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "discount-scope-module",
+    "title": "A module-scope discount reduces that module only",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-max-discount",
+    "title": "In an exclusive group, max_discount keeps the largest",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-first-in-order",
+    "title": "In an exclusive group, first_in_order keeps the first",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "not-stackable-after-earlier-discount",
+    "title": "A non-stackable discount yields to an earlier one",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-step-tiers",
+    "title": "A step_tiers strategy at a bracket boundary",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-lookup-missing-key-error",
+    "title": "An unmatched lookup key fails by default",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "strategy-lookup-missing-key-zero",
+    "title": "An unmatched lookup key can apply zero with a warning",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-lookup-hit",
+    "title": "A lookup key is matched as a canonical decimal string",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-linear-ramp-derived-metric",
+    "title": "A linear_ramp over the contract_term_months metric",
+    "rules": [
+      "4.6",
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "Q12",
+    "outcome": "statement"
+  },
+  {
+    "id": "discount-ineligible-selection-error",
+    "title": "A selected discount that is not eligible fails by default",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "discount-ineligible-selection-dropped",
+    "title": "An ineligible selection can be dropped with a warning",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "variant-enables-ineligible-discount",
+    "title": "A variant can switch a discount on",
+    "rules": [
+      "7.2"
+    ],
+    "status": "provisional",
+    "question": "Q11",
+    "outcome": "statement"
+  },
+  {
+    "id": "minimum-product-then-contract",
+    "title": "Floors are evaluated in order against the current net",
+    "rules": [
+      "7.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "minimum-annual-scope",
+    "title": "An annual floor works on the annualized basis",
+    "rules": [
+      "7.8"
+    ],
+    "status": "provisional",
+    "question": "Q6",
+    "outcome": "statement"
+  },
+  {
+    "id": "package-per-unit-price",
+    "title": "A per-unit package price is charged per package",
+    "rules": [
+      "4.3",
+      "7.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "package-flat-price-ignores-count",
+    "title": "A flat package price ignores the number of packages",
+    "rules": [
+      "5.1",
+      "7.5"
+    ],
+    "status": "provisional",
+    "question": "Q2",
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-pay-as-you-go",
+    "title": "Overage is priced per period",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-within-grant",
+    "title": "No overage when the grant covers the quantity",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-unlimited-grant",
+    "title": "An unlimited grant never has overage",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-hard-cap",
+    "title": "Overage under a hard cap is a validation failure",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "failures-in-several-phases",
+    "title": "Failures from different phases are all reported",
+    "rules": [
+      "6",
+      "7.1",
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "failure-in-lines-and-in-entitlements",
+    "title": "A line that cannot be priced does not hide an overage failure",
+    "rules": [
+      "6",
+      "5.2",
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "failures-in-phase-0-and-phase-6",
+    "title": "A discount failure is reported with a phase 0 failure",
+    "rules": [
+      "6",
+      "7.1",
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "discount-checks-need-priced-lines",
+    "title": "Phases 6 and 7 do not run when a line cannot be priced",
+    "rules": [
+      "6",
+      "5.2",
+      "7.7"
+    ],
+    "status": "provisional",
+    "question": "DN-26",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "overage-from-two-selections",
+    "title": "An overage line lists every billed quantity that makes the demand",
+    "rules": [
+      "7.6",
+      "9.2"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-package-units-count",
+    "title": "Package units join the pool",
+    "rules": [
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "Q3",
+    "outcome": "statement"
+  },
+  {
+    "id": "conflicting-tier-overage-policies",
+    "title": "Tiers that disagree on a credit type fail",
+    "rules": [
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "Q14",
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "grant-override-replaces-pool",
+    "title": "A negotiated grant override replaces the pool",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "variant-grant-replaces-pool",
+    "title": "A variant grant replaces the same credit type and period",
+    "rules": [
+      "7.2",
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "consumption-conditions-ignored",
+    "title": "Consumption rule conditions are never evaluated",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "business-rules-unevaluated",
+    "title": "Rules an engine does not evaluate are listed, not applied",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "dependency-unmet",
+    "title": "A module dependency that is not met fails",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "dependency-met-by-addon",
+    "title": "An add-on can meet a dependency",
+    "rules": [
+      "7.1",
+      "4.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "relationship-mutual-exclusion",
+    "title": "Mutually exclusive products fail together",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "relationship-not-modeled-warns",
+    "title": "A relationship type with no parameters is informational",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "rounding-half-away-from-zero",
+    "title": "Ties round away from zero, in both directions",
+    "rules": [
+      "9.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "rounding-none",
+    "title": "A null rounding rounds nothing",
+    "rules": [
+      "9.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "contract-discount-excludes-one-time",
+    "title": "A contract-wide discount skips one-time fees; totals",
+    "rules": [
+      "7.7",
+      "9.4"
+    ],
+    "status": "provisional",
+    "question": "Q5",
+    "outcome": "statement"
+  },
+  {
+    "id": "manual-value-above-max",
+    "title": "A manual value above its maximum fails",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "manual-value-needs-approval",
+    "title": "A value above the approval threshold warns",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "minimum-currency-must-match",
+    "title": "A floor in another currency fails",
+    "rules": [
+      "7.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "minimum-not-needed",
+    "title": "A floor already met adds nothing",
+    "rules": [
+      "7.8"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-throttle-not-priced",
+    "title": "Overage under throttle is not priced",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-unknown-grant-indeterminate",
+    "title": "An unknown grant makes overage indeterminate",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-mixed-period-pools",
+    "title": "Several pools: the largest overage governs",
+    "rules": [
+      "7.6"
+    ],
+    "status": "provisional",
+    "question": "Q3",
+    "outcome": "statement"
+  },
+  {
+    "id": "multiple-variants-for-motion",
+    "title": "Two variants for one deal motion fail",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "region-unassigned-code",
+    "title": "A two-letter code that ISO 3166-1 has not assigned fails",
+    "rules": [
+      "4.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "region-code-not-iso-assigned",
+    "title": "XK is not an ISO 3166-1 code",
+    "rules": [
+      "4.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "unresolved-id-stops-calculation",
+    "title": "An unresolved id ends the calculation after step 1",
+    "rules": [
+      "6",
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-not-in-model",
+    "title": "An override target that is not in the model is unresolved_reference",
+    "rules": [
+      "4.1",
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-module-not-charged",
+    "title": "An override target in the model but not charged is invalid_override",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-package-not-charged",
+    "title": "A credit package override with no package selected is invalid_override",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "grant-override-credit-type-not-in-model",
+    "title": "A grant override for an unknown credit type is unresolved_reference",
+    "rules": [
+      "4.1",
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "required-module-also-selected",
+    "title": "A required module that is also an add-on selection is charged once",
+    "rules": [
+      "4.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "plan-from-billing-id-ineligible-error",
+    "title": "A plan named only by billing.plan_id counts as selected, and must be eligible",
+    "rules": [
+      "7.1",
+      "4.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "plan-from-billing-id-ineligible-dropped",
+    "title": "An ineligible plan can be dropped with a warning",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-entry-null-currency",
+    "title": "A price book entry with a null currency is in the book currency",
+    "rules": [
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-step-tiers-gap",
+    "title": "An input in a gap between step_tiers brackets gives 0",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "module-scope-includes-one-time",
+    "title": "A module-scope discount includes one-time charges",
+    "rules": [
+      "7.7",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "product-scope-includes-one-time",
+    "title": "A product-scope discount includes one-time charges",
+    "rules": [
+      "7.7",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "product-scope-two-products-is-contract-total",
+    "title": "A discount matching two products is applied to contract_total",
+    "rules": [
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-chosen-at-its-turn",
+    "title": "The group member is chosen where the group comes in the order",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-tie-goes-first",
+    "title": "A tie in an exclusive group goes to the first in the order",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "not-stackable-after-group-applied",
+    "title": "A group counts as applied once its chosen member applied",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "relationship-not-modeled-unselected",
+    "title": "The not-modeled warning appears even when its objects are not selected",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "dependency-dependent-absent",
+    "title": "A dependency only applies when the dependent object is present",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "dependency-met-in-other-selection",
+    "title": "The required object may be in another product selection",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "prerequisite-related-missing",
+    "title": "A prerequisite fails when the subject is selected and the related object is not",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "prerequisite-subject-absent",
+    "title": "A prerequisite does not apply when the subject is absent",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "zero-adjustment-not-reported",
+    "title": "An adjustment of 0 is not reported",
+    "rules": [
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "annualized-recurring-share-rounded-once",
+    "title": "The recurring share of a spread adjustment is rounded on its own",
+    "rules": [
+      "9.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-price-override-is-an-adjustment",
+    "title": "A replaced overage price is reported as an adjustment",
+    "rules": [
+      "7.4",
+      "7.6",
+      "9.3"
+    ],
+    "status": "provisional",
+    "question": "DN-10",
+    "outcome": "statement"
+  },
+  {
+    "id": "custom-unit-price-on-flat-module",
+    "title": "custom_unit_price needs a credit type to multiply",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "overage-override-without-overage-price",
+    "title": "Any overage override on a credit type with no overage price fails",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "overage-override-no-overage-accepted",
+    "title": "An overage override with no overage in the deal changes nothing",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "consumption-conditions-credit-type-not-in-deal",
+    "title": "The consumption-conditions warning is only for credit types in the deal",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "minimum-true-up-matching-several-products",
+    "title": "A product-scope true-up matching several products is contract_total",
+    "rules": [
+      "7.8",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  }
+]

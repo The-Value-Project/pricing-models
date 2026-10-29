@@ -17,9 +17,14 @@
     "InvoiceStatement": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/invoice_statement.json",
     "ValueModel": "https://github.com/The-Value-Project/value-models/blob/main/schemas/value_model.json"
   },
-  "x-spec": "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-meta-model-spec.md",
+  "x-spec": "https://github.com/The-Value-Project/pricing-models/blob/main/spec/pricing-calculation-spec.md",
   "type": "object",
   "required": [
+    "schema_version",
+    "model_id",
+    "vendor_name",
+    "effective_date",
+    "currency",
     "products",
     "bundles",
     "discounts",
@@ -32,10 +37,55 @@
     "pricing_rules",
     "business_rules",
     "module_dependencies",
-    "pricing_relationships"
+    "pricing_relationships",
+    "comparison_grid",
+    "conformance_profile"
   ],
   "additionalProperties": true,
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^2\\.[0-9]+(\\.[0-9]+)?$",
+      "description": "Version of this schema that the document conforms to: any 2.x release, for example 2.0.0. Later 2.x releases accept every document that is valid under an earlier 2.x release."
+    },
+    "model_id": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/id"
+        }
+      ],
+      "description": "Stable unique identifier of this model. DealConfiguration.model_reference.model_id and InvoiceStatement.model_id refer to it."
+    },
+    "vendor_name": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Name of the vendor that publishes this pricing."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effective_date": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "ISO 8601 date (YYYY-MM-DD) from which this model applies."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "currency": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/currency_code"
+        }
+      ],
+      "description": "ISO 4217 base currency of the model. A price whose currency is null uses this currency."
+    },
     "products": {
       "type": "array",
       "description": "Vendor's product catalog.",
@@ -46,12 +96,17 @@
           "label",
           "modules",
           "tiers",
-          "plans"
+          "commitment_plans",
+          "position"
         ],
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Stable kebab-case product identifier."
           },
           "label": {
@@ -69,12 +124,13 @@
                 "price",
                 "included_credit_grants",
                 "eligibility",
-                "features"
+                "features",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
@@ -84,257 +140,16 @@
                   "description": "True if mandatory for the product."
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 },
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "eligibility": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "required": [
-                        "deal_motions",
-                        "regions",
-                        "min_metric"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "deal_motions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "enum": [
-                              "new_logo",
-                              "renewal",
-                              "expansion",
-                              "reprice"
-                            ]
-                          }
-                        },
-                        "regions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "min_metric": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "required": [
-                                "metric",
-                                "min"
-                              ],
-                              "additionalProperties": false,
-                              "properties": {
-                                "metric": {
-                                  "type": "string"
-                                },
-                                "min": {
-                                  "type": "number"
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "$ref": "#/$defs/eligibility"
                 },
                 "features": {
                   "type": "array",
@@ -342,13 +157,16 @@
                     "type": "string"
                   },
                   "description": "Human-readable features provided by this module."
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
                 }
               }
             }
           },
           "tiers": {
             "type": "array",
-            "description": "Plan levels including sets of modules.",
+            "description": "Tiers: named sets of modules.",
             "items": {
               "type": "object",
               "required": [
@@ -357,12 +175,13 @@
                 "included_modules",
                 "included_credit_grants",
                 "overage_policy",
-                "features"
+                "features",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
@@ -370,61 +189,14 @@
                 "included_modules": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
                   },
                   "description": "Module IDs included in this tier."
                 },
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "overage_policy": {
@@ -444,11 +216,14 @@
                     "type": "string"
                   },
                   "description": "Tier-level features beyond module features."
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
                 }
               }
             }
           },
-          "plans": {
+          "commitment_plans": {
             "type": "array",
             "description": "Commitment-period pricing options.",
             "items": {
@@ -459,19 +234,29 @@
                 "commitment_months",
                 "adjustment",
                 "targets",
+                "default_for_tier_ids",
                 "included_credit_grants",
-                "eligibility"
+                "eligibility",
+                "position"
               ],
               "additionalProperties": false,
               "properties": {
                 "id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "label": {
                   "type": "string"
                 },
                 "commitment_months": {
-                  "type": "number"
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Minimum commitment in months. Null if the commitment is not a clean number of months, or if there is no minimum term. Never guessed from a label such as \"Annual\"."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 },
                 "adjustment": {
                   "type": "object",
@@ -497,13 +282,13 @@
                     "tier_ids": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "$ref": "#/$defs/id"
                       }
                     },
                     "module_ids": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "$ref": "#/$defs/id"
                       }
                     }
                   }
@@ -511,117 +296,27 @@
                 "included_credit_grants": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "required": [
-                      "credit_type_id",
-                      "quantity",
-                      "renewal_behavior",
-                      "period",
-                      "metric_type"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                      "credit_type_id": {
-                        "type": "string",
-                        "description": "References credit_types[].id."
-                      },
-                      "quantity": {
-                        "type": "number",
-                        "description": "Amount granted. Use -1 for unlimited."
-                      },
-                      "renewal_behavior": {
-                        "type": "string",
-                        "enum": [
-                          "reset",
-                          "accumulate"
-                        ]
-                      },
-                      "period": {
-                        "type": "string",
-                        "enum": [
-                          "monthly",
-                          "annual",
-                          "per_billing_period",
-                          "concurrent",
-                          "lifetime",
-                          "one_time"
-                        ],
-                        "description": "How grant renews. concurrent=simultaneous limit."
-                      },
-                      "metric_type": {
-                        "type": "string",
-                        "enum": [
-                          "consumable",
-                          "capacity",
-                          "cumulative",
-                          "one_time"
-                        ],
-                        "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                      }
-                    }
+                    "$ref": "#/$defs/credit_grant"
                   }
                 },
                 "eligibility": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "required": [
-                        "deal_motions",
-                        "regions",
-                        "min_metric"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "deal_motions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "enum": [
-                              "new_logo",
-                              "renewal",
-                              "expansion",
-                              "reprice"
-                            ]
-                          }
-                        },
-                        "regions": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "min_metric": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "required": [
-                                "metric",
-                                "min"
-                              ],
-                              "additionalProperties": false,
-                              "properties": {
-                                "metric": {
-                                  "type": "string"
-                                },
-                                "min": {
-                                  "type": "number"
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "$ref": "#/$defs/eligibility"
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
+                },
+                "default_for_tier_ids": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "description": "Ids of this product's tiers for which this commitment plan is the preselected option. Empty if none. A tier appears in at most one commitment plan of a product."
                 }
               }
             }
+          },
+          "position": {
+            "$ref": "#/$defs/position"
           }
         }
       }
@@ -642,7 +337,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -650,7 +345,7 @@
           "product_ids": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/$defs/id"
             }
           },
           "adjustment": {
@@ -668,114 +363,11 @@
           "included_credit_grants": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": [
-                "credit_type_id",
-                "quantity",
-                "renewal_behavior",
-                "period",
-                "metric_type"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "credit_type_id": {
-                  "type": "string",
-                  "description": "References credit_types[].id."
-                },
-                "quantity": {
-                  "type": "number",
-                  "description": "Amount granted. Use -1 for unlimited."
-                },
-                "renewal_behavior": {
-                  "type": "string",
-                  "enum": [
-                    "reset",
-                    "accumulate"
-                  ]
-                },
-                "period": {
-                  "type": "string",
-                  "enum": [
-                    "monthly",
-                    "annual",
-                    "per_billing_period",
-                    "concurrent",
-                    "lifetime",
-                    "one_time"
-                  ],
-                  "description": "How grant renews. concurrent=simultaneous limit."
-                },
-                "metric_type": {
-                  "type": "string",
-                  "enum": [
-                    "consumable",
-                    "capacity",
-                    "cumulative",
-                    "one_time"
-                  ],
-                  "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                }
-              }
+              "$ref": "#/$defs/credit_grant"
             }
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           }
         }
       }
@@ -801,7 +393,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -867,63 +459,7 @@
             ]
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           },
           "targets": {
             "anyOf": [
@@ -939,19 +475,19 @@
                   "module_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "product_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "credit_type_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   }
                 }
@@ -1009,7 +545,7 @@
                 "additionalProperties": false,
                 "properties": {
                   "strategy_id": {
-                    "type": "string"
+                    "$ref": "#/$defs/id"
                   },
                   "caps": {
                     "anyOf": [
@@ -1090,12 +626,13 @@
           "label",
           "unit_label",
           "consumption_rules",
-          "overage_policy"
+          "overage_policy",
+          "overage_price"
         ],
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -1145,8 +682,47 @@
               "unknown"
             ],
             "description": "What happens when this credit type is exhausted."
+          },
+          "overage_price": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/price"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Price per unit of overage for this credit type. Required (non-null) when overage_policy is pay_as_you_go, and null otherwise. Its credit_type_id is null: the unit is this credit type."
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "overage_policy": {
+                  "const": "pay_as_you_go"
+                }
+              },
+              "required": [
+                "overage_policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "overage_price": {
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "overage_price": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "credit_packages": {
@@ -1162,162 +738,25 @@
           "price",
           "expiration_months",
           "rollover_policy",
+          "rollover_percent",
           "eligibility"
         ],
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
           },
           "credit_type_id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "quantity": {
             "type": "number"
           },
           "price": {
-            "type": "object",
-            "required": [
-              "type",
-              "period",
-              "amount",
-              "currency",
-              "unit",
-              "tiers",
-              "breakpoints"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "flat",
-                  "per_unit",
-                  "tiered",
-                  "volume"
-                ],
-                "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-              },
-              "period": {
-                "type": "string",
-                "enum": [
-                  "month",
-                  "quarter",
-                  "year",
-                  "one_time"
-                ]
-              },
-              "amount": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "currency": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "unit": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "description": "What the price is per. Null for flat."
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "tiers": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "description": "Graduated bands (tiered type).",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "min",
-                        "max",
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "min": {
-                          "type": "number"
-                        },
-                        "max": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "value": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "breakpoints": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "description": "Volume bands (volume type).",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "min",
-                        "max",
-                        "value"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "min": {
-                          "type": "number"
-                        },
-                        "max": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "value": {
-                          "type": "number"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            }
+            "$ref": "#/$defs/price"
           },
           "expiration_months": {
             "anyOf": [
@@ -1334,69 +773,55 @@
             "enum": [
               "none",
               "partial",
-              "full"
+              "full",
+              "unknown"
             ]
           },
           "eligibility": {
+            "$ref": "#/$defs/eligibility"
+          },
+          "rollover_percent": {
             "anyOf": [
               {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Percentage of unused units that roll over. Required (non-null) when rollover_policy is partial, and null otherwise."
               },
               {
                 "type": "null"
               }
             ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "rollover_policy": {
+                  "const": "partial"
+                }
+              },
+              "required": [
+                "rollover_policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "rollover_percent": {
+                  "type": "number"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "rollover_percent": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "discount_strategies": {
@@ -1414,7 +839,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -1430,7 +855,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Deprecated in 2.0.0. Each strategy shape already names its input in shape.*.metric, which is authoritative. A second list can disagree with it, and nothing says which one wins. Engines read shape.*.metric and ignore input_keys. Validators warn if the two disagree. Earliest removal: two MINOR releases after 2.0.0."
           },
           "shape": {
             "type": "object",
@@ -1654,13 +1080,18 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "region": {
             "type": "string"
           },
           "currency": {
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/$defs/currency_code"
+              }
+            ],
+            "description": "Currency of every price in this price book. A price book whose currency differs from the model currency is the only way a calculation ends up in a different currency."
           },
           "fallback_multiplier": {
             "anyOf": [
@@ -1683,148 +1114,10 @@
               "additionalProperties": false,
               "properties": {
                 "module_id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 }
               }
             }
@@ -1840,148 +1133,10 @@
               "additionalProperties": false,
               "properties": {
                 "credit_package_id": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "price": {
-                  "type": "object",
-                  "required": [
-                    "type",
-                    "period",
-                    "amount",
-                    "currency",
-                    "unit",
-                    "tiers",
-                    "breakpoints"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "flat",
-                        "per_unit",
-                        "tiered",
-                        "volume"
-                      ],
-                      "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "month",
-                        "quarter",
-                        "year",
-                        "one_time"
-                      ]
-                    },
-                    "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "currency": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "unit": {
-                      "anyOf": [
-                        {
-                          "type": "string",
-                          "description": "What the price is per. Null for flat."
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "tiers": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Graduated bands (tiered type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "breakpoints": {
-                      "anyOf": [
-                        {
-                          "type": "array",
-                          "description": "Volume bands (volume type).",
-                          "items": {
-                            "type": "object",
-                            "required": [
-                              "min",
-                              "max",
-                              "value"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                              "min": {
-                                "type": "number"
-                              },
-                              "max": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "value": {
-                                "type": "number"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    }
-                  }
+                  "$ref": "#/$defs/price"
                 }
               }
             }
@@ -2003,7 +1158,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "deal_motion": {
             "type": "string",
@@ -2039,148 +1194,10 @@
                   "additionalProperties": false,
                   "properties": {
                     "module_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "price": {
-                      "type": "object",
-                      "required": [
-                        "type",
-                        "period",
-                        "amount",
-                        "currency",
-                        "unit",
-                        "tiers",
-                        "breakpoints"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "flat",
-                            "per_unit",
-                            "tiered",
-                            "volume"
-                          ],
-                          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                        },
-                        "period": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "quarter",
-                            "year",
-                            "one_time"
-                          ]
-                        },
-                        "amount": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "currency": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "unit": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "description": "What the price is per. Null for flat."
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "tiers": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Graduated bands (tiered type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "breakpoints": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Volume bands (volume type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
+                      "$ref": "#/$defs/price"
                     }
                   }
                 }
@@ -2196,148 +1213,10 @@
                   "additionalProperties": false,
                   "properties": {
                     "credit_package_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "price": {
-                      "type": "object",
-                      "required": [
-                        "type",
-                        "period",
-                        "amount",
-                        "currency",
-                        "unit",
-                        "tiers",
-                        "breakpoints"
-                      ],
-                      "additionalProperties": false,
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "flat",
-                            "per_unit",
-                            "tiered",
-                            "volume"
-                          ],
-                          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
-                        },
-                        "period": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "quarter",
-                            "year",
-                            "one_time"
-                          ]
-                        },
-                        "amount": {
-                          "anyOf": [
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "currency": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "unit": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "description": "What the price is per. Null for flat."
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "tiers": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Graduated bands (tiered type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
-                        "breakpoints": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "description": "Volume bands (volume type).",
-                              "items": {
-                                "type": "object",
-                                "required": [
-                                  "min",
-                                  "max",
-                                  "value"
-                                ],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "min": {
-                                    "type": "number"
-                                  },
-                                  "max": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "value": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        }
-                      }
+                      "$ref": "#/$defs/price"
                     }
                   }
                 }
@@ -2345,54 +1224,7 @@
               "included_credit_grants": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "required": [
-                    "credit_type_id",
-                    "quantity",
-                    "renewal_behavior",
-                    "period",
-                    "metric_type"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "credit_type_id": {
-                      "type": "string",
-                      "description": "References credit_types[].id."
-                    },
-                    "quantity": {
-                      "type": "number",
-                      "description": "Amount granted. Use -1 for unlimited."
-                    },
-                    "renewal_behavior": {
-                      "type": "string",
-                      "enum": [
-                        "reset",
-                        "accumulate"
-                      ]
-                    },
-                    "period": {
-                      "type": "string",
-                      "enum": [
-                        "monthly",
-                        "annual",
-                        "per_billing_period",
-                        "concurrent",
-                        "lifetime",
-                        "one_time"
-                      ],
-                      "description": "How grant renews. concurrent=simultaneous limit."
-                    },
-                    "metric_type": {
-                      "type": "string",
-                      "enum": [
-                        "consumable",
-                        "capacity",
-                        "cumulative",
-                        "one_time"
-                      ],
-                      "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
-                    }
-                  }
+                  "$ref": "#/$defs/credit_grant"
                 }
               },
               "discount_eligibility_overrides": {
@@ -2406,7 +1238,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "discount_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "enabled": {
                       "type": "boolean"
@@ -2425,7 +1257,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "bundle_id": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     },
                     "enabled": {
                       "type": "boolean"
@@ -2455,7 +1287,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "label": {
             "type": "string"
@@ -2473,7 +1305,12 @@
             "type": "number"
           },
           "currency": {
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/$defs/currency_code"
+              }
+            ],
+            "description": "Must equal the currency of the invoice."
           },
           "targets": {
             "anyOf": [
@@ -2488,13 +1325,13 @@
                   "product_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   },
                   "credit_type_ids": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "$ref": "#/$defs/id"
                     }
                   }
                 }
@@ -2505,63 +1342,7 @@
             ]
           },
           "eligibility": {
-            "anyOf": [
-              {
-                "type": "object",
-                "required": [
-                  "deal_motions",
-                  "regions",
-                  "min_metric"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "deal_motions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "new_logo",
-                        "renewal",
-                        "expansion",
-                        "reprice"
-                      ]
-                    }
-                  },
-                  "regions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "min_metric": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "required": [
-                          "metric",
-                          "min"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "type": "string"
-                          },
-                          "min": {
-                            "type": "number"
-                          }
-                        }
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/eligibility"
           }
         }
       }
@@ -2580,13 +1361,15 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Deprecated in 2.0.0. The order of phases is fixed by the specification, so a model-supplied order can only contradict it, and its vocabulary is defined nowhere. Engines ignore it. Validators warn when it differs from the phase list. Earliest removal: two MINOR releases after 2.0.0."
         },
         "discount_application_order": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Ids of discounts, in the order they are applied. Every discount that can apply to a deal MUST appear, otherwise the model is invalid."
         },
         "rounding": {
           "anyOf": [
@@ -2594,6 +1377,7 @@
               "type": "object",
               "required": [
                 "mode",
+                "method",
                 "currency_minor_units"
               ],
               "additionalProperties": false,
@@ -2608,12 +1392,20 @@
                 "currency_minor_units": {
                   "anyOf": [
                     {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Number of decimal places. Applied to line totals and adjustment amounts only."
                     },
                     {
                       "type": "null"
                     }
                   ]
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "half_away_from_zero"
+                  ],
+                  "description": "How a tie rounds. Only half_away_from_zero is defined in 2.0.0."
                 }
               }
             },
@@ -2678,7 +1470,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "rule_type": {
             "type": "string",
@@ -2717,21 +1509,21 @@
               "product_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               },
               "tier_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               },
               "module_ids": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/$defs/id"
                 },
                 "description": "Empty = all."
               }
@@ -2756,18 +1548,48 @@
         "type": "object",
         "required": [
           "dependent_id",
+          "dependent_kind",
           "requires_id",
+          "requires_kind",
           "description"
         ],
         "additionalProperties": false,
         "properties": {
           "dependent_id": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Module/credit_package that has the dependency."
           },
-          "requires_id": {
+          "dependent_kind": {
             "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object dependent_id is. Ids are unique within a kind, so a module and a tier may share an id."
+          },
+          "requires_id": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Module/tier/product that must be selected."
+          },
+          "requires_kind": {
+            "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object requires_id is."
           },
           "description": {
             "type": "string",
@@ -2785,13 +1607,15 @@
           "id",
           "relationship_type",
           "subject",
+          "subject_kind",
           "related_to",
+          "related_to_kind",
           "description"
         ],
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/$defs/id"
           },
           "relationship_type": {
             "type": "string",
@@ -2808,14 +1632,45 @@
             ]
           },
           "subject": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
             "description": "Originating product/tier/module."
+          },
+          "subject_kind": {
+            "type": "string",
+            "enum": [
+              "module",
+              "tier",
+              "product",
+              "credit_package"
+            ],
+            "description": "What kind of object subject is."
           },
           "related_to": {
             "anyOf": [
               {
+                "$ref": "#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Target. Null if unilateral."
+          },
+          "related_to_kind": {
+            "anyOf": [
+              {
                 "type": "string",
-                "description": "Target. Null if unilateral."
+                "enum": [
+                  "module",
+                  "tier",
+                  "product",
+                  "credit_package"
+                ],
+                "description": "What kind of object related_to is. Null if related_to is null."
               },
               {
                 "type": "null"
@@ -2828,6 +1683,932 @@
           }
         }
       }
+    },
+    "comparison_grid": {
+      "type": "array",
+      "description": "A grid of features, limits and comparison items (rows) across the tiers of a product. Descriptive only: calculation never reads it, so it is never a second source of price truth. Empty when unused.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "product_id",
+          "label",
+          "section",
+          "position",
+          "cells"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "product_id": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/id"
+              }
+            ],
+            "description": "References products[].id."
+          },
+          "label": {
+            "type": "string"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Heading the row is grouped under."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "position": {
+            "$ref": "#/$defs/position"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "tier_id",
+                "state",
+                "value",
+                "text",
+                "position"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "tier_id": {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/id"
+                    }
+                  ],
+                  "description": "References products[].tiers[].id of the row's product."
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "structured",
+                    "free_text",
+                    "not_available"
+                  ],
+                  "description": "structured: value holds the content. free_text: only prose is available, in text. not_available: this tier does not have it."
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "text": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "position": {
+                  "$ref": "#/$defs/position"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "structured"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "not": {
+                          "type": "null"
+                        }
+                      },
+                      "text": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "free_text"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      },
+                      "text": {
+                        "not": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "not_available"
+                      }
+                    },
+                    "required": [
+                      "state"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "value": {
+                        "type": "null"
+                      },
+                      "text": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "conformance_profile": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "implementation",
+            "persists",
+            "derives",
+            "discards"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "implementation": {
+              "type": "string",
+              "description": "Name of the implementation that declares this profile."
+            },
+            "persists": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation stores and returns unchanged."
+            },
+            "derives": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation computes from other data instead of storing."
+            },
+            "discards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "products",
+                  "bundles",
+                  "discounts",
+                  "credit_types",
+                  "credit_packages",
+                  "discount_strategies",
+                  "price_books",
+                  "variants",
+                  "minimum_commitments",
+                  "pricing_rules",
+                  "business_rules",
+                  "module_dependencies",
+                  "pricing_relationships",
+                  "comparison_grid"
+                ]
+              },
+              "description": "Regions the implementation drops. It must say so here and may not drop a populated region silently."
+            }
+          },
+          "description": "What an implementation keeps, derives and drops. Null if the implementation does not declare one."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "price": {
+      "type": "object",
+      "required": [
+        "type",
+        "period",
+        "amount",
+        "currency",
+        "unit",
+        "credit_type_id",
+        "tiers",
+        "breakpoints"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "flat",
+            "per_unit",
+            "tiered",
+            "volume"
+          ],
+          "description": "flat=fixed, per_unit=amount×qty, tiered=graduated bands, volume=all units at band price."
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "month",
+            "quarter",
+            "year",
+            "one_time"
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/currency_code"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "ISO 4217 currency of the amount. Null means the model currency."
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "Display label only: what the price is per. Null for flat. Calculation uses credit_type_id, not this text."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tiers": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "Graduated bands (tiered type).",
+              "items": {
+                "type": "object",
+                "required": [
+                  "min",
+                  "max",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "breakpoints": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "Volume bands (volume type).",
+              "items": {
+                "type": "object",
+                "required": [
+                  "min",
+                  "max",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credit_type_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "References credit_types[].id. The quantity of this credit type is the quantity the price applies to. Required (non-null) for per_unit, tiered and volume module prices; null for flat prices and for credit-package prices."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "tiered"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "array"
+              },
+              "breakpoints": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "volume"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "breakpoints": {
+                "type": "array"
+              },
+              "tiers": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "flat"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "null"
+              },
+              "breakpoints": {
+                "type": "null"
+              },
+              "credit_type_id": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "per_unit"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "tiers": {
+                "type": "null"
+              },
+              "breakpoints": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "credit_grant": {
+      "type": "object",
+      "required": [
+        "credit_type_id",
+        "quantity",
+        "renewal_behavior",
+        "period",
+        "metric_type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "credit_type_id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/id"
+            }
+          ],
+          "description": "References credit_types[].id."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Amount granted. Use -1 for unlimited."
+        },
+        "renewal_behavior": {
+          "type": "string",
+          "enum": [
+            "reset",
+            "accumulate",
+            "unknown"
+          ],
+          "description": "reset or accumulate. unknown means the source does not say; an engine reports an indeterminate entitlement and never guesses."
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "annual",
+            "per_billing_period",
+            "concurrent",
+            "lifetime",
+            "one_time",
+            "unknown"
+          ],
+          "description": "How grant renews. concurrent=simultaneous limit."
+        },
+        "metric_type": {
+          "type": "string",
+          "enum": [
+            "consumable",
+            "capacity",
+            "cumulative",
+            "one_time",
+            "unknown"
+          ],
+          "description": "consumable=depletes/resets, capacity=concurrent limit, cumulative=grows, one_time=granted once."
+        }
+      }
+    },
+    "eligibility": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "deal_motions",
+            "regions",
+            "min_metric"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "deal_motions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "new_logo",
+                  "renewal",
+                  "expansion",
+                  "reprice"
+                ]
+              }
+            },
+            "regions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "min_metric": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "metric",
+                    "min"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "metric": {
+                      "type": "string"
+                    },
+                    "min": {
+                      "type": "number"
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "position": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Display order among siblings. Dense, zero-based and unique within the immediate parent. Null means array order. For ordering only, never an identifier or a diff key."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "An id: opaque and case-sensitive, lower-case words joined by hyphens. It stays the same across versions of a model while its object exists, and is never reused for a different object."
+    },
+    "referential_rules": {
+      "description": "Reference only. Nothing in properties or required refers to it, so it never changes validation. JSON Schema draft-07 cannot express rules that cross arrays, so they are listed here as data in const. A conformant importer, or a validator, runs these rules as a second pass after schema validation. Ids are unique across the model within each kind.",
+      "const": {
+        "unique": [
+          {
+            "kind": "product",
+            "path": "products[].id"
+          },
+          {
+            "kind": "module",
+            "path": "products[].modules[].id"
+          },
+          {
+            "kind": "tier",
+            "path": "products[].tiers[].id"
+          },
+          {
+            "kind": "commitment_plan",
+            "path": "products[].commitment_plans[].id"
+          },
+          {
+            "kind": "bundle",
+            "path": "bundles[].id"
+          },
+          {
+            "kind": "discount",
+            "path": "discounts[].id"
+          },
+          {
+            "kind": "credit_type",
+            "path": "credit_types[].id"
+          },
+          {
+            "kind": "credit_package",
+            "path": "credit_packages[].id"
+          },
+          {
+            "kind": "discount_strategy",
+            "path": "discount_strategies[].id"
+          },
+          {
+            "kind": "price_book",
+            "path": "price_books[].id"
+          },
+          {
+            "kind": "variant",
+            "path": "variants[].id"
+          },
+          {
+            "kind": "minimum_commitment",
+            "path": "minimum_commitments[].id"
+          },
+          {
+            "kind": "business_rule",
+            "path": "business_rules[].id"
+          },
+          {
+            "kind": "pricing_relationship",
+            "path": "pricing_relationships[].id"
+          },
+          {
+            "kind": "comparison_row",
+            "path": "comparison_grid[].id"
+          }
+        ],
+        "resolves": [
+          {
+            "from": "products[].tiers[].included_modules[]",
+            "to": "module",
+            "note": "a module of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].targets.tier_ids[]",
+            "to": "tier",
+            "note": "a tier of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].targets.module_ids[]",
+            "to": "module",
+            "note": "a module of the same product"
+          },
+          {
+            "from": "products[].commitment_plans[].default_for_tier_ids[]",
+            "to": "tier",
+            "note": "a tier of the same product"
+          },
+          {
+            "from": "bundles[].product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "discounts[].targets.module_ids[]",
+            "to": "module"
+          },
+          {
+            "from": "discounts[].targets.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "discounts[].targets.credit_type_ids[]",
+            "to": "credit_type"
+          },
+          {
+            "from": "discounts[].strategy.strategy_id",
+            "to": "discount_strategy"
+          },
+          {
+            "from": "credit_packages[].credit_type_id",
+            "to": "credit_type"
+          },
+          {
+            "from": "price_books[].module_prices[].module_id",
+            "to": "module"
+          },
+          {
+            "from": "price_books[].credit_package_prices[].credit_package_id",
+            "to": "credit_package"
+          },
+          {
+            "from": "variants[].overrides.module_price_overrides[].module_id",
+            "to": "module"
+          },
+          {
+            "from": "variants[].overrides.credit_package_price_overrides[].credit_package_id",
+            "to": "credit_package"
+          },
+          {
+            "from": "variants[].overrides.discount_eligibility_overrides[].discount_id",
+            "to": "discount"
+          },
+          {
+            "from": "variants[].overrides.bundle_eligibility_overrides[].bundle_id",
+            "to": "bundle"
+          },
+          {
+            "from": "minimum_commitments[].targets.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "minimum_commitments[].targets.credit_type_ids[]",
+            "to": "credit_type"
+          },
+          {
+            "from": "business_rules[].applies_to.product_ids[]",
+            "to": "product"
+          },
+          {
+            "from": "business_rules[].applies_to.tier_ids[]",
+            "to": "tier"
+          },
+          {
+            "from": "business_rules[].applies_to.module_ids[]",
+            "to": "module"
+          },
+          {
+            "from": "module_dependencies[].dependent_id",
+            "to": "kind given by dependent_kind"
+          },
+          {
+            "from": "module_dependencies[].requires_id",
+            "to": "kind given by requires_kind"
+          },
+          {
+            "from": "pricing_relationships[].subject",
+            "to": "kind given by subject_kind"
+          },
+          {
+            "from": "pricing_relationships[].related_to",
+            "to": "kind given by related_to_kind"
+          },
+          {
+            "from": "comparison_grid[].product_id",
+            "to": "product"
+          },
+          {
+            "from": "comparison_grid[].cells[].tier_id",
+            "to": "tier",
+            "note": "a tier of the row's product"
+          },
+          {
+            "from": "every credit_grant.credit_type_id (modules, tiers, commitment plans, bundles, variant overrides)",
+            "to": "credit_type"
+          },
+          {
+            "from": "every price.credit_type_id that is non-null",
+            "to": "credit_type"
+          },
+          {
+            "from": "DealConfiguration: product_selections[].product_id, tier_id, commitment_plan_id; quantities[].credit_type_id; credit_package_selections[].credit_package_id; bundle_selections[].bundle_id; discount_selections[].discount_id; module_selections[].module_id; negotiated_overrides.price_overrides[].target_id (by target_kind; none for total_deal); negotiated_overrides.credit_grant_overrides[].credit_type_id",
+            "to": "the matching object in this model",
+            "note": "checked across documents"
+          }
+        ],
+        "disjoint": [
+          {
+            "path": "products[].commitment_plans[].default_for_tier_ids[]",
+            "within": "the commitment plans of one product",
+            "rule": "No tier id appears in more than one commitment plan."
+          }
+        ],
+        "dense_and_unique_within_parent": [
+          {
+            "path": "products[].position",
+            "parent": "the model"
+          },
+          {
+            "path": "products[].modules[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "products[].tiers[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "products[].commitment_plans[].position",
+            "parent": "the product"
+          },
+          {
+            "path": "comparison_grid[].position",
+            "parent": "the model"
+          },
+          {
+            "path": "comparison_grid[].cells[].position",
+            "parent": "the row"
+          },
+          {
+            "rule": "Among siblings, either every position is null (array order), or the positions are distinct integers that form 0 to n-1 with no gaps."
+          }
+        ],
+        "type_matched": [
+          {
+            "id": "module_dependencies[].dependent_id",
+            "kind": "module_dependencies[].dependent_kind"
+          },
+          {
+            "id": "module_dependencies[].requires_id",
+            "kind": "module_dependencies[].requires_kind"
+          },
+          {
+            "id": "pricing_relationships[].subject",
+            "kind": "pricing_relationships[].subject_kind"
+          },
+          {
+            "id": "pricing_relationships[].related_to",
+            "kind": "pricing_relationships[].related_to_kind"
+          }
+        ],
+        "derived_agreement": [
+          {
+            "path": "products[].modules[].price.credit_type_id",
+            "rule": "Non-null when price.type is per_unit, tiered or volume. Null when it is flat."
+          },
+          {
+            "path": "credit_packages[].price.credit_type_id",
+            "rule": "Null. The quantity is credit_package_selections[].quantity."
+          },
+          {
+            "path": "credit_types[].overage_price.credit_type_id",
+            "rule": "Null. The unit is the credit type itself."
+          },
+          {
+            "path": "products[].tiers[].included_modules[]",
+            "rule": "A module marked required is charged whether or not a tier lists it, and once. A module in no tier's included_modules is an add-on."
+          }
+        ]
+      }
+    },
+    "currency_code": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code."
     }
   }
 }

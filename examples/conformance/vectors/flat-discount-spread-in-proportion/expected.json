@@ -1,0 +1,108 @@
+{
+  "vector": "flat-discount-spread-in-proportion",
+  "title": "A flat discount is spread in proportion to running amounts",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "provisional",
+  "open_question": "Q7",
+  "worked": "$60,000 in all. The $6,000 flat discount takes $1,000, $2,000 and $3,000 off the three lines. Product p2 is then $18,000. A 10% discount on p2: -$1,800. Net $52,200.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m1",
+          "product_id": "p1",
+          "target_id": "m1",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 10000,
+          "line_total": 10000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "module_charge",
+          "description": "m2",
+          "product_id": "p2",
+          "target_id": "m2",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 20000,
+          "line_total": 20000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/1/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 3,
+          "category": "module_charge",
+          "description": "m3",
+          "product_id": "p3",
+          "target_id": "m3",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 30000,
+          "line_total": 30000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/2/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 60000,
+        "one_time": 0,
+        "gross": 60000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "other",
+          "description": "Discount f",
+          "amount": -6000,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        },
+        {
+          "adjustment_type": "other",
+          "description": "Discount pc",
+          "amount": -1800,
+          "applies_to": "product:p2",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/1"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -7800,
+        "net_total": 52200,
+        "annualized_total": 52200,
+        "total_contract_value": 52200
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "vector": "bundle-partial-is-error",
+  "title": "A selected bundle with a missing product fails by default",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "provisional",
+  "open_question": "Q9",
+  "worked": "The bundle needs p1 and p2. Only p1 is selected. Policy is error.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "ineligible_selection"
+    ]
+  }
+}
