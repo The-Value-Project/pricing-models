@@ -105,21 +105,27 @@ The Linux Foundation hosts the industry's most successful open standards infrast
 
 ## Versioning Policy
 
-All schemas and specifications follow semantic versioning: `MAJOR.MINOR`.
+All schemas and specifications follow semantic versioning: `MAJOR.MINOR.PATCH`. PATCH is for corrections that change no meaning: a typo, a broken link, a fixed example.
 
 | Change type | Version impact | Approval required |
 |---|---|---|
+| Typo, link or example fix | PATCH | Maintainer |
 | New optional field | MINOR | TSC simple majority (Stage 2+) / ValueIQ (Stage 1) |
 | New enum value | MINOR | TSC simple majority (Stage 2+) / ValueIQ (Stage 1) |
 | Clarified field description | MINOR | TSC simple majority (Stage 2+) / ValueIQ (Stage 1) |
+| Changing or settling a provisional rule | MINOR | TSC simple majority (Stage 2+) / ValueIQ (Stage 1) |
 | New required field | MAJOR | TSC 2/3 supermajority (Stage 2+) / ValueIQ (Stage 1) |
 | Renamed or removed field | MAJOR | TSC 2/3 supermajority (Stage 2+) / ValueIQ (Stage 1) |
 | Changed field type | MAJOR | TSC 2/3 supermajority (Stage 2+) / ValueIQ (Stage 1) |
 | New normative requirement | MAJOR | TSC 2/3 supermajority (Stage 2+) / ValueIQ (Stage 1) |
 
+**New fields in a MINOR release are optional.** A field added in a MINOR release is not listed in `required`. A field that every document must carry is a new required field, which is MAJOR.
+
+**Provisional rules.** A MAJOR release may mark a rule provisional, because it depends on how the thing it describes works in practice and has not yet been confirmed. A provisional rule is identified in the specification, and its conformance vectors have the status `provisional`. Changing or settling a provisional rule is a MINOR change. A rule that is not provisional changes only in a MAJOR release, except that a change which only clarifies it is MINOR. A MINOR release cannot add a provisional rule. An implementation conforms to a release if it passes every conformance vector that is `settled` for that release.
+
 **Deprecation policy:** Any field or normative requirement marked `deprecated` must be supported for a minimum of two MINOR versions before removal. Deprecation notices are published in `CHANGELOG.md` and in the schema `description` field of the deprecated element.
 
-**Compatibility guarantee:** MINOR version changes are backward-compatible. A system that reads `ValueModel` 1.0 must be able to read `ValueModel` 1.1 without modification. MAJOR version changes may require migration; migration guides are published in `spec/` alongside the new version.
+**Compatibility guarantee:** MINOR version changes are backward-compatible. A document that is valid under a schema 2.x is valid under every later 2.y schema, and a system that reads it under 2.x reads it under 2.y without modification. A document that uses a field added in a later MINOR release may not validate against an earlier schema, because the objects in the schemas are closed (`additionalProperties: false`); its `schema_version` says which release it uses. The prices calculated under a provisional rule may differ between MINOR releases. MAJOR version changes may require migration; migration guides are published in `spec/` alongside the new version.
 
 ---
 

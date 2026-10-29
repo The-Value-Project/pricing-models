@@ -292,7 +292,7 @@ pricing-models/
 | Pricing page specification (`spec/pricing-page-spec.md`) | 3.0.0 | 2.0.0 | Implementation-Ready |
 | LLM interpreter reference (`spec/pricing-model-llm-reference.md`) | 2.0.0 | 2.0.0 | Implementation-Ready |
 
-Versions follow `MAJOR.MINOR.PATCH` (semver). Each schema has one version, which is its `x-version`. The `schema_version` field in each JSON instance must match it. Each specification document has its own version, and the table shows which schema version it targets. "PMS vX.Y.Z" in a document means a schema version.
+Versions follow `MAJOR.MINOR.PATCH` (semver). Each schema has one version, which is its `x-version`. The `schema_version` field in each JSON instance names the release the document was written for. It can be any version in the schema's MAJOR line, so a 2.0.0 document stays valid when the schema moves to 2.1.0. Each specification document has its own version, and the table shows which schema version it targets. "PMS vX.Y.Z" in a document means a schema version.
 
 ---
 

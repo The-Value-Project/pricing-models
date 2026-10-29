@@ -42,6 +42,12 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 
 The normative calculation specification that the README, the CHANGELOG and `x-spec` had linked to since 1.0.0, and that had never been committed. It defines scope, conformance and equality, conventions (ids, percentages, empty arrays, no silent defaults), inputs, price primitives and bands, the nine phases, entitlements and overage, rounding, output rules, validation failure codes and warning types. It states every calculation decision made for 2.0.0. Annex D lists the places that go beyond those decisions, for review. `x-spec` in `pricing_model.json` and the README now point to it.
 
+### Changed — versioning policy
+
+- `schema_version` in all three schemas accepts any 2.x (`^2\.[0-9]+(\.[0-9]+)?$`), not only `2.0.0`, so that later 2.x releases accept 2.0 documents.
+- `spec/pricing-calculation-spec.md` §2.6: what it means to conform (pass every `settled` vector), and what a provisional rule is (a drafting note in Annex D not marked settled; it can change in a MINOR release).
+- `GOVERNANCE.md` versioning policy: `MAJOR.MINOR.PATCH`, with PATCH for corrections that change no meaning; settling a provisional rule is MINOR; new fields in a MINOR release are optional; the compatibility guarantee is stated for documents valid under 2.x staying valid under later 2.y.
+
 ### Added — worked example, conformance suite and CI
 
 - `examples/acme_ai_platform_pms.json`, `acme_deal_config.json` and `acme_invoice.json`: the worked example that the README had promised since 1.0.0 and the repository never held. The numbers are worked out by hand.

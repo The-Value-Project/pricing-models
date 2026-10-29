@@ -31,7 +31,7 @@ New values that are not breaking: `unknown` for a grant's `renewal_behavior`, `p
 
 | Change | What to do |
 |---|---|
-| New required `schema_version` | `"2.0.0"`. |
+| New required `schema_version` | A 2.x version string, for example `"2.0.0"`. |
 | New required `product_selections[].commitment_plan_id` | The selected commitment plan of that product, or null. |
 | New required `product_selections[].module_selections[]` | Add `[]` if the deal has no add-ons. A selected module must not already be in the chosen tier. |
 | New required `growth_schedule[].period_index` | Integer from 1, unique within the schedule. `period_label` is display text only. |
@@ -45,7 +45,7 @@ New values that are not breaking: `unknown` for a grant's `renewal_behavior`, `p
 | Change | What to do |
 |---|---|
 | Renamed: `adjustments[].adjustment_type` value `plan_adjustment` → `commitment_plan_adjustment` | Emit the new value. |
-| New required `schema_version` and `model_id` | `"2.0.0"`, and the `PricingModel.model_id` the statement was calculated from. |
+| New required `schema_version` and `model_id` | A 2.x version string, for example `"2.0.0"`, and the `PricingModel.model_id` the statement was calculated from. |
 | `line_items[].product_id` may be null | Null for a line that belongs to no single product. |
 | `line_items[].source_fields[]` use a defined syntax | `"model#"` or `"config#"` followed by an RFC 6901 JSON Pointer. |
 | `totals.annualized_total` and `totals.total_contract_value` are never null | Always emit a number when the calculation succeeds. |
