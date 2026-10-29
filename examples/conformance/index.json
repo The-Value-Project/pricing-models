@@ -960,5 +960,324 @@
     "status": "settled",
     "question": null,
     "outcome": "validation_failure"
+  },
+  {
+    "id": "region-unassigned-code",
+    "title": "A two-letter code that ISO 3166-1 has not assigned fails",
+    "rules": [
+      "4.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "region-code-not-iso-assigned",
+    "title": "XK is not an ISO 3166-1 code",
+    "rules": [
+      "4.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "unresolved-id-stops-calculation",
+    "title": "An unresolved id ends the calculation after step 1",
+    "rules": [
+      "6",
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-not-in-model",
+    "title": "An override target that is not in the model is unresolved_reference",
+    "rules": [
+      "4.1",
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-module-not-charged",
+    "title": "An override target in the model but not charged is invalid_override",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "override-target-package-not-charged",
+    "title": "A credit package override with no package selected is invalid_override",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "grant-override-credit-type-not-in-model",
+    "title": "A grant override for an unknown credit type is unresolved_reference",
+    "rules": [
+      "4.1",
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "required-module-also-selected",
+    "title": "A required module that is also an add-on selection is charged once",
+    "rules": [
+      "4.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "plan-from-billing-id-ineligible-error",
+    "title": "A plan named only by billing.plan_id counts as selected, and must be eligible",
+    "rules": [
+      "7.1",
+      "4.5"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "plan-from-billing-id-ineligible-dropped",
+    "title": "An ineligible plan can be dropped with a warning",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "price-book-entry-null-currency",
+    "title": "A price book entry with a null currency is in the book currency",
+    "rules": [
+      "7.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "strategy-step-tiers-gap",
+    "title": "An input in a gap between step_tiers brackets gives 0",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "module-scope-includes-one-time",
+    "title": "A module-scope discount includes one-time charges",
+    "rules": [
+      "7.7",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "product-scope-includes-one-time",
+    "title": "A product-scope discount includes one-time charges",
+    "rules": [
+      "7.7",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "product-scope-two-products-is-contract-total",
+    "title": "A discount matching two products is applied to contract_total",
+    "rules": [
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-chosen-at-its-turn",
+    "title": "The group member is chosen where the group comes in the order",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "exclusive-group-tie-goes-first",
+    "title": "A tie in an exclusive group goes to the first in the order",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "not-stackable-after-group-applied",
+    "title": "A group counts as applied once its chosen member applied",
+    "rules": [
+      "7.7"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "relationship-not-modeled-unselected",
+    "title": "The not-modeled warning appears even when its objects are not selected",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "dependency-dependent-absent",
+    "title": "A dependency only applies when the dependent object is present",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "dependency-met-in-other-selection",
+    "title": "The required object may be in another product selection",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "prerequisite-related-missing",
+    "title": "A prerequisite fails when the subject is selected and the related object is not",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "prerequisite-subject-absent",
+    "title": "A prerequisite does not apply when the subject is absent",
+    "rules": [
+      "7.1"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "zero-adjustment-not-reported",
+    "title": "An adjustment of 0 is not reported",
+    "rules": [
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "annualized-recurring-share-rounded-once",
+    "title": "The recurring share of a spread adjustment is rounded on its own",
+    "rules": [
+      "9.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "overage-price-override-is-an-adjustment",
+    "title": "A replaced overage price is reported as an adjustment",
+    "rules": [
+      "7.4",
+      "7.6",
+      "9.3"
+    ],
+    "status": "provisional",
+    "question": "DN-10",
+    "outcome": "statement"
+  },
+  {
+    "id": "custom-unit-price-on-flat-module",
+    "title": "custom_unit_price needs a credit type to multiply",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "overage-override-without-overage-price",
+    "title": "Any overage override on a credit type with no overage price fails",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "validation_failure"
+  },
+  {
+    "id": "overage-override-no-overage-accepted",
+    "title": "An overage override with no overage in the deal changes nothing",
+    "rules": [
+      "7.4"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "consumption-conditions-credit-type-not-in-deal",
+    "title": "The consumption-conditions warning is only for credit types in the deal",
+    "rules": [
+      "7.6"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
+  },
+  {
+    "id": "minimum-true-up-matching-several-products",
+    "title": "A product-scope true-up matching several products is contract_total",
+    "rules": [
+      "7.8",
+      "9.3"
+    ],
+    "status": "settled",
+    "question": null,
+    "outcome": "statement"
   }
 ]

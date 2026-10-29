@@ -1,0 +1,16 @@
+{
+  "vector": "override-target-package-not-charged",
+  "title": "A credit package override with no package selected is invalid_override",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Package pk exists in the model but the deal does not select it.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_override"
+    ]
+  }
+}

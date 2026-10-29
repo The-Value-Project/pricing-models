@@ -1,0 +1,85 @@
+{
+  "vector": "minimum-true-up-matching-several-products",
+  "title": "A product-scope true-up matching several products is contract_total",
+  "spec_sections": [
+    "7.8",
+    "9.3"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Two products, $3,600 in all, floor $5,000: true-up $1,400. The floor matches two products, so applies_to is contract_total.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m1",
+          "product_id": "p1",
+          "target_id": "m1",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "module_charge",
+          "description": "m2",
+          "product_id": "p2",
+          "target_id": "m2",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 200,
+          "line_total": 2400,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/1/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 3600,
+        "one_time": 0,
+        "gross": 3600
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "minimum_true_up",
+          "description": "Minimum commitment mn",
+          "amount": 1400,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/minimum_commitments/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": 1400,
+        "net_total": 5000,
+        "annualized_total": 5000,
+        "total_contract_value": 5000
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

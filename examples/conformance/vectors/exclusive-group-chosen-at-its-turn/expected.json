@@ -1,0 +1,76 @@
+{
+  "vector": "exclusive-group-chosen-at-its-turn",
+  "title": "The group member is chosen where the group comes in the order",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "d0 takes 50%: $500 left. At the group's turn: g1 10% of $500 = $50, g2 flat $60. g2 is larger and applies: -$60. Net $440. Comparing on the original $1,000 would have chosen g1.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 1000,
+          "line_total": 1000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1000,
+        "one_time": 0,
+        "gross": 1000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "other",
+          "description": "Discount d0",
+          "amount": -500,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        },
+        {
+          "adjustment_type": "other",
+          "description": "Discount g2",
+          "amount": -60,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/2"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -560,
+        "net_total": 440,
+        "annualized_total": 440,
+        "total_contract_value": 440
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}
