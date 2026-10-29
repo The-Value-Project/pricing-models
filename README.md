@@ -52,11 +52,11 @@ A structured, computable representation of a vendor's complete pricing. Produced
 
 ```
 PricingModel
-├── schema_version            "1.0.0"
+├── schema_version            "2.0.0"
 ├── model_id                  Stable unique identifier (referenced by DealConfiguration.model_reference.model_id)
-├── vendor_name / effective_date / currency
+├── vendor_name / effective_date / currency   (currency: ISO 4217 base currency)
 │
-├── products[]                Core product catalog
+├── products[]                Core product catalog (items carry a display `position`)
 │   ├── modules[]             Individually priced capabilities (each has exactly one price object)
 │   ├── tiers[]               Tiers — sets of included module_ids + credit grants
 │   └── commitment_plans[]    Commitment-period options — percentage adjustments to module prices
@@ -72,7 +72,9 @@ PricingModel
 ├── pricing_rules             Computation config: discount order, rounding, exclusive-group and missing-input handling
 ├── business_rules[]          Plain-text constraints (hard_block | warning | info)
 ├── module_dependencies[]     Module dependency graph
-└── pricing_relationships[]   Cross-product rules
+├── pricing_relationships[]   Cross-product rules
+├── comparison_grid[]         Features and limits compared across tiers (descriptive only; never read by the calculation)
+└── conformance_profile       Which regions an implementation keeps, derives and drops (or null)
 ```
 
 **Price primitives:** All pricing uses exactly one of four types:
@@ -100,29 +102,30 @@ A customer-specific deal referencing a PricingModel instance. Created by a sales
 
 ```
 DealConfiguration
-├── schema_version            "1.0.0"
+├── schema_version            "2.0.0"
 ├── config_id                 Unique deal identifier (referenced by InvoiceStatement.config_id)
 ├── model_reference.model_id  References PricingModel.model_id
 ├── customer                  name, domain, region
 ├── deal_motion               new_logo | renewal | expansion | reprice
-├── billing                   plan_id, contract_start_date, contract_term_months
+├── billing                   plan_id (deprecated), contract_start_date, contract_term_months
 │
 ├── product_selections[]
-│   ├── product_id / tier_id
-│   ├── quantities[]          credit_type_id, quantity, quantity_type, growth_schedule
+│   ├── product_id / tier_id / commitment_plan_id
+│   ├── module_selections[]   add-on modules (modules in no tier)
+│   ├── quantities[]          credit_type_id, quantity, quantity_type, growth_schedule (by contract year)
 │   └── credit_package_selections[]
 │
 ├── bundle_selections[]
 ├── discount_selections[]     discount_id + manual_value
 └── negotiated_overrides
-    ├── price_overrides[]     fixed_price | discount_percentage | waived | capped
-    ├── credit_grant_overrides[]
+    ├── price_overrides[]     target_kind + target_id; fixed_price | custom_unit_price | discount_percentage | discount_amount | waived | capped
+    ├── credit_grant_overrides[]   credit_type_id + period + new_quantity
     └── custom_terms[]        sla_upgrade | price_lock | mfn_clause | other
 ```
 
-**Join keys:** All `product_id`, `tier_id`, `plan_id`, `credit_type_id`, `credit_package_id`, `discount_id`, and `bundle_id` values reference IDs declared in the PricingModel. Unresolved join keys are fatal errors.
+**Join keys:** All `product_id`, `tier_id`, `commitment_plan_id`, `credit_type_id`, `credit_package_id`, `module_id`, `discount_id`, `bundle_id` and override `target_id` values reference IDs declared in the PricingModel. Ids match `^[a-z0-9]+(-[a-z0-9]+)*$`. Unresolved join keys are fatal errors.
 
-**Quantity types:** `committed` (contractual minimum, always billed), `estimated` (forecast only), `maximum` (capacity ceiling), `starting` (initial value with `growth_schedule`).
+**Quantity types:** `committed` (contractual minimum, billed), `estimated` (a forecast: billed, with a warning), `maximum` (a ceiling: never billed, and a billed quantity above it is an error), `starting` (billed; the quantity until the `growth_schedule` says otherwise).
 
 ---
 
@@ -134,7 +137,7 @@ The deterministic, auditable output of the pricing engine.
 
 ```
 InvoiceStatement
-├── schema_version            "1.0.0"
+├── schema_version            "2.0.0"
 ├── invoice_id / config_id / model_id / period / currency
 │
 ├── line_items[]
@@ -142,16 +145,16 @@ InvoiceStatement
 │   ├── quantity / unit / unit_price / line_total
 │   ├── graduated_detail[]    Band-level breakdown for tiered/volume pricing
 │   ├── computation_method    Human-readable trace
-│   └── source_fields[]       JSON paths to PricingModel/DealConfiguration fields that drove this line
+│   └── source_fields[]       "model#" or "config#" plus a JSON Pointer to the field that drove this line
 │
 ├── subtotals                 recurring / one_time / gross
 ├── adjustments[]
-│   ├── adjustment_type       commitment_plan_adjustment | volume_discount | manual_discount | ...
+│   ├── adjustment_type       commitment_plan_adjustment | bundle_discount | strategy_discount | negotiated_* | minimum_true_up | other
 │   ├── amount                Signed (negative = discount, positive = true-up)
 │   └── source                Identifies the PricingModel object that drove this adjustment
 │
 ├── totals                    total_adjustments / net_total / annualized_total / total_contract_value
-├── entitlement_summary[]     Per credit_type: granted / committed_or_used / overage / overage_cost
+├── entitlement_summary[]     Per credit_type: granted / committed_or_used / overage / overage_cost (null when indeterminate)
 └── warnings[]                error | warning | info
 ```
 
@@ -259,6 +262,7 @@ pricing-models/
 ├── README.md                              This file (CC BY 4.0)
 ├── CONTRIBUTING.md                        Contribution guide (CC BY 4.0)
 ├── CHANGELOG.md                           Version history (CC BY 4.0)
+├── .github/workflows/check.yml            CI: schemas, vectors, worked example, second engine
 ├── schemas/
 │   ├── pricing_model.json                 PricingModel schema v1.0.0 (Apache-2.0)
 │   ├── deal_configuration.json            DealConfiguration schema v1.0.0 (Apache-2.0)
@@ -271,7 +275,8 @@ pricing-models/
 └── examples/
     ├── acme_ai_platform_pms.json          Worked example PricingModel instance
     ├── acme_deal_config.json              Worked example DealConfiguration
-    └── acme_invoice.json                  Worked example InvoiceStatement
+    ├── acme_invoice.json                  Worked example InvoiceStatement
+    └── conformance/                       Conformance vectors, a second engine and a check script (see its README)
 ```
 
 ---

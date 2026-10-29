@@ -24,7 +24,8 @@ JSON SCHEMAS  ·  schemas/
 SPECIFICATIONS, DOCUMENTATION, AND EXAMPLES  ·  spec/  examples/  README.md
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Files:  spec/pricing-meta-model-spec.md
+  Files:  spec/pricing-calculation-spec.md
+          spec/migration-2.0.0.md
           spec/pricing-page-spec.md
           spec/pricing-model-llm-reference.md
           examples/

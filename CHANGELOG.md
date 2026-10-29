@@ -42,6 +42,12 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 
 The normative calculation specification that the README, the CHANGELOG and `x-spec` had linked to since 1.0.0, and that had never been committed. It defines scope, conformance and equality, conventions (ids, percentages, empty arrays, no silent defaults), inputs, price primitives and bands, the nine phases, entitlements and overage, rounding, output rules, validation failure codes and warning types. It states every calculation decision made for 2.0.0. Annex D lists the places that go beyond those decisions, for review. `x-spec` in `pricing_model.json` and the README now point to it.
 
+### Added — worked example, conformance suite and CI
+
+- `examples/acme_ai_platform_pms.json`, `acme_deal_config.json` and `acme_invoice.json`: the worked example that the README had promised since 1.0.0 and the repository never held. The numbers are worked out by hand.
+- `examples/conformance/`: 125 vectors, each with a `PricingModel`, a `DealConfiguration` and an expected result (a statement or a set of failure codes) with the arithmetic shown. 104 follow decided rules and 21 are `provisional` where a drafting note or a practitioner question is still open. A second engine, written blind from the specification, runs on them: its differences from the expected results are explained in `second-engine/TRIAGE.md`.
+- `examples/conformance/tools/check.py` and `.github/workflows/check.yml`: check that the schemas are valid draft-07, that every vector validates against them and uses only codes and warning types from the specification, and that the second engine differs only where `known-differences.json` says.
+
 ### Changed — documentation
 
 - `spec/pricing-page-spec.md` 2.0.0 → 3.0.0 (MAJOR, targets schemas 2.0.0): a page written to 2.0.0 does not conform. The §4b tier price rule is defined for every price type (the 2.0.0 rule summed unit prices with flat charges and showed fully priced tiered tiers as "Contact sales"), and "dominant" billing period is gone. Adds §4k Credit Types and Packages, §4l Bundles and §4m Comparison Grid. Front matter requires `model_id` and `schema_version: "2.0.0"`, equal to the JSON's. The JSON block keeps every root field and lists every dropped nested field. Conformance gains five checks. `calculation_order` is no longer narrated as model data. The front-matter example, LLM instruction block and footer say 2.0.0 where they said `1.4`; a page published with `schema_version: "1.4"` should change it to the schema version it targets.

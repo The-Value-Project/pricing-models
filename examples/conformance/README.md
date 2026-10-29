@@ -32,3 +32,5 @@ The worked example in `examples/acme_ai_platform_pms.json`, `acme_deal_config.js
 ## Running your engine
 
 Run your engine on each `model.json` and `config.json`, and compare its result with `expected.json` as above. A vector that your engine fails points to either a bug in the engine or a gap in the specification. Please report gaps as issues.
+
+`python examples/conformance/tools/check.py --compare DIR` does the comparison for you: put one `<vector-id>.json` per vector in `DIR`, each holding `{"outcome": "statement", "statement": …}` or `{"outcome": "validation_failure", "codes": […]}`. Run it without arguments to check the schemas, the vectors, the worked example and the second engine, as CI does. It needs Python with `jsonschema`, and node for the second engine.
