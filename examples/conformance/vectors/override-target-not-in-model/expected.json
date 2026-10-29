@@ -1,0 +1,17 @@
+{
+  "vector": "override-target-not-in-model",
+  "title": "An override target that is not in the model is unresolved_reference",
+  "spec_sections": [
+    "4.1",
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "No module called ghost exists in the model.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unresolved_reference"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "vector": "prerequisite-related-missing",
+  "title": "A prerequisite fails when the subject is selected and the related object is not",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Subject p1 present, related p2 missing.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "dependency_unmet"
+    ]
+  }
+}

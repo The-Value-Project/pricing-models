@@ -1,0 +1,34 @@
+{
+  "schema_version": "2.0.0",
+  "config_id": "cfg-1",
+  "config_date": "2026-01-01",
+  "model_reference": {
+    "model_id": "acme"
+  },
+  "customer": {
+    "name": "Customer",
+    "domain": null,
+    "region": "US"
+  },
+  "deal_motion": "new_logo",
+  "billing": {
+    "plan_id": null,
+    "contract_start_date": "2026-01-01",
+    "contract_term_months": 12,
+    "payment_terms": null
+  },
+  "product_selections": [
+    {
+      "product_id": "p1",
+      "tier_id": "t1",
+      "commitment_plan_id": null,
+      "module_selections": [],
+      "quantities": [],
+      "credit_package_selections": []
+    }
+  ],
+  "bundle_selections": [],
+  "discount_selections": [],
+  "negotiated_overrides": null,
+  "config_notes": []
+}

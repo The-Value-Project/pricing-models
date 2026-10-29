@@ -1,0 +1,85 @@
+{
+  "vector": "product-scope-includes-one-time",
+  "title": "A product-scope discount includes one-time charges",
+  "spec_sections": [
+    "7.7",
+    "9.3"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Product p has $1,000 and $500: 10% = -$150, applies_to product:p.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "acme",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "a",
+          "product_id": "p",
+          "target_id": "a",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 1000,
+          "line_total": 1000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "one_time_fee",
+          "description": "s",
+          "product_id": "p",
+          "target_id": "s",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 500,
+          "line_total": 500,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/1/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1000,
+        "one_time": 500,
+        "gross": 1500
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "other",
+          "description": "Discount d",
+          "amount": -150,
+          "applies_to": "product:p",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -150,
+        "net_total": 1350,
+        "annualized_total": 900,
+        "total_contract_value": 1350
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

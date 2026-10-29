@@ -50,3 +50,18 @@ The engine in this folder is the blind run and has not been changed. It differs 
 - F-11, N-7: it accepts `waived` on an overage with no `overage_price`.
 - F-14, N-6: it warns for every credit type that has a consumption rule.
 - N-26: a minimum over several products is named after the first one.
+
+## The second engine on 125 vectors (2026-10-29)
+
+31 vectors were added for the rules settled in the triage above and in the follow-up on override targets. The second engine was run on all 125, unchanged. It differs from `expected.json` on 13, and every difference is explained:
+
+| Vectors | Why they differ |
+|---|---|
+| `overage-pay-as-you-go`, `overage-mixed-period-pools`, `overage-package-units-count`, `overage-price-override-is-an-adjustment`, `package-flat-price-ignores-count`, `package-per-unit-price` | Section 9.2 gaps (`product_id` and `source_fields` for credit-package and overage lines), settled after the blind run. The engine was not updated. |
+| `region-unassigned-code`, `region-code-not-iso-assigned` | N-2: it accepts any two capital letters as a country. |
+| `custom-unit-price-on-flat-module` | F-10: it builds a `per_unit` price for `custom_unit_price` on a flat module price. |
+| `overage-override-without-overage-price` | F-11, N-7: it accepts `waived` on an overage with no `overage_price`. |
+| `consumption-conditions-credit-type-not-in-deal` | F-14, N-6: it warns for every credit type that has a consumption rule. |
+| `override-target-not-in-model`, `grant-override-credit-type-not-in-model` | The engine reports `invalid_override`. The specification now says an id that is not in the model is `unresolved_reference` (found in step 1 of 7.1), and `invalid_override` is for a target that is in the model but not charged. |
+
+Where the two engines agree on the new vectors: the override replacement of an overage price, reported as an adjustment of -$60 on `credit_type:api` (`overage-price-override-is-an-adjustment`), and every exclusive-group, scope, dependency, relationship and annualized-total vector.
