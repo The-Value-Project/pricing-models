@@ -35,8 +35,8 @@ Specifications and documentation in `spec/` are licensed under **CC BY 4.0**.
 
 | Content | License | SPDX | Full text |
 |---|---|---|---|
-| JSON schemas (`schemas/`) | Apache License 2.0 | `Apache-2.0` | [LICENSE-CODE](LICENSE-CODE) |
-| Specifications and docs (`spec/`, `README.md`, `examples/`) | Creative Commons Attribution 4.0 | `CC-BY-4.0` | [LICENSE-DOCS](LICENSE-DOCS) |
+| JSON schemas and examples (`schemas/`, `examples/`) | Apache License 2.0 | `Apache-2.0` | [LICENSE-CODE](LICENSE-CODE) |
+| Specifications and docs (`spec/`, `README.md`) | Creative Commons Attribution 4.0 | `CC-BY-4.0` | [LICENSE-DOCS](LICENSE-DOCS) |
 
 See [LICENSE](LICENSE) for the dual-license overview and attribution guidance.
 

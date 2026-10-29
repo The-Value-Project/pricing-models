@@ -50,6 +50,10 @@ The normative calculation specification that the README, the CHANGELOG and `x-sp
 - Section 9.2: an overage line lists every billed `quantities` entry of the credit type, in selection order (DN-20, now settled).
 - Six conformance vectors for these rules (`required-module-in-tier-and-selected`, `failures-in-several-phases`, `failure-in-lines-and-in-entitlements`, `failures-in-phase-0-and-phase-6`, `discount-checks-need-priced-lines`, `overage-from-two-selections`). The second engine differs on three, explained in `second-engine/TRIAGE.md`.
 
+### Changed — licence of `examples/`
+
+- All of `examples/` (worked examples, conformance vectors, the second engine and the check script) is Apache-2.0. `LICENSE` and the README had put it under CC BY 4.0, while `GOVERNANCE.md` said Apache-2.0 for `examples/*.json`. `LICENSE`, the README table, `CONTRIBUTING.md` and `GOVERNANCE.md` now agree.
+
 ### Changed — versioning policy
 
 - `schema_version` in all three schemas accepts any 2.x (`^2\.[0-9]+(\.[0-9]+)?$`), not only `2.0.0`, so that later 2.x releases accept 2.0 documents.
