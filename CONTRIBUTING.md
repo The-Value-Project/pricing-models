@@ -67,9 +67,9 @@ Use a clear descriptive title. For schema issues, include:
 
 ## License
 
-By contributing to JSON schema files (`schemas/`), you agree your contributions will be licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+By contributing to JSON schema files (`schemas/`) and to examples (`examples/`), you agree your contributions will be licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-By contributing to specification and documentation files (`spec/`, `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `examples/`), you agree your contributions will be licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+By contributing to specification and documentation files (`spec/`, `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`), you agree your contributions will be licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
 ---
 

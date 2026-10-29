@@ -35,8 +35,8 @@ Specifications and documentation in `spec/` are licensed under **CC BY 4.0**.
 
 | Content | License | SPDX | Full text |
 |---|---|---|---|
-| JSON schemas (`schemas/`) | Apache License 2.0 | `Apache-2.0` | [LICENSE-CODE](LICENSE-CODE) |
-| Specifications and docs (`spec/`, `README.md`, `examples/`) | Creative Commons Attribution 4.0 | `CC-BY-4.0` | [LICENSE-DOCS](LICENSE-DOCS) |
+| JSON schemas and examples (`schemas/`, `examples/`) | Apache License 2.0 | `Apache-2.0` | [LICENSE-CODE](LICENSE-CODE) |
+| Specifications and docs (`spec/`, `README.md`) | Creative Commons Attribution 4.0 | `CC-BY-4.0` | [LICENSE-DOCS](LICENSE-DOCS) |
 
 See [LICENSE](LICENSE) for the dual-license overview and attribution guidance.
 
@@ -273,9 +273,9 @@ pricing-models/
 │   ├── pricing-page-spec.md               Pricing page specification v3.0.0 (CC BY 4.0)
 │   └── pricing-model-llm-reference.md     LLM interpreter reference v2.0.0 (CC BY 4.0)
 └── examples/
-    ├── acme_ai_platform_pms.json          Worked example PricingModel instance
-    ├── acme_deal_config.json              Worked example DealConfiguration
-    ├── acme_invoice.json                  Worked example InvoiceStatement
+    ├── larkspur_platform_pms.json         Worked example PricingModel instance
+    ├── larkspur_deal_config.json          Worked example DealConfiguration
+    ├── larkspur_invoice.json              Worked example InvoiceStatement
     └── conformance/                       Conformance vectors, a second engine and a check script (see its README)
 ```
 
