@@ -15,7 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Version
 Not a breaking change: the set of valid `PricingModel` documents is unchanged.
 
 - Factored the three shapes that were repeated inline into `$defs`: `price` (6 sites), `credit_grant` (the item of `included_credit_grants[]`, 5 sites) and `eligibility` (6 sites). Each site is now a `$ref`. All 17 copies were identical before the change. Code generated from the schema will show one named type in place of several anonymous ones; that is not a change in what validates.
-- Technique and credit: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal defines its shared shapes the same way.
+- Technique and credit: a merged-model pricing schema proposal defines its shared shapes the same way.
 
 ### Changed (breaking) — `plans` renamed to `commitment_plans`
 
@@ -25,7 +25,7 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 - `InvoiceStatement`: the `adjustments[].adjustment_type` value `plan_adjustment` is now `commitment_plan_adjustment`.
 - `DealConfiguration`: `billing.plan_id` keeps its name. It now refers to `products[].commitment_plans[].id`.
 - `README.md`, `spec/pricing-page-spec.md` (§4c is now "Commitment plans") and `spec/pricing-model-llm-reference.md` use the new name.
-- Source: the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal already uses `commitment_plans`, and its mapping tables record the clash.
+- Source: a merged-model pricing schema proposal already uses `commitment_plans`, and its mapping tables record the clash.
 
 ### Changed (breaking) — schemas, in progress for 2.0.0
 
@@ -36,7 +36,7 @@ Part of the planned 2.0.0 MAJOR release. A clean break, with no alias. See `spec
 - `DealConfiguration`: `module_selections`, `product_selections[].commitment_plan_id`, `growth_schedule[].period_index`, `price_overrides[].target_kind` (a null `target_id` for the whole deal, and `credit_type_overage` for overage prices), `credit_grant_overrides[].period`.
 - `InvoiceStatement`: `model_id`; nullable `line_items[].product_id`; `source_fields` as `model#` or `config#` JSON Pointers; annualized total and total contract value never null; nullable `overage` and `overage_cost` for an indeterminate entitlement.
 - Deprecated, not removed: `discount_strategies[].input_keys`, `pricing_rules.calculation_order`, `billing.plan_id`. Each description says why and what replaces it.
-- Source: `$defs`, `position`, `commitment_months`, `default_for_tier_ids`, the grid, the conformance profile, the kind fields and the reference rules are from the Currv Pricing Model Schema (CPMS) v1.0 merged-model proposal. The rest comes from the audit of the published files.
+- Source: `$defs`, `position`, `commitment_months`, `default_for_tier_ids`, the grid, the conformance profile, the kind fields and the reference rules are from a merged-model pricing schema proposal. The rest comes from the audit of the published files.
 
 ### Added — `spec/pricing-calculation-spec.md` (draft, for 2.0.0)
 
