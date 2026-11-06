@@ -10,7 +10,7 @@
     "full-text": "LICENSE-CODE",
     "repo": "https://github.com/The-Value-Project/pricing-models"
   },
-  "x-version": "1.0.0",
+  "x-version": "2.0.0-rc.2",
   "x-part-of": "The Value Project — https://github.com/The-Value-Project",
   "x-related-schemas": {
     "PricingModel": "https://github.com/The-Value-Project/pricing-models/blob/main/schemas/pricing_model.json",
