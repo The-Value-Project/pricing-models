@@ -1,0 +1,16 @@
+{
+  "vector": "period-year-in-14-months",
+  "title": "A yearly price on a 14-month term is invalid",
+  "spec_sections": [
+    "3.8"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "14 / 12 is not a whole number. No proration.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "term_not_multiple_of_period"
+    ]
+  }
+}

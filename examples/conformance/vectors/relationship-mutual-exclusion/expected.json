@@ -1,0 +1,16 @@
+{
+  "vector": "relationship-mutual-exclusion",
+  "title": "Mutually exclusive products fail together",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "p1 and p2 are both selected.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "mutual_exclusion"
+    ]
+  }
+}

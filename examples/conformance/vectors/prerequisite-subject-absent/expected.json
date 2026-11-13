@@ -1,0 +1,59 @@
+{
+  "vector": "prerequisite-subject-absent",
+  "title": "A prerequisite does not apply when the subject is absent",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Only the related object is selected: no failure.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m2",
+          "product_id": "p2",
+          "target_id": "m2",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 200,
+          "line_total": 2400,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/1/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 2400,
+        "one_time": 0,
+        "gross": 2400
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 2400,
+        "annualized_total": 2400,
+        "total_contract_value": 2400
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

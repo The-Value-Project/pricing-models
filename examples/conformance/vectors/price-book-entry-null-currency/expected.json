@@ -1,0 +1,59 @@
+{
+  "vector": "price-book-entry-null-currency",
+  "title": "A price book entry with a null currency is in the book currency",
+  "spec_sections": [
+    "7.3"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "The entry has no currency, so it is in EUR: €90 × 12 = €1,080.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "EUR",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 90,
+          "line_total": 1080,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/price_books/0/module_prices/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1080,
+        "one_time": 0,
+        "gross": 1080
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 1080,
+        "annualized_total": 1080,
+        "total_contract_value": 1080
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

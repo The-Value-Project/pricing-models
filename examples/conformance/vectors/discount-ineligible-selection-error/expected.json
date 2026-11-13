@@ -1,0 +1,16 @@
+{
+  "vector": "discount-ineligible-selection-error",
+  "title": "A selected discount that is not eligible fails by default",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "d is for renewals. The deal is new_logo.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "ineligible_selection"
+    ]
+  }
+}

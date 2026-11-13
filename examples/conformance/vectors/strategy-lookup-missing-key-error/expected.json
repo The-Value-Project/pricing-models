@@ -1,0 +1,16 @@
+{
+  "vector": "strategy-lookup-missing-key-error",
+  "title": "An unmatched lookup key fails by default",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Seats 8 is not a key.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "missing_strategy_input"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "vector": "percentages-compound",
+  "title": "Commitment plan, bundle and discount compound",
+  "spec_sections": [
+    "3.2",
+    "7.4",
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "$1,000. Plan -10%: -$100 → $900. Bundle -5%: -$45 → $855. Discount 10% of $855: -$85.50 → $769.50. Adding the percentages would give $750.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 1000,
+          "line_total": 1000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1000,
+        "one_time": 0,
+        "gross": 1000
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "commitment_plan_adjustment",
+          "description": "Commitment plan a",
+          "amount": -100,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "model#/products/0/commitment_plans/0"
+        },
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b",
+          "amount": -45,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/0"
+        },
+        {
+          "adjustment_type": "other",
+          "description": "Discount d",
+          "amount": -85.5,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -230.5,
+        "net_total": 769.5,
+        "annualized_total": 769.5,
+        "total_contract_value": 769.5
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

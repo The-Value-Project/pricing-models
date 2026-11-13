@@ -1,0 +1,17 @@
+{
+  "vector": "unresolved-id-stops-calculation",
+  "title": "An unresolved id ends the calculation after step 1",
+  "spec_sections": [
+    "6",
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "The tier id does not resolve, so only that failure is reported. The negative quantity is not reported.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unresolved_reference"
+    ]
+  }
+}

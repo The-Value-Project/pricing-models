@@ -1,0 +1,16 @@
+{
+  "vector": "custom-unit-price-on-flat-module",
+  "title": "custom_unit_price needs a credit type to multiply",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "The module price is flat and has no credit_type_id.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_override"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "vector": "override-target-module-not-charged",
+  "title": "An override target in the model but not charged is invalid_override",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Module x is in the model, but not in the tier, and not selected.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_override"
+    ]
+  }
+}

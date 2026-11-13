@@ -1,0 +1,16 @@
+{
+  "vector": "mixed-currency-prices",
+  "title": "Prices in two currencies fail",
+  "spec_sections": [
+    "3.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "USD and EUR in one calculation.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "mixed_currency"
+    ]
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "vector": "strategy-lookup-hit",
+  "title": "A lookup key is matched as a canonical decimal string",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Seats 10 → key \"10\" → 7%. -$84. Net $1,116.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 10,
+          "unit": "unit",
+          "unit_price": 10,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price",
+            "config#/product_selections/0/quantities/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1200,
+        "one_time": 0,
+        "gross": 1200
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "strategy_discount",
+          "description": "Discount d",
+          "amount": -84,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -84,
+        "net_total": 1116,
+        "annualized_total": 1116,
+        "total_contract_value": 1116
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "seats",
+          "granted": null,
+          "committed_or_used": 10,
+          "overage": 0,
+          "overage_cost": 0,
+          "overage_policy": "throttle"
+        }
+      ],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

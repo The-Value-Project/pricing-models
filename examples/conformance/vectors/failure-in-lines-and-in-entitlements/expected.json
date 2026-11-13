@@ -1,0 +1,19 @@
+{
+  "vector": "failure-in-lines-and-in-entitlements",
+  "title": "A line that cannot be priced does not hide an overage failure",
+  "spec_sections": [
+    "6",
+    "5.2",
+    "7.6"
+  ],
+  "status": "provisional",
+  "open_question": "DN-26",
+  "worked": "The bands of m have a gap (phase 4), and 5,000 is billed against a hard cap of 4,000 (phase 5). Both are reported. The overage is not priced, because the lines are not.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "hard_cap_exceeded",
+      "malformed_bands"
+    ]
+  }
+}

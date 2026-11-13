@@ -1,0 +1,16 @@
+{
+  "vector": "region-code-not-iso-assigned",
+  "title": "XK is not an ISO 3166-1 code",
+  "spec_sections": [
+    "4.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "XK is not assigned in ISO 3166-1.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unknown_region"
+    ]
+  }
+}

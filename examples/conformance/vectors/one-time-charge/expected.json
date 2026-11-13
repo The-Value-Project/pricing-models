@@ -1,0 +1,60 @@
+{
+  "vector": "one-time-charge",
+  "title": "A one-time price is charged once",
+  "spec_sections": [
+    "5.1",
+    "7.5"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Charged once, whatever the term. Category one_time_fee. Annualized value excludes it.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2027-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "one_time_fee",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 5000,
+          "line_total": 5000,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 0,
+        "one_time": 5000,
+        "gross": 5000
+      },
+      "adjustments": [],
+      "totals": {
+        "total_adjustments": 0,
+        "net_total": 5000,
+        "annualized_total": 0,
+        "total_contract_value": 5000
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "vector": "mandatory-manual-discount-invalid",
+  "title": "A mandatory discount cannot be manual",
+  "spec_sections": [
+    "7.1"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "manual + mandatory.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_discount"
+    ]
+  }
+}

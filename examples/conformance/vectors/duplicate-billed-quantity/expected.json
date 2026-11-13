@@ -1,0 +1,16 @@
+{
+  "vector": "duplicate-billed-quantity",
+  "title": "Two billed entries for one credit type fail",
+  "spec_sections": [
+    "4.2"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Two billed entries for the same product and credit type.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "duplicate_billed_quantity"
+    ]
+  }
+}

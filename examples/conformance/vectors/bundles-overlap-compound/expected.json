@@ -1,0 +1,124 @@
+{
+  "vector": "bundles-overlap-compound",
+  "title": "Two bundles on one product compound in selection order",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "provisional",
+  "open_question": "Q9",
+  "worked": "p1: $1,200 × 0.9 = $1,080 (-$120), then × 0.8 = $864 (-$216). p2: -10% = -$120. p3: -20% = -$240. Net $3,600 - $696 = $2,904.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m1",
+          "product_id": "p1",
+          "target_id": "m1",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 2,
+          "category": "module_charge",
+          "description": "m2",
+          "product_id": "p2",
+          "target_id": "m2",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/1/modules/0/price"
+          ]
+        },
+        {
+          "line_id": 3,
+          "category": "module_charge",
+          "description": "m3",
+          "product_id": "p3",
+          "target_id": "m3",
+          "quantity": 1,
+          "unit": "",
+          "unit_price": 100,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/2/modules/0/price"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 3600,
+        "one_time": 0,
+        "gross": 3600
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b1",
+          "amount": -120,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/0"
+        },
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b2",
+          "amount": -216,
+          "applies_to": "line:1",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/1"
+        },
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b1",
+          "amount": -120,
+          "applies_to": "line:2",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/0"
+        },
+        {
+          "adjustment_type": "bundle_discount",
+          "description": "Bundle b2",
+          "amount": -240,
+          "applies_to": "line:3",
+          "computation_method": "adjustment",
+          "source": "model#/bundles/1"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -696,
+        "net_total": 2904,
+        "annualized_total": 2904,
+        "total_contract_value": 2904
+      },
+      "entitlement_summary": [],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

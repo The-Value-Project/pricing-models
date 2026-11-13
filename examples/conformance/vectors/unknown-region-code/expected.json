@@ -1,0 +1,16 @@
+{
+  "vector": "unknown-region-code",
+  "title": "A region that is not a code fails",
+  "spec_sections": [
+    "4.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "\"XX1\" is neither a country code nor a grouping.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unknown_region"
+    ]
+  }
+}
