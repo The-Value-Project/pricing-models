@@ -160,6 +160,24 @@ InvoiceStatement
 
 Every line item traces to `source_fields[]`. Every adjustment identifies its source. Identical inputs produce identical outputs.
 
+### Validating with the schemas
+
+The schemas are JSON Schema draft-07. Each carries five annotation keywords that no validator needs: `x-license`, `x-part-of`, `x-related-schemas`, `x-spec` and `x-version`. They use the `x-` prefix that JSON Schema allows for custom keywords. The schemas also use union types such as `["string", "null"]`.
+
+Many validators ignore unknown keywords. The Python `jsonschema` package validates the schemas as they are. [Ajv](https://ajv.js.org/) 8 is strict by default, and it refuses to compile them until you allow both:
+
+```js
+const Ajv = require("ajv");
+const ajv = new Ajv({
+  allowUnionTypes: true,
+  keywords: ["x-license", "x-part-of", "x-related-schemas", "x-spec", "x-version"],
+});
+```
+
+`new Ajv({ strict: false })` also works, but it switches off every strict check, not only these two.
+
+The `$id` values point at pages on GitHub, not at addresses that return the raw schema, so a validator cannot fetch a schema from its `$id`. Fetch it from a raw URL instead, and register it under that URL, for example with `ajv.addSchema(schema, url)`, so that references inside it resolve. Pin a release tag in the URL, so that a later release cannot change what your validator sees: `https://raw.githubusercontent.com/The-Value-Project/pricing-models/<release-tag>/schemas/pricing_model.json`.
+
 ---
 
 ## The Computation Engine
