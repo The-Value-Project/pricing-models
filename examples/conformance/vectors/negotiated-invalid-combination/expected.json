@@ -1,0 +1,16 @@
+{
+  "vector": "negotiated-invalid-combination",
+  "title": "A waived total deal is invalid",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Waived is not a valid total_deal type.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_override"
+    ]
+  }
+}

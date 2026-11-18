@@ -1,0 +1,16 @@
+{
+  "vector": "region-unassigned-code",
+  "title": "A two-letter code that ISO 3166-1 has not assigned fails",
+  "spec_sections": [
+    "4.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "ZZ is reserved for user assignment, not an assigned country code.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unknown_region"
+    ]
+  }
+}

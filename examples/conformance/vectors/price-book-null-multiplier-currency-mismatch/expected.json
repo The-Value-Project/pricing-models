@@ -1,0 +1,17 @@
+{
+  "vector": "price-book-null-multiplier-currency-mismatch",
+  "title": "No multiplier and a different currency fails",
+  "spec_sections": [
+    "3.7",
+    "7.3"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Base is USD, the book is EUR, and there is no multiplier.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "mixed_currency"
+    ]
+  }
+}

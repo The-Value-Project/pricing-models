@@ -1,0 +1,19 @@
+{
+  "vector": "failures-in-phase-0-and-phase-6",
+  "title": "A discount failure is reported with a phase 0 failure",
+  "spec_sections": [
+    "6",
+    "7.1",
+    "7.7"
+  ],
+  "status": "provisional",
+  "open_question": "DN-26",
+  "worked": "m is an add-on that tier t already includes (phase 0). The manual value 20 is above its maximum of 15 (phase 6). The amounts exist, so phase 6 runs and both are reported.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "manual_value_exceeds_max",
+      "module_selection_in_tier"
+    ]
+  }
+}

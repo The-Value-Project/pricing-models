@@ -1,0 +1,16 @@
+{
+  "vector": "duplicate-period-index",
+  "title": "A growth schedule repeats an index",
+  "spec_sections": [
+    "4.2"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Two schedule entries for year 2.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "duplicate_period_index"
+    ]
+  }
+}

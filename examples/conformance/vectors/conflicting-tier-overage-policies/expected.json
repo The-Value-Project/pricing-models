@@ -1,0 +1,16 @@
+{
+  "vector": "conflicting-tier-overage-policies",
+  "title": "Tiers that disagree on a credit type fail",
+  "spec_sections": [
+    "7.6"
+  ],
+  "status": "provisional",
+  "open_question": "Q14",
+  "worked": "One tier says pay_as_you_go, the other hard_cap, for the same credit type.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "conflicting_overage_policy"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "vector": "minimum-currency-must-match",
+  "title": "A floor in another currency fails",
+  "spec_sections": [
+    "7.8"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "EUR floor, USD statement.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "mixed_currency"
+    ]
+  }
+}

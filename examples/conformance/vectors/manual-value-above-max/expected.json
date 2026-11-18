@@ -1,0 +1,16 @@
+{
+  "vector": "manual-value-above-max",
+  "title": "A manual value above its maximum fails",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "20 > 15.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "manual_value_exceeds_max"
+    ]
+  }
+}

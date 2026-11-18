@@ -1,0 +1,21 @@
+{
+  "about": "Vectors on which the second engine (the blind run, unchanged) differs from expected.json. Each is explained in TRIAGE.md. check.py fails if a vector is added to or removed from this list without a change here.",
+  "vectors": [
+    "consumption-conditions-credit-type-not-in-deal",
+    "custom-unit-price-on-flat-module",
+    "discount-checks-need-priced-lines",
+    "grant-override-credit-type-not-in-model",
+    "overage-from-two-selections",
+    "overage-mixed-period-pools",
+    "overage-override-without-overage-price",
+    "overage-package-units-count",
+    "overage-pay-as-you-go",
+    "overage-price-override-is-an-adjustment",
+    "override-target-not-in-model",
+    "package-flat-price-ignores-count",
+    "package-per-unit-price",
+    "region-code-not-iso-assigned",
+    "region-unassigned-code",
+    "required-module-in-tier-and-selected"
+  ]
+}

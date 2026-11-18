@@ -1,0 +1,133 @@
+{
+  "schema_version": "2.0.0",
+  "model_id": "larkspur",
+  "vendor_name": "Larkspur Software",
+  "effective_date": "2026-01-01",
+  "currency": "USD",
+  "products": [
+    {
+      "id": "p",
+      "label": "p",
+      "position": null,
+      "modules": [
+        {
+          "id": "m",
+          "label": "m",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 100,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        },
+        {
+          "id": "c",
+          "label": "c",
+          "position": null,
+          "required": true,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 50,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        },
+        {
+          "id": "d",
+          "label": "d",
+          "position": null,
+          "required": false,
+          "price": {
+            "type": "flat",
+            "period": "month",
+            "amount": 20,
+            "currency": null,
+            "unit": null,
+            "credit_type_id": null,
+            "tiers": null,
+            "breakpoints": null
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "features": []
+        }
+      ],
+      "tiers": [
+        {
+          "id": "t",
+          "label": "t",
+          "position": null,
+          "included_modules": [
+            "m"
+          ],
+          "included_credit_grants": [],
+          "overage_policy": "pay_as_you_go",
+          "features": []
+        }
+      ],
+      "commitment_plans": [
+        {
+          "id": "a",
+          "label": "a",
+          "position": null,
+          "commitment_months": 12,
+          "adjustment": {
+            "percent": -10
+          },
+          "targets": {
+            "tier_ids": [
+              "t"
+            ],
+            "module_ids": []
+          },
+          "included_credit_grants": [],
+          "eligibility": null,
+          "default_for_tier_ids": []
+        }
+      ]
+    }
+  ],
+  "bundles": [],
+  "discounts": [],
+  "credit_types": [],
+  "credit_packages": [],
+  "discount_strategies": [],
+  "price_books": [],
+  "variants": [],
+  "minimum_commitments": [],
+  "pricing_rules": {
+    "calculation_order": [],
+    "discount_application_order": [],
+    "rounding": {
+      "mode": "currency_minor_units",
+      "method": "half_away_from_zero",
+      "currency_minor_units": 2
+    },
+    "policy": {
+      "exclusive_group_resolution": "max_discount",
+      "ineligible_selection_handling": "error",
+      "missing_strategy_inputs_handling": "error"
+    }
+  },
+  "business_rules": [],
+  "module_dependencies": [],
+  "pricing_relationships": [],
+  "comparison_grid": [],
+  "conformance_profile": null
+}

@@ -1,0 +1,78 @@
+{
+  "vector": "strategy-step-tiers",
+  "title": "A step_tiers strategy at a bracket boundary",
+  "spec_sections": [
+    "7.7"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Seats 10: bracket [10, 50) gives 8%. $10 × 10 × 12 = $1,200. 8% = -$96. Net $1,104.",
+  "expected": {
+    "outcome": "statement",
+    "statement": {
+      "schema_version": "2.0.0",
+      "invoice_id": "inv-cfg-1",
+      "config_id": "cfg-1",
+      "model_id": "larkspur",
+      "period": {
+        "label": "Contract",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "period_type": "contract_total"
+      },
+      "currency": "USD",
+      "line_items": [
+        {
+          "line_id": 1,
+          "category": "module_charge",
+          "description": "m",
+          "product_id": "p",
+          "target_id": "m",
+          "quantity": 10,
+          "unit": "unit",
+          "unit_price": 10,
+          "line_total": 1200,
+          "graduated_detail": null,
+          "computation_method": "contract charge",
+          "source_fields": [
+            "model#/products/0/modules/0/price",
+            "config#/product_selections/0/quantities/0"
+          ]
+        }
+      ],
+      "subtotals": {
+        "recurring": 1200,
+        "one_time": 0,
+        "gross": 1200
+      },
+      "adjustments": [
+        {
+          "adjustment_type": "strategy_discount",
+          "description": "Discount d",
+          "amount": -96,
+          "applies_to": "contract_total",
+          "computation_method": "adjustment",
+          "source": "model#/discounts/0"
+        }
+      ],
+      "totals": {
+        "total_adjustments": -96,
+        "net_total": 1104,
+        "annualized_total": 1104,
+        "total_contract_value": 1104
+      },
+      "entitlement_summary": [
+        {
+          "credit_type_id": "seats",
+          "granted": null,
+          "committed_or_used": 10,
+          "overage": 0,
+          "overage_cost": 0,
+          "overage_policy": "throttle"
+        }
+      ],
+      "warnings": [],
+      "computation_notes": []
+    }
+  }
+}

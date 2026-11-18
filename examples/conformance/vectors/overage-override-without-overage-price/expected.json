@@ -1,0 +1,16 @@
+{
+  "vector": "overage-override-without-overage-price",
+  "title": "Any overage override on a credit type with no overage price fails",
+  "spec_sections": [
+    "7.4"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Credit type api has no overage_price.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "invalid_override"
+    ]
+  }
+}

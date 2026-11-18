@@ -1,0 +1,16 @@
+{
+  "vector": "maximum-ceiling-exceeded",
+  "title": "A billed quantity above the maximum entry fails",
+  "spec_sections": [
+    "4.2"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "Billed 12, maximum 10.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "maximum_exceeded"
+    ]
+  }
+}

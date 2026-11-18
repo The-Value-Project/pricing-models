@@ -1,0 +1,17 @@
+{
+  "vector": "plan-from-billing-id-ineligible-error",
+  "title": "A plan named only by billing.plan_id counts as selected, and must be eligible",
+  "spec_sections": [
+    "7.1",
+    "4.5"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "The plan is for renewals. The deal is new_logo.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "ineligible_selection"
+    ]
+  }
+}

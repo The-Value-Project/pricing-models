@@ -1,0 +1,17 @@
+{
+  "vector": "grant-override-credit-type-not-in-model",
+  "title": "A grant override for an unknown credit type is unresolved_reference",
+  "spec_sections": [
+    "4.1",
+    "7.6"
+  ],
+  "status": "settled",
+  "open_question": null,
+  "worked": "No credit type ghost.",
+  "expected": {
+    "outcome": "validation_failure",
+    "codes": [
+      "unresolved_reference"
+    ]
+  }
+}
